@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root Cad="BuiltInCad" version="2.0">
+	<Project>
+		<Panels>
+			<Panel IsProduce="true" ID="1971G1.29.04" Name="1971G1.29.04" Length="258.2" Width="257" Thickness="18" MachiningPoint="1">
+				<Outline>
+					<Point X="258.2" Y="257" />
+					<Point X="0" Y="257" />
+					<Point X="0" Y="0" />
+					<Point X="258.2" Y="0" />
+				</Outline>
+				<Machines>
+					<Machining Type="2" IsGenCode="2" Face="5" X="59.7" Y="59.7" Diameter="8" Depth="9" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="59.7" Y="59.7" Diameter="2.22" Depth="9.1" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="149.59" Y="108.61" Diameter="8" Depth="18.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="198.5" Y="198.5" Diameter="2.22" Depth="9.1" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="198.5" Y="198.5" Diameter="8" Depth="9" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="50.59" Y="207.61" Diameter="8" Depth="18.5" />
+					<Machining Type="3" IsGenCode="2" Face="5" X="31.7" Y="0" Depth="18.5" Diameter="10" ToolOffset="右" Pocket="0" Closed="0">
+						<MillPreDefinedRectangle Length="0" Width="0" X="0" Y="0" Z="0" Radius="0" CornerBotLeft="0" CornerBotRight="0" CornerTopLeft="0" CornerTopRight="0" />
+						<Lines>
+							<Line LineID="0" EndX="258.2" EndY="226.5" Angle="-90" />
+						</Lines>
+					</Machining>
+					<Machining Type="1" IsGenCode="2" Face="1" X="50.1" Y="257" Z="9" Diameter="5" Depth="33.5" />
+					<Machining Type="1" IsGenCode="2" Face="1" X="208.1" Y="257" Z="9" Diameter="5" Depth="33.5" />
+					<Machining Type="1" IsGenCode="2" Face="4" X="0" Y="50" Z="9" Diameter="5" Depth="34.7" />
+					<Machining Type="1" IsGenCode="2" Face="4" X="0" Y="207" Z="9" Diameter="5" Depth="34.7" />
+				</Machines>
+				<EdgeGroup X1="0" Y1="0">
+					<Edge Face="1" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="2" Thickness="0" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="3" Thickness="0" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="4" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+				</EdgeGroup>
+			</Panel>
+		</Panels>
+	</Project>
+</Root>

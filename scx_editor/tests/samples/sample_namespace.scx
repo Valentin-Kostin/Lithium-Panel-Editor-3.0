@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns:NanxingSCX xmlns:ns="http://www.nanxing.com/scx" Version="2.0">
+  <ns:Material Length="2800" Width="2070" Thickness="16" />
+  <ns:Operations>
+    <ns:Operation Type="Drill" X="50" Y="60" Diameter="8" Depth="12" />
+  </ns:Operations>
+</ns:NanxingSCX>

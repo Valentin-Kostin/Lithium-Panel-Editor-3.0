@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NanxingSCX Version="1.0">
+  <Material Name="Broken" Length="abc" Width="1220" />
+  <!-- Неправильно закрытый тег -->
+  <Operations>
+    <Operation ID="1" Type="Drill" X="100" Y="200"
+  </Operations>
+</NanxingSCX>

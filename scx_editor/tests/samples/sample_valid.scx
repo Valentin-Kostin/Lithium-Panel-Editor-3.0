@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NanxingSCX Version="1.0" Machine="NANXING CNC">
+  <Material Name="Detail_001" Length="2440" Width="1220" Thickness="18" />
+  <Tools>
+    <Tool ID="1" Diameter="8" SpindleSpeed="12000" FeedRate="1500" />
+    <Tool ID="2" Diameter="10" SpindleSpeed="10000" FeedRate="1200" />
+  </Tools>
+  <Operations>
+    <Operation ID="1" Type="Drill" ToolID="1" X="100.5" Y="200.25" Z="0" Depth="13" />
+    <Operation ID="2" Type="Mill" ToolID="2" X="300" Y="400" Z="-5" FeedRate="1200" />
+  </Operations>
+</NanxingSCX>
