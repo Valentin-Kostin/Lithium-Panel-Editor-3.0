@@ -235,11 +235,11 @@ class MainWindow(QMainWindow):
             self._on_property_changed
         )
         
-        self.scx_tab.operations_table.selectionModel().currentChanged.connect(
-            self._on_operations_selection_changed
+        self.scx_tab.operations_table.operation_selected.connect(
+            self._on_operation_selected
         )
-        self.pgmx_tab.operations_table.selectionModel().currentChanged.connect(
-            self._on_operations_selection_changed
+        self.pgmx_tab.operations_table.operation_selected.connect(
+            self._on_operation_selected
         )
     
     def _load_mapping(self):
