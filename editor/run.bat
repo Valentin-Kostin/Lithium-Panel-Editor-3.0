@@ -1,7 +1,7 @@
 @echo off
-REM Запуск SCX Editor из исходников
+REM Запуск Editor из исходников
 
-echo Запуск SCX Editor...
+echo Запуск Editor...
 python main.py %*
 
 if errorlevel 1 (

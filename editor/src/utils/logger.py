@@ -7,7 +7,7 @@ from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
 
-def setup_logging(log_file: str = 'logs/scx_editor.log', 
+def setup_logging(log_file: str = 'logs/editor.log', 
                   level: int = logging.INFO) -> None:
     """
     Настраивает логирование приложения.
