@@ -1,5 +1,5 @@
 """
-Главный файл запуска приложения SCX Editor.
+Главный файл запуска приложения Editor.
 """
 
 import sys
@@ -18,11 +18,11 @@ def main():
     """Точка входа приложения."""
     setup_logging()
     
-    logger.info("Запуск SCX Editor")
+    logger.info("Запуск Editor")
     
     app = QApplication(sys.argv)
-    app.setApplicationName("SCX Editor")
-    app.setOrganizationName("NanxingEditor")
+    app.setApplicationName("Editor")
+    app.setOrganizationName("Editor")
     
     app.setStyle('Fusion')
     

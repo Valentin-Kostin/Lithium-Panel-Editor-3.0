@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "auto_backup": false,
+  "backup_format": "timestamp",
+  "detailed_xml_mode": false,
+  "nanxing_mapping_path": "config/nanxing_mapping.json",
+  "scm_mapping_path": "config/scm_mapping.json",
+  "theme": "light",
+  "language": "ru",
+  "warn_on_delete": true,
+  "show_xml_tree": true,
+  "max_undo_steps": 100,
+  "recent_files": [],
+  "default_folder": ""
+}

@@ -9,7 +9,10 @@ env/
 venv/
 .venv/
 .ENV
+.ENV.local
 .env
+.env.local
+.env.*
 
 # Build and distribution artifacts
 build/
@@ -26,16 +29,20 @@ dist/
 # Logs
 *.log
 
-# Coverage
-.coverage
-coverage/
-htmlcov/
-
-# Testing
-.pytest_cache/
-.mypy_cache/
-
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Coverage reports
+.coverage
+htmlcov/
+coverage/
+
+# MyPy cache
+.mypy_cache/
+# Pytest cache
+.pytest_cache/
+
+# Git-related (if not already in repo)
+.git/
 ```

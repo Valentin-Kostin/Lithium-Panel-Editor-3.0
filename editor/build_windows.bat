@@ -1,8 +1,8 @@
 @echo off
-REM Сборка SCX Editor в Windows приложение
+REM Сборка Editor в Windows приложение
 
 echo ========================================
-echo Сборка SCX Editor
+echo Сборка Editor
 echo ========================================
 echo.
 
@@ -21,7 +21,7 @@ del /q *.spec 2>nul
 
 echo.
 echo Сборка приложения (onedir режим - рекомендуется)...
-pyinstaller --noconfirm --clean --windowed --name "SCX Editor" ^
+pyinstaller --noconfirm --clean --windowed --name "Editor" ^
     --add-data "config;config" ^
     --add-data "resources;resources" ^
     main.py
@@ -36,7 +36,7 @@ if errorlevel 1 (
 echo.
 echo ========================================
 echo Сборка завершена успешно!
-echo Приложение находится в папке: dist\SCX Editor
+echo Приложение находится в папке: dist\Editor
 echo ========================================
 echo.
 
@@ -49,7 +49,7 @@ if /i "%answer%"=="y" (
     rmdir /s /q build 2>nul
     del /q *.spec 2>nul
     
-    pyinstaller --noconfirm --clean --onefile --windowed --name "SCX Editor" ^
+    pyinstaller --noconfirm --clean --onefile --windowed --name "Editor" ^
         --add-data "config;config" ^
         --add-data "resources;resources" ^
         main.py
@@ -59,7 +59,7 @@ if /i "%answer%"=="y" (
         echo Ошибка сборки onefile!
     ) else (
         echo.
-        echo Onefile версия находится в папке: dist\SCX Editor.exe
+        echo Onefile версия находится в папке: dist\Editor.exe
     )
 )
 
