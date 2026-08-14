@@ -1,1 +1,39 @@
-Nothing needs to be added to the .gitignore file since the only change was adding the .gitignore file itself, and there are no build artifacts, dependency directories, or other files that need to be ignored based on the provided change list.
+```
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Dependencies
+.venv/
+venv/
+env/
+.env
+.env.local
+.env.*
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Coverage
+.coverage
+coverage/
+htmlcov/
+
+# Temporary files
+*.tmp
+.DS_Store
+Thumbs.db
+```

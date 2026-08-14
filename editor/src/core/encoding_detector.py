@@ -63,7 +63,11 @@ def detect_encoding(file_path: Path, xml_declaration_hint: Optional[str] = None)
         result = charset_normalizer.from_bytes(raw_data).best()
         if result:
             encoding = result.encoding.lower()
-            confidence = result.confidence
+            # Handle different versions of charset-normalizer
+            confidence = getattr(result, 'confidence', None)
+            if confidence is None:
+                # For newer versions or when confidence is not available, assume high confidence
+                confidence = 1.0
             
             if confidence > 0.7:
                 logger.info(f"Кодировка определена через charset-normalizer: {encoding} (confidence={confidence:.2f})")
