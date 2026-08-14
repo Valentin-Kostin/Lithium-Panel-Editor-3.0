@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root Cad="BuiltInCad" version="2.0">
+	<Project>
+		<Panels>
+			<Panel IsProduce="true" ID="1971G1.20.07" Name="1971G1.20.07" Length="2287.4" Width="420.4" Thickness="4" MachiningPoint="1">
+				<Outline>
+					<Point X="2287.4" Y="420.4" />
+					<Point X="0" Y="420.4" />
+					<Point X="0" Y="0" />
+					<Point X="2287.4" Y="0" />
+				</Outline>
+				<Machines>
+				</Machines>
+				<EdgeGroup X1="0" Y1="0">
+					<Edge Face="1" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="2" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="3" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="4" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+				</EdgeGroup>
+			</Panel>
+		</Panels>
+	</Project>
+</Root>

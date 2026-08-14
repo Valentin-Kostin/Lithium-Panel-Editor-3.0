@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root Cad="BuiltInCad" version="2.0">
+	<Project>
+		<Panels>
+			<Panel IsProduce="true" ID="1971G1.46.02.01" Name="1971G1.46.02.01" Length="244" Width="496" Thickness="23.2" MachiningPoint="1">
+				<Outline>
+					<Point X="244" Y="496" />
+					<Point X="0" Y="496" />
+					<Point X="0" Y="0" />
+					<Point X="244" Y="0" />
+				</Outline>
+				<Machines>
+					<Machining Type="2" IsGenCode="2" Face="5" X="93.5" Y="29.2" Diameter="2.5" Depth="3" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="125.5" Y="29.2" Diameter="2.5" Depth="3" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="157.5" Y="29.2" Diameter="2.5" Depth="3" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="189.5" Y="29.2" Diameter="2.5" Depth="3" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="93.5" Y="462.8" Diameter="2.5" Depth="3" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="125.5" Y="462.8" Diameter="2.5" Depth="3" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="157.5" Y="462.8" Diameter="2.5" Depth="3" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="189.5" Y="462.8" Diameter="2.5" Depth="3" />
+					<Machining Type="3" IsGenCode="2" Face="5" X="67.92" Y="243.883" Depth="1" Diameter="0" ToolOffset="Undefined" Pocket="1" Closed="1">
+						<MillPreDefinedRectangle Length="0" Width="0" X="0" Y="0" Z="0" Radius="0" CornerBotLeft="0" CornerBotRight="0" CornerTopLeft="0" CornerTopRight="0" />
+						<Lines>
+							<Line LineID="0" EndX="67.92" EndY="251.761" Angle="0" />
+							<Line LineID="1" EndX="63.359" EndY="256.322" Angle="0" />
+							<Line LineID="2" EndX="54.602" EndY="256.322" Angle="0" />
+							<Line LineID="3" EndX="50.48" EndY="252.201" Angle="0" />
+							<Line LineID="4" EndX="50.48" EndY="248.5" Angle="0" />
+							<Line LineID="5" EndX="48.98" EndY="248.5" Angle="0" />
+							<Line LineID="6" EndX="48.98" EndY="252.822" Angle="0" />
+							<Line LineID="7" EndX="53.98" EndY="257.822" Angle="0" />
+							<Line LineID="8" EndX="63.98" EndY="257.822" Angle="0" />
+							<Line LineID="9" EndX="68.98" EndY="252.822" Angle="0" />
+							<Line LineID="10" EndX="73.98" EndY="257.822" Angle="0" />
+							<Line LineID="11" EndX="88.98" EndY="257.822" Angle="0" />
+							<Line LineID="12" EndX="93.98" EndY="252.822" Angle="0" />
+							<Line LineID="13" EndX="93.98" EndY="248.5" Angle="0" />
+							<Line LineID="14" EndX="92.48" EndY="248.5" Angle="0" />
+							<Line LineID="15" EndX="92.48" EndY="252.201" Angle="0" />
+							<Line LineID="16" EndX="88.359" EndY="256.322" Angle="0" />
+							<Line LineID="17" EndX="74.602" EndY="256.322" Angle="0" />
+							<Line LineID="18" EndX="70.041" EndY="251.761" Angle="0" />
+							<Line LineID="19" EndX="70.041" EndY="243.883" Angle="0" />
+							<Line LineID="20" EndX="74.602" EndY="239.322" Angle="0" />
+							<Line LineID="21" EndX="88.359" EndY="239.322" Angle="0" />
+							<Line LineID="22" EndX="92.48" EndY="243.443" Angle="0" />
+							<Line LineID="23" EndX="92.48" EndY="247.5" Angle="0" />
+							<Line LineID="24" EndX="93.98" EndY="247.5" Angle="0" />
+							<Line LineID="25" EndX="93.98" EndY="242.822" Angle="0" />
+							<Line LineID="26" EndX="88.98" EndY="237.822" Angle="0" />
+							<Line LineID="27" EndX="73.98" EndY="237.822" Angle="0" />
+							<Line LineID="28" EndX="68.98" EndY="242.822" Angle="0" />
+							<Line LineID="29" EndX="63.98" EndY="237.822" Angle="0" />
+							<Line LineID="30" EndX="53.98" EndY="237.822" Angle="0" />
+							<Line LineID="31" EndX="48.98" EndY="242.822" Angle="0" />
+							<Line LineID="32" EndX="48.98" EndY="247.5" Angle="0" />
+							<Line LineID="33" EndX="50.48" EndY="247.5" Angle="0" />
+							<Line LineID="34" EndX="50.48" EndY="243.443" Angle="0" />
+							<Line LineID="35" EndX="54.602" EndY="239.322" Angle="0" />
+							<Line LineID="36" EndX="63.359" EndY="239.322" Angle="0" />
+							<Line LineID="37" EndX="67.92" EndY="243.883" Angle="0" />
+						</Lines>
+					</Machining>
+					<Machining Type="3" IsGenCode="2" Face="5" X="173.98" Y="243.443" Depth="1" Diameter="0" ToolOffset="Undefined" Pocket="1" Closed="1">
+						<MillPreDefinedRectangle Length="0" Width="0" X="0" Y="0" Z="0" Radius="0" CornerBotLeft="0" CornerBotRight="0" CornerTopLeft="0" CornerTopRight="0" />
+						<Lines>
+							<Line LineID="0" EndX="173.98" EndY="254" Angle="0" />
+							<Line LineID="1" EndX="175.48" EndY="254" Angle="0" />
+							<Line LineID="2" EndX="175.48" EndY="242.822" Angle="0" />
+							<Line LineID="3" EndX="170.48" EndY="237.822" Angle="0" />
+							<Line LineID="4" EndX="155.48" EndY="237.822" Angle="0" />
+							<Line LineID="5" EndX="150.48" EndY="242.822" Angle="0" />
+							<Line LineID="6" EndX="150.48" EndY="252.822" Angle="0" />
+							<Line LineID="7" EndX="155.48" EndY="257.822" Angle="0" />
+							<Line LineID="8" EndX="175.48" EndY="257.822" Angle="0" />
+							<Line LineID="9" EndX="187.98" EndY="252.822" Angle="0" />
+							<Line LineID="10" EndX="195.48" EndY="242.822" Angle="0" />
+							<Line LineID="11" EndX="194.28" EndY="241.922" Angle="0" />
+							<Line LineID="12" EndX="187.033" EndY="251.585" Angle="0" />
+							<Line LineID="13" EndX="175.48" EndY="256.206" Angle="0" />
+							<Line LineID="14" EndX="173.98" EndY="256.322" Angle="0" />
+							<Line LineID="15" EndX="156.102" EndY="256.322" Angle="0" />
+							<Line LineID="16" EndX="151.98" EndY="252.201" Angle="0" />
+							<Line LineID="17" EndX="151.98" EndY="243.443" Angle="0" />
+							<Line LineID="18" EndX="156.102" EndY="239.322" Angle="0" />
+							<Line LineID="19" EndX="169.859" EndY="239.322" Angle="0" />
+							<Line LineID="20" EndX="173.98" EndY="243.443" Angle="0" />
+						</Lines>
+					</Machining>
+				</Machines>
+				<EdgeGroup X1="0" Y1="0">
+					<Edge Face="1" Thickness="1.0" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="2" Thickness="1.0" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="3" Thickness="1.0" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="4" Thickness="1.0" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+				</EdgeGroup>
+			</Panel>
+		</Panels>
+	</Project>
+</Root>

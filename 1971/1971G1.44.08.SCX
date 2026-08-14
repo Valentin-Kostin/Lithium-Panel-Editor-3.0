@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root Cad="BuiltInCad" version="2.0">
+	<Project>
+		<Panels>
+			<Panel IsProduce="true" ID="1971G1.44.08" Name="1971G1.44.08" Length="651" Width="761" Thickness="19.2" MachiningPoint="1">
+				<Outline>
+					<Point X="651" Y="761" />
+					<Point X="0" Y="761" />
+					<Point X="0" Y="0" />
+					<Point X="651" Y="0" />
+				</Outline>
+				<Machines>
+					<Machining Type="2" IsGenCode="2" Face="5" X="99.7" Y="9.5" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="99.7" Y="9.5" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="325.5" Y="9.5" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="325.5" Y="9.5" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="551.3" Y="9.5" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="551.3" Y="9.5" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="49.7" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="49.7" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="641.5" Y="63.7" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="641.5" Y="63.7" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="380.5" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="380.5" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="641.5" Y="380.5" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="641.5" Y="380.5" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="641.5" Y="697.3" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="641.5" Y="697.3" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="711.3" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="711.3" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="99.7" Y="751.5" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="99.7" Y="751.5" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="325.5" Y="751.5" Diameter="2.22" Depth="14.7" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="325.5" Y="751.5" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="551.3" Y="751.5" Diameter="20" Depth="13.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="551.3" Y="751.5" Diameter="2.22" Depth="14.7" />
+					<Machining Type="3" IsGenCode="2" Face="5" X="446.5" Y="380.5" Depth="20.2" Diameter="10" ToolOffset="左" Pocket="0" Closed="0">
+						<MillPreDefinedRectangle Length="0" Width="0" X="0" Y="0" Z="0" Radius="0" CornerBotLeft="0" CornerBotRight="0" CornerTopLeft="0" CornerTopRight="0" />
+						<Lines>
+							<Line LineID="0" EndX="446.5" EndY="531.5" Angle="0" />
+							<Line LineID="1" EndX="294.5" EndY="531.5" Angle="0" />
+							<Line LineID="2" EndX="294.5" EndY="229.5" Angle="0" />
+							<Line LineID="3" EndX="446.5" EndY="229.5" Angle="0" />
+							<Line LineID="4" EndX="446.5" EndY="380.5" Angle="0" />
+						</Lines>
+					</Machining>
+				</Machines>
+				<EdgeGroup X1="0" Y1="0">
+					<Edge Face="1" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="2" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="3" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+					<Edge Face="4" Thickness="-0.3" Pre_Milling="0" X="0" Y="0" CentralAngle="0" />
+				</EdgeGroup>
+			</Panel>
+		</Panels>
+	</Project>
+</Root>

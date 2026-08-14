@@ -1,0 +1,17 @@
+{
+  "scx": {
+    "operations": {
+      "DRILLING": "Сверление",
+      "MILLING": "Фрезерование",
+      "CUTTING": "Раскрой",
+      "EDGE_BANDING": "Кромление"
+    }
+  },
+  "pgmx": {
+    "operations": {
+      "DRILLING": "Сверление",
+      "MILLING": "Фрезерование",
+      "CUTTING": "Раскрой"
+    }
+  }
+}
