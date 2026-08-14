@@ -3,11 +3,11 @@
 """
 
 from PySide6.QtWidgets import (
-    QTableView, QHeaderView, QMenu, QAction, QStyledItemDelegate, QLineEdit,
+    QTableView, QHeaderView, QMenu, QStyledItemDelegate, QLineEdit,
     QDoubleSpinBox
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QDoubleValidator
+from PySide6.QtGui import QAction, QDoubleValidator
 
 from ..models.operations_model import OperationsTableModel
 
