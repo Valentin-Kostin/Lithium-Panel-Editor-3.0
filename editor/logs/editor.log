@@ -1,0 +1,23 @@
+2026-08-13 13:40:09 - __main__ - INFO - Запуск Editor
+2026-08-13 16:27:38 - __main__ - INFO - Запуск Editor
+2026-08-13 16:50:53 - __main__ - INFO - Запуск Editor
+2026-08-13 16:50:53 - src.ui.main_window - WARNING - Файл маппинга не найден: C:\Базис\Lithium Panel Editor_3.0\editor\src\config\default_mapping.json
+2026-08-13 16:50:54 - __main__ - INFO - Окно приложения показано
+2026-08-13 16:51:25 - src.core.encoding_detector - INFO - Кодировка определена из XML declaration: utf-8
+2026-08-13 16:51:25 - src.core.xml_utils - INFO - XML успешно загружен: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.20.05.SCX
+2026-08-13 16:51:25 - src.core.scx_document - INFO - SCX файл загружен: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.20.05.SCX
+2026-08-13 16:51:53 - __main__ - INFO - Приложение завершено с кодом: 0
+2026-08-13 16:59:26 - __main__ - INFO - Запуск Editor
+2026-08-13 16:59:26 - src.ui.main_window - WARNING - Файл маппинга не найден: C:\Базис\Lithium Panel Editor_3.0\editor\src\config\default_mapping.json
+2026-08-13 16:59:27 - __main__ - INFO - Окно приложения показано
+2026-08-13 16:59:41 - src.core.encoding_detector - INFO - Кодировка определена из XML declaration: utf-8
+2026-08-13 16:59:41 - src.core.xml_utils - INFO - XML успешно загружен: C:\SCM_Projects\1899m1R2\1899m1R2.08.02.01.SCX
+2026-08-13 16:59:41 - src.core.scx_document - INFO - SCX файл загружен: C:\SCM_Projects\1899m1R2\1899m1R2.08.02.01.SCX
+2026-08-13 16:59:43 - __main__ - INFO - Приложение завершено с кодом: 0
+2026-08-14 13:29:43 - __main__ - INFO - Запуск Editor
+2026-08-14 13:29:44 - src.ui.main_window - WARNING - Файл маппинга не найден: C:\Базис\Lithium Panel Editor_3.0\editor\src\config\default_mapping.json
+2026-08-14 13:29:44 - __main__ - INFO - Окно приложения показано
+2026-08-14 13:29:56 - src.core.encoding_detector - INFO - Кодировка определена из XML declaration: utf-8
+2026-08-14 13:29:56 - src.core.xml_utils - INFO - XML успешно загружен: C:\SCM_Projects\1909m1w2\1909m1w2.03.05.SCX
+2026-08-14 13:29:56 - src.core.scx_document - INFO - SCX файл загружен: C:\SCM_Projects\1909m1w2\1909m1w2.03.05.SCX
+2026-08-14 13:30:13 - __main__ - INFO - Приложение завершено с кодом: 0
