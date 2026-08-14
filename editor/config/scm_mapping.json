@@ -1,34 +1,48 @@
 {
-  "version": 1,
-  "description": "Маппинг параметров SCM Group PGMX",
-  "format": "PGMX",
-  "vendor": "SCM Group",
+  "format": "SCM",
+  "vendor": "SCM Group (XCam/Maestro)",
   "namespaces": {
-    "a": "http://www.scmgroup.com/XCam/MachiningDataModel/ProjectModule",
-    "b": "http://www.scmgroup.com/XCam/MachiningDataModel/GeometryModule",
-    "c": "http://www.scmgroup.com/XCam/MachiningDataModel/ToolModule",
+    "project": "http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.ProjectModule",
+    "utility": "http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Utility",
+    "parametrics": "http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Parametrics",
     "i": "http://www.w3.org/2001/XMLSchema-instance"
   },
   "workpiece": {
-    "length": {"xpath": "//WorkPiece/Length | //dx1", "type": "float"},
-    "width": {"xpath": "//WorkPiece/Width | //dy1", "type": "float"},
-    "thickness": {"xpath": "//WorkPiece/Depth | //dz1", "type": "float"},
-    "material": {"xpath": "//WorkPiece/Material | //Material/@Name", "type": "string"}
+    "length": {"xpath": ".//WorkPiece/Length", "type": "float", "default_var": "dx1"},
+    "width": {"xpath": ".//WorkPiece/Width", "type": "float", "default_var": "dy1"},
+    "thickness": {"xpath": ".//WorkPiece/Depth", "type": "float", "default_var": "dz1"}
   },
   "operations": {
-    "container_xpath": "//ManufacturingFeature | //Operation | //MachiningOp",
-    "fields": [
-      {"id": "name", "label_ru": "Имя операции", "label_en": "Operation Name", "xpath": "@Name | name", "type": "string"},
-      {"id": "type", "label_ru": "Тип операции", "label_en": "Operation Type", "xpath": "@Type | @OperationType", "type": "string"},
-      {"id": "diameter", "label_ru": "Диаметр", "label_en": "Diameter", "xpath": "a:Diameter | Diameter | @Diameter", "type": "float", "unit": "мм", "min": 0},
-      {"id": "depth", "label_ru": "Глубина", "label_en": "Depth", "xpath": "Depth | EndDepth | @Depth", "type": "float", "unit": "мм", "min": 0},
-      {"id": "x", "label_ru": "Координата X", "label_en": "X Coordinate", "xpath": "Geometries//_x | @X | X", "type": "float", "unit": "мм"},
-      {"id": "y", "label_ru": "Координата Y", "label_en": "Y Coordinate", "xpath": "Geometries//_y | @Y | Y", "type": "float", "unit": "мм"},
-      {"id": "z", "label_ru": "Координата Z", "label_en": "Z Coordinate", "xpath": "Geometries//_z | @Z | Z", "type": "float", "unit": "мм"},
-      {"id": "plane", "label_ru": "Плоскость", "label_en": "Plane", "xpath": "PlaneID | @Plane", "type": "string"},
-      {"id": "feed_rate", "label_ru": "Подача", "label_en": "Feed Rate", "xpath": "FeedRate | @FeedRate", "type": "float", "unit": "мм/мин", "min": 0},
-      {"id": "spindle_speed", "label_ru": "Обороты шпинделя", "label_en": "Spindle Speed", "xpath": "SpindleSpeed | @SpindleSpeed | RPM", "type": "int", "unit": "об/мин", "min": 0},
-      {"id": "tool_id", "label_ru": "ID инструмента", "label_en": "Tool ID", "xpath": "ToolKey | @ToolID | Tool/ID", "type": "string"}
-    ]
+    "drilling": {
+      "container_xpath": ".//ManufacturingFeature[i:type='RoundHole']",
+      "fields": [
+        {"id": "name", "xpath": "@Name", "type": "string", "label": "Имя операции"},
+        {"id": "diameter", "xpath": "Diameter", "type": "float", "label": "Диаметр"},
+        {"id": "depth", "xpath": "EndDepth", "type": "float", "label": "Глубина"},
+        {"id": "geometry_id", "xpath": "GeometryID", "type": "string", "label": "ID геометрии"}
+      ]
+    },
+    "milling": {
+      "container_xpath": ".//ManufacturingFeature[i:type='PocketRectangular']",
+      "fields": [
+        {"id": "name", "xpath": "@Name", "type": "string", "label": "Имя операции"},
+        {"id": "depth", "xpath": "EndDepth", "type": "float", "label": "Глубина"},
+        {"id": "tool_key", "xpath": "ToolKey", "type": "string", "label": "Ключ инструмента"}
+      ]
+    }
+  },
+  "geometries": {
+    "container_xpath": ".//Geometries/*",
+    "id_attribute": "Key/ID",
+    "coordinates": {
+      "x": {"xpath": "_x", "type": "float"},
+      "y": {"xpath": "_y", "type": "float"},
+      "z": {"xpath": "_z", "type": "float"}
+    }
+  },
+  "planes": {
+    "container_xpath": ".//Planes/*",
+    "id_attribute": "Key/ID",
+    "name_field": "Name"
   }
 }

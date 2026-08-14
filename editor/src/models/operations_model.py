@@ -1,246 +1,243 @@
 """
-Модель операций обработки для таблицы.
-Извлекает операции из XML и предоставляет для редактирования.
-Поддерживает как SCX (через XML элементы), так и PGMX (через OperationData).
+Модель таблицы операций для отображения и редактирования данных.
 """
 
-import logging
-from typing import Optional, Any, List, Dict, Union
-from lxml import etree
+from typing import List, Optional, Any
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt, Signal
+from PySide6.QtGui import QColor
 
-from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex
-
-from ..core.base_handler import OperationData as BaseOperationData
-
-logger = logging.getLogger(__name__)
+from ..core.base_handler import OperationRow
 
 
-class SCXOperationData:
-    """Данные одной SCX операции."""
+class OperationsTableModel(QAbstractTableModel):
+    """
+    Модель таблицы операций для QTableView.
+    """
+
+    # Сигналы
+    data_changed_signal = Signal(int, str, object)  # row, field, value
+    operation_selected = Signal(int)  # row
+
+    # Заголовки столбцов
+    HEADERS = ['#', 'Файл', 'Имя операции', 'Тип', 'X', 'Y', 'Z', 'Диаметр', 'Глубина']
     
-    def __init__(self, element: etree.Element, index: int):
-        self.element = element
-        self.index = index
-        self.data = self._parse_element()
-    
-    def _parse_element(self) -> Dict[str, Any]:
-        """Парсит элемент операции."""
-        return {
-            'id': self.element.get('ID', str(self.index)),
-            'type': self.element.get('Type', 'Unknown'),
-            'name': self.element.get('Name', ''),
-            'x': self.element.get('X', ''),
-            'y': self.element.get('Y', ''),
-            'z': self.element.get('Z', ''),
-            'depth': self.element.get('Depth', ''),
-            'diameter': self.element.get('Diameter', ''),
-            'tool_id': self.element.get('ToolID', ''),
-            'feed_rate': self.element.get('FeedRate', ''),
-            'spindle_speed': self.element.get('SpindleSpeed', ''),
-        }
-    
-    def get_type_display(self) -> str:
-        """Получает отображаемое имя типа операции."""
-        type_map = {
-            'Drill': 'Сверление',
-            'Mill': 'Фрезеровка',
-            'Cut': 'Раскрой',
-            'Pocket': 'Карман',
-            'Contour': 'Контур',
-            'Engrave': 'Гравировка',
-        }
-        op_type = self.data.get('type', 'Unknown')
-        return type_map.get(op_type, op_type)
+    # Индексы столбцов
+    COL_ID = 0
+    COL_FILE = 1
+    COL_NAME = 2
+    COL_TYPE = 3
+    COL_X = 4
+    COL_Y = 5
+    COL_Z = 6
+    COL_DIAMETER = 7
+    COL_DEPTH = 8
 
-
-class OperationsModel(QAbstractTableModel):
-    """Модель операций для QTableView. Поддерживает SCX и PGMX."""
-    
     def __init__(self, parent=None):
         super().__init__(parent)
-        self._operations: List[Union[SCXOperationData, BaseOperationData]] = []
-        self._is_pgmx_mode = False
-        self._headers = [
-            '№', 'Тип', 'Имя', 'X', 'Y', 'Z', 
-            'Глубина', 'Ø', 'Инструмент', 'Подача', 'Обороты'
-        ]
-    
-    def set_root_element(self, root: Optional[etree.Element]):
-        """
-        Устанавливает корневой элемент и извлекает SCX операции.
-        
-        Args:
-            root: Корневой элемент XML.
-        """
-        self.beginResetModel()
-        self._operations = []
-        self._is_pgmx_mode = False
-        
-        if root is not None:
-            self._extract_operations(root)
-        
-        self.endResetModel()
-    
-    def set_operations(self, operations: List[BaseOperationData]):
-        """
-        Устанавливает PGMX операции из handler.
-        
-        Args:
-            operations: Список OperationData из PGMX handler.
-        """
-        self.beginResetModel()
-        self._operations = operations
-        self._is_pgmx_mode = True
-        self.endResetModel()
-    
-    def _extract_operations(self, root: etree.Element):
-        """Извлекает SCX операции из XML."""
-        op_index = 0
-        
-        for elem in root.iter():
-            tag = elem.tag
-            if '}' in tag:
-                tag = tag.split('}')[1]
-            
-            if tag.lower() == 'operation':
-                op_data = SCXOperationData(elem, op_index)
-                self._operations.append(op_data)
-                op_index += 1
-    
+        self._operations: List[OperationRow] = []
+        self._editable_columns = {
+            self.COL_X, self.COL_Y, self.COL_Z,
+            self.COL_DIAMETER, self.COL_DEPTH
+        }
+
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
-        """Получает количество строк."""
         if parent.isValid():
             return 0
         return len(self._operations)
-    
+
     def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
-        """Получает количество столбцов."""
-        return len(self._headers)
-    
-    def headerData(self, section: int, orientation: Qt.Orientation,
-                   role: int = Qt.DisplayRole) -> Any:
-        """Получает заголовок."""
-        if role != Qt.DisplayRole:
-            return None
-        
-        if orientation == Qt.Horizontal:
-            if 0 <= section < len(self._headers):
-                return self._headers[section]
-        
+        return len(self.HEADERS)
+
+    def headerData(self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole) -> any:
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.HEADERS[section]
+        elif role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
         return None
-    
-    def data(self, index: QModelIndex, role: int = Qt.DisplayRole) -> Any:
-        """Получает данные ячейки."""
-        if not index.isValid():
+
+    def data(self, index: QModelIndex, role: int = Qt.DisplayRole) -> any:
+        if not index.isValid() or index.row() >= len(self._operations):
             return None
-        
-        if role not in (Qt.DisplayRole, Qt.EditRole):
-            return None
-        
+
         operation = self._operations[index.row()]
-        col = index.column()
-        
-        if self._is_pgmx_mode:
-            # Режим PGMX - используется BaseOperationData
-            if isinstance(operation, BaseOperationData):
-                if col == 0:
-                    return operation.id
-                elif col == 1:
-                    return operation.name  # PGMX не имеет типа, использовать имя
-                elif col == 2:
-                    return operation.name
-                elif col == 3:
-                    return operation.parameters.get('X', '')
-                elif col == 4:
-                    return operation.parameters.get('Y', '')
-                elif col == 5:
-                    return operation.parameters.get('Z', '')
-                elif col == 6:
-                    return str(operation.depth) if operation.depth else ''
-                elif col == 7:
-                    return operation.parameters.get('Diameter', '')
-                elif col == 8:
-                    return operation.tool_id or operation.tool_name
-                elif col == 9:
-                    return str(operation.feed_rate) if operation.feed_rate else ''
-                elif col == 10:
-                    return str(operation.speed) if operation.speed else ''
-        else:
-            # Режим SCX - используется SCXOperationData
-            if isinstance(operation, SCXOperationData):
-                if col == 0:
-                    return operation.data['id']
-                elif col == 1:
-                    return operation.get_type_display()
-                elif col == 2:
-                    return operation.data['name']
-                elif col == 3:
-                    return operation.data['x']
-                elif col == 4:
-                    return operation.data['y']
-                elif col == 5:
-                    return operation.data['z']
-                elif col == 6:
-                    return operation.data['depth']
-                elif col == 7:
-                    return operation.data['diameter']
-                elif col == 8:
-                    return operation.data['tool_id']
-                elif col == 9:
-                    return operation.data['feed_rate']
-                elif col == 10:
-                    return operation.data['spindle_speed']
-        
+        column = index.column()
+
+        if role == Qt.DisplayRole or role == Qt.EditRole:
+            if column == self.COL_ID:
+                return operation.id
+            elif column == self.COL_FILE:
+                return operation.file_name
+            elif column == self.COL_NAME:
+                return operation.operation_name
+            elif column == self.COL_TYPE:
+                return operation.operation_type
+            elif column == self.COL_X:
+                return f"{operation.x:.3f}" if operation.x is not None else ""
+            elif column == self.COL_Y:
+                return f"{operation.y:.3f}" if operation.y is not None else ""
+            elif column == self.COL_Z:
+                return f"{operation.z:.3f}" if operation.z is not None else ""
+            elif column == self.COL_DIAMETER:
+                return f"{operation.diameter:.3f}" if operation.diameter is not None else ""
+            elif column == self.COL_DEPTH:
+                return f"{operation.depth:.3f}" if operation.depth is not None else ""
+
+        elif role == Qt.TextAlignmentRole:
+            if column in {self.COL_X, self.COL_Y, self.COL_Z, self.COL_DIAMETER, self.COL_DEPTH}:
+                return Qt.AlignRight | Qt.AlignVCenter
+            return Qt.AlignLeft | Qt.AlignVCenter
+
+        elif role == Qt.BackgroundRole:
+            if operation.is_modified:
+                return QColor(255, 255, 200)  # Светло-жёлтый для изменённых
+            return None
+
+        elif role == Qt.ToolTipRole:
+            tooltip = f"Операция #{operation.id}\n"
+            tooltip += f"Имя: {operation.operation_name}\n"
+            tooltip += f"Тип: {operation.operation_type}\n"
+            if operation.x is not None:
+                tooltip += f"X: {operation.x:.3f}\n"
+            if operation.y is not None:
+                tooltip += f"Y: {operation.y:.3f}\n"
+            if operation.z is not None:
+                tooltip += f"Z: {operation.z:.3f}\n"
+            if operation.diameter is not None:
+                tooltip += f"Диаметр: {operation.diameter:.3f}\n"
+            if operation.depth is not None:
+                tooltip += f"Глубина: {operation.depth:.3f}"
+            return tooltip
+
         return None
-    
+
+    def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
+        if not index.isValid() or index.row() >= len(self._operations):
+            return False
+
+        if role != Qt.EditRole:
+            return False
+
+        operation = self._operations[index.row()]
+        column = index.column()
+
+        # Проверка возможности редактирования
+        if column not in self._editable_columns:
+            return False
+
+        # Парсинг значения
+        try:
+            if value == "" or value is None:
+                new_value = None
+            else:
+                new_value = float(value)
+        except (ValueError, TypeError):
+            return False
+
+        # Обновление значения
+        old_value = None
+        if column == self.COL_X:
+            old_value = operation.x
+            operation.x = new_value
+        elif column == self.COL_Y:
+            old_value = operation.y
+            operation.y = new_value
+        elif column == self.COL_Z:
+            old_value = operation.z
+            operation.z = new_value
+        elif column == self.COL_DIAMETER:
+            old_value = operation.diameter
+            operation.diameter = new_value
+        elif column == self.COL_DEPTH:
+            old_value = operation.depth
+            operation.depth = new_value
+
+        # Пометка как изменённое если значение действительно изменилось
+        if old_value != new_value:
+            operation.is_modified = True
+            self.data_changed_signal.emit(operation.id, self.HEADERS[column], new_value)
+
+        # Уведомление об изменении данных
+        self.dataChanged.emit(index, index, [Qt.DisplayRole, Qt.BackgroundRole])
+        return True
+
     def flags(self, index: QModelIndex) -> Qt.ItemFlags:
-        """Получает флаги ячейки."""
         if not index.isValid():
             return Qt.NoItemFlags
-        
-        return Qt.ItemIsEnabled | Qt.ItemIsSelectable
-    
-    def get_operation(self, row: int) -> Optional[Union[SCXOperationData, BaseOperationData]]:
-        """
-        Получает операцию по строке.
-        
-        Args:
-            row: Номер строки.
-        
-        Returns:
-            OperationData или None.
-        """
+
+        base_flags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
+
+        if index.column() in self._editable_columns:
+            base_flags |= Qt.ItemIsEditable
+
+        return base_flags
+
+    def set_operations(self, operations: List[OperationRow]) -> None:
+        """Установка списка операций."""
+        self.beginResetModel()
+        self._operations = operations
+        self.endResetModel()
+
+    def add_operation(self, operation: OperationRow) -> None:
+        """Добавление одной операции."""
+        row = len(self._operations)
+        self.beginInsertRows(QModelIndex(), row, row)
+        self._operations.append(operation)
+        self.endInsertRows()
+
+    def clear(self) -> None:
+        """Очистка списка операций."""
+        self.beginResetModel()
+        self._operations = []
+        self.endResetModel()
+
+    def get_operation_at(self, row: int) -> Optional[OperationRow]:
+        """Получение операции по индексу строки."""
         if 0 <= row < len(self._operations):
             return self._operations[row]
         return None
-    
-    def get_element(self, row: int) -> Optional[Any]:
-        """
-        Получает XML элемент операции (для SCX) или xml_node_ref (для PGMX).
+
+    def get_all_operations(self) -> List[OperationRow]:
+        """Получение всех операций."""
+        return self._operations.copy()
+
+    def get_modified_operations(self) -> List[OperationRow]:
+        """Получение только изменённых операций."""
+        return [op for op in self._operations if op.is_modified]
+
+    def has_modifications(self) -> bool:
+        """Проверка наличия изменённых операций."""
+        return any(op.is_modified for op in self._operations)
+
+    def reset_modifications(self) -> None:
+        """Сброс флага модификации у всех операций."""
+        for op in self._operations:
+            op.is_modified = False
         
-        Args:
-            row: Номер строки.
+        # Обновление фона всей таблицы
+        top_left = self.index(0, 0)
+        bottom_right = self.index(len(self._operations) - 1, self.columnCount() - 1)
+        self.dataChanged.emit(top_left, bottom_right, [Qt.BackgroundRole])
+
+    def filter_by_type(self, operation_type: str) -> None:
+        """
+        Фильтрация операций по типу.
+        TODO: Реализовать полноценную фильтрацию с proxy model.
+        """
+        pass
+
+    def search_by_name(self, search_text: str) -> List[int]:
+        """
+        Поиск операций по имени.
         
         Returns:
-            XML элемент или None.
+            Список индексов строк соответствующих поиску.
         """
-        op = self.get_operation(row)
-        if op is None:
-            return None
+        if not search_text:
+            return list(range(len(self._operations)))
         
-        if self._is_pgmx_mode and isinstance(op, BaseOperationData):
-            return op.xml_node_ref
-        elif isinstance(op, SCXOperationData):
-            return op.element
-        return None
-    
-    def operation_count(self) -> int:
-        """Получает количество операций."""
-        return len(self._operations)
-    
-    def clear(self):
-        """Очищает модель."""
-        self.beginResetModel()
-        self._operations = []
-        self._is_pgmx_mode = False
-        self.endResetModel()
+        results = []
+        search_lower = search_text.lower()
+        for i, op in enumerate(self._operations):
+            if search_lower in op.operation_name.lower():
+                results.append(i)
+        return results

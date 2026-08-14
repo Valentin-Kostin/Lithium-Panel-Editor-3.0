@@ -1,627 +1,253 @@
 """
-Главное окно приложения с поддержкой двух форматов: SCX (NANXING) и PGMX (SCM Group).
-Реализует архитектуру с вкладками согласно технической спецификации.
+Главное окно приложения.
+Содержит вкладки для SCM (.PGMX) и NANXING (.SCX) форматов.
 """
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 from PySide6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
-    QSplitter, QToolBar, QFileDialog, QMessageBox,
-    QTabWidget, QLabel, QStackedWidget
+    QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout,
+    QPushButton, QToolBar, QStatusBar, QLabel, QMessageBox, QFileDialog
 )
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QAction, QIcon
 
-from lxml import etree
-
-from ..core.scx_document import SCXDocument
-from ..core.base_handler import BaseFormatHandler, OperationData, FileMetadata
 from ..core.pgmx_handler import PgmxFormatHandler
-from ..core.mapping import MappingConfig
-from ..models.tree_model import SCXTreeModel
-from ..models.operations_model import OperationsModel
-from ..models.undo_commands import UndoStack
-from ..ui.xml_tree_view import SCXTreeView
-from ..ui.property_editor import PropertyEditor
-from ..ui.operations_table import OperationsTable
-from ..ui.diff_dialog import DiffDialog
-from ..ui.settings_dialog import SettingsDialog
-from ..ui.status_bar import StatusBar
+from ..core.scx_handler import ScxFormatHandler
+from .format_tab import FormatTab
 
 logger = logging.getLogger(__name__)
 
 
-class FormatTab(QWidget):
-    """Widget for a single format tab (SCX or PGMX)."""
-    
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.handler: Optional[BaseFormatHandler] = None
-        self.tree_model = SCXTreeModel()
-        self.operations_model = OperationsModel()
-        
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        
-        splitter = QSplitter(Qt.Horizontal)
-        
-        # Левая панель - XML дерево
-        left_widget = QWidget()
-        left_layout = QVBoxLayout(left_widget)
-        left_layout.setContentsMargins(0, 0, 0, 0)
-        
-        self.tree_view = SCXTreeView()
-        self.tree_view.set_model(self.tree_model)
-        left_layout.addWidget(self.tree_view)
-        
-        splitter.addWidget(left_widget)
-        
-        # Правая панель - Вкладки со свойствами и операциями
-        right_widget = QWidget()
-        right_layout = QVBoxLayout(right_widget)
-        right_layout.setContentsMargins(0, 0, 0, 0)
-        
-        self.tab_widget = QTabWidget()
-        
-        self.property_editor = PropertyEditor()
-        self.tab_widget.addTab(self.property_editor, "Свойства")
-        
-        self.operations_table = OperationsTable()
-        self.operations_table.set_model(self.operations_model)
-        self.tab_widget.addTab(self.operations_table, "Операции")
-        
-        right_layout.addWidget(self.tab_widget)
-        
-        splitter.addWidget(right_widget)
-        splitter.setStretchFactor(0, 1)
-        splitter.setStretchFactor(1, 2)
-        
-        layout.addWidget(splitter)
-    
-    def load_data(self, handler: BaseFormatHandler):
-        """Load data from handler into the UI components."""
-        self.handler = handler
-        
-        # Загрузить дерево
-        xml_tree = handler.get_xml_tree()
-        if xml_tree is not None:
-            # Убедиться что у нас ElementTree, а не просто Element
-            if isinstance(xml_tree, etree._Element):
-                xml_tree = etree.ElementTree(xml_tree)
-            self.tree_model.set_tree(xml_tree)
-        
-        # Загрузить операции
-        operations = handler.get_operations()
-        if operations:
-            self.operations_model.set_operations(operations)
-
-
 class MainWindow(QMainWindow):
-    """Главное окно приложения с поддержкой SCX и PGMX."""
-    
+    """
+    Главное окно приложения Lithium Panel Editor.
+    """
+
     def __init__(self):
         super().__init__()
         
-        self.scx_document: Optional[SCXDocument] = None
-        self.pgmx_handler: Optional[PgmxFormatHandler] = None
-        self.current_handler: Optional[BaseFormatHandler] = None
-        self.mapping_config: Optional[MappingConfig] = None
-        self.undo_stack = UndoStack(max_size=100)
-        self.settings = self._load_default_settings()
+        self.setWindowTitle("Lithium Panel Editor 3.0")
+        self.setMinimumSize(1024, 768)
         
-        self.setWindowTitle("SCX/PGMX Editor - Редактор файлов ЧПУ")
-        self.setMinimumSize(1200, 800)
+        # Инициализация обработчиков форматов
+        self.pgmx_handler = PgmxFormatHandler()
+        self.scx_handler = ScxFormatHandler()
         
-        self._init_ui()
-        self._init_toolbar()
-        self._init_statusbar()
+        # Вкладки
+        self.tabs = QTabWidget()
+        
+        # Создание вкладок форматов
+        self.scm_tab = FormatTab(self.pgmx_handler, self)
+        self.nanxing_tab = FormatTab(self.scx_handler, self)
+        
+        self.tabs.addTab(self.scm_tab, "🇮🇹 SCM (.PGMX)")
+        self.tabs.addTab(self.nanxing_tab, "🇨🇳 NANXING (.SCX)")
+        
+        self.setCentralWidget(self.tabs)
+        
+        self._setup_ui()
+        self._create_actions()
+        self._create_toolbar()
+        self._create_statusbar()
         self._connect_signals()
+
+    def _setup_ui(self):
+        """Настройка UI."""
+        # Центральная виджет уже установлен (tabs)
+        pass
+
+    def _create_actions(self):
+        """Создание действий меню."""
+        # Меню Файл
+        self.open_folder_action = QAction("📁 Открыть папку", self)
+        self.open_folder_action.setShortcut("Ctrl+O")
+        self.open_folder_action.setToolTip("Открыть папку со сканированием файлов")
         
-        self._load_mapping()
-    
-    def _load_default_settings(self) -> dict:
-        """Загружает настройки по умолчанию."""
-        return {
-            'auto_backup': True,
-            'backup_format': 'timestamp',
-            'detailed_xml_mode': False,
-            'mapping_path': 'config/default_mapping.json',
-            'language': 'ru',
-            'warn_on_delete': True,
-        }
-    
-    def _init_ui(self):
-        """Инициализирует UI с вкладками для SCX и PGMX."""
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
+        self.save_all_action = QAction("💾 Сохранить всё", self)
+        self.save_all_action.setShortcut("Ctrl+S")
+        self.save_all_action.setToolTip("Сохранить все изменённые файлы")
         
-        main_layout = QVBoxLayout(central_widget)
+        self.exit_action = QAction("Выход", self)
+        self.exit_action.setShortcut("Ctrl+Q")
+        self.exit_action.setToolTip("Закрыть приложение")
         
-        # Главный виджет вкладок для форматов
-        self.format_tabs = QTabWidget()
+        # Меню Правка
+        self.undo_action = QAction("↶ Отменить", self)
+        self.undo_action.setShortcut("Ctrl+Z")
+        self.undo_action.setEnabled(False)  # TODO
         
-        # Вкладка SCX (NANXING)
-        self.scx_tab = FormatTab(self)
-        self.format_tabs.addTab(self.scx_tab, "🇨🇳 NANXING (.SCX)")
+        self.redo_action = QAction("↷ Повторить", self)
+        self.redo_action.setShortcut("Ctrl+Y")
+        self.redo_action.setEnabled(False)  # TODO
         
-        # Вкладка PGMX (SCM Group)
-        self.pgmx_tab = FormatTab(self)
-        self.format_tabs.addTab(self.pgmx_tab, "🇮🇹 SCM (.PGMX)")
-        
-        # Подключить смену вкладки для обновления текущего обработчика
-        self.format_tabs.currentChanged.connect(self._on_format_tab_changed)
-        
-        main_layout.addWidget(self.format_tabs)
-        
-        # Установить начальный текущий обработчик
-        self.current_handler = None
-    
-    def _on_format_tab_changed(self, index: int):
-        """Handle format tab switch."""
-        if index == 0:  # SCX tab
-            self.current_handler = self.scx_document
-        elif index == 1:  # PGMX tab
-            self.current_handler = self.pgmx_handler
-        
-        # Обновить строку состояния
-        if self.current_handler and self.current_handler.file_path:
-            self.statusbar.set_file_path(str(self.current_handler.file_path))
-        else:
-            self.statusbar.set_status("")
-    
-    def _init_toolbar(self):
-        """Инициализирует панель инструментов."""
-        toolbar = QToolBar("Основная")
+        # Меню Помощь
+        self.about_action = QAction("О программе", self)
+        self.about_action.setToolTip("Информация о приложении")
+
+    def _create_toolbar(self):
+        """Создание панели инструментов."""
+        toolbar = QToolBar("Основная панель")
+        toolbar.setMovable(False)
         self.addToolBar(toolbar)
         
-        self.open_action = QAction("Открыть файл", self)
-        self.open_action.setShortcut("Ctrl+O")
-        self.open_action.triggered.connect(self._open_file)
-        toolbar.addAction(self.open_action)
-        
-        self.open_folder_action = QAction("📁 Открыть папку", self)
-        self.open_folder_action.setShortcut("Ctrl+Shift+O")
-        self.open_folder_action.triggered.connect(self._open_folder)
         toolbar.addAction(self.open_folder_action)
-        
+        toolbar.addAction(self.save_all_action)
         toolbar.addSeparator()
-        
-        self.save_action = QAction("Сохранить", self)
-        self.save_action.setShortcut("Ctrl+S")
-        self.save_action.triggered.connect(self._save_file)
-        toolbar.addAction(self.save_action)
-        
-        self.save_as_action = QAction("Сохранить как", self)
-        self.save_as_action.setShortcut("Ctrl+Shift+S")
-        self.save_as_action.triggered.connect(self._save_file_as)
-        toolbar.addAction(self.save_as_action)
-        
-        toolbar.addSeparator()
-        
-        self.undo_action = QAction("Отмена", self)
-        self.undo_action.setShortcut("Ctrl+Z")
-        self.undo_action.triggered.connect(self._undo)
         toolbar.addAction(self.undo_action)
-        
-        self.redo_action = QAction("Повтор", self)
-        self.redo_action.setShortcut("Ctrl+Y")
-        self.redo_action.triggered.connect(self._redo)
         toolbar.addAction(self.redo_action)
-        
         toolbar.addSeparator()
-        
-        self.show_diff_action = QAction("Показать изменения", self)
-        self.show_diff_action.triggered.connect(self._show_diff)
-        toolbar.addAction(self.show_diff_action)
-        
-        self.settings_action = QAction("Настройки", self)
-        self.settings_action.triggered.connect(self._show_settings)
-        toolbar.addAction(self.settings_action)
-        
-        self.about_action = QAction("О программе", self)
-        self.about_action.triggered.connect(self._show_about)
         toolbar.addAction(self.about_action)
-    
-    def _init_statusbar(self):
-        """Инициализирует статусную строку."""
-        self.statusbar = StatusBar()
+
+    def _create_statusbar(self):
+        """Создание статус-бара."""
+        self.statusbar = QStatusBar()
         self.setStatusBar(self.statusbar)
-    
+        
+        # Метки статуса
+        self.status_label = QLabel("Готов")
+        self.statusbar.addWidget(self.status_label, 1)
+        
+        self.files_count_label = QLabel("")
+        self.statusbar.addPermanentWidget(self.files_count_label)
+        
+        self.modified_label = QLabel("")
+        self.statusbar.addPermanentWidget(self.modified_label)
+
     def _connect_signals(self):
-        """Подключает сигналы."""
-    # Подключить сигналы для обеих вкладок
-        self.scx_tab.tree_view.selectionModel().currentChanged.connect(
-            self._on_tree_selection_changed
-        )
-        self.pgmx_tab.tree_view.selectionModel().currentChanged.connect(
-            self._on_tree_selection_changed
-        )
+        """Подключение сигналов."""
+        # Меню
+        self.open_folder_action.triggered.connect(self._on_open_folder)
+        self.save_all_action.triggered.connect(self._on_save_all)
+        self.exit_action.triggered.connect(self.close)
+        self.about_action.triggered.connect(self._show_about)
         
-        self.scx_tab.property_editor.value_changed.connect(
-            self._on_property_changed
-        )
-        self.pgmx_tab.property_editor.value_changed.connect(
-            self._on_property_changed
-        )
+        # Сигналы от вкладок
+        self.scm_tab.files_loaded.connect(self._on_files_loaded_scm)
+        self.scm_tab.modifications_changed.connect(self._on_modifications_changed_scm)
+        self.scm_tab.status_message.connect(self._on_status_message)
         
-        self.scx_tab.operations_table.operation_selected.connect(
-            self._on_operation_selected
-        )
-        self.pgmx_tab.operations_table.operation_selected.connect(
-            self._on_operation_selected
-        )
-    
-    def _load_mapping(self):
-        """Загружает конфигурацию маппинга."""
-        mapping_path = Path(self.settings.get('mapping_path', 'config/default_mapping.json'))
+        self.nanxing_tab.files_loaded.connect(self._on_files_loaded_nanxing)
+        self.nanxing_tab.modifications_changed.connect(self._on_modifications_changed_nanxing)
+        self.nanxing_tab.status_message.connect(self._on_status_message)
         
-        if not mapping_path.is_absolute():
-            app_dir = Path(__file__).parent.parent
-            mapping_path = app_dir / mapping_path
+        # Переключение вкладок
+        self.tabs.currentChanged.connect(self._on_tab_changed)
+
+    @Slot()
+    def _on_open_folder(self):
+        """Обработка открытия папки с текущей вкладки."""
+        current_tab = self.tabs.currentWidget()
+        if current_tab == self.scm_tab:
+            self.scm_tab.open_folder_btn.click()
+        elif current_tab == self.nanxing_tab:
+            self.nanxing_tab.open_folder_btn.click()
+
+    @Slot()
+    def _on_save_all(self):
+        """Сохранение всех изменённых файлов на текущей вкладке."""
+        current_tab = self.tabs.currentWidget()
+        saved_count = 0
         
-        if mapping_path.exists():
-            self.mapping_config = MappingConfig(mapping_path)
-            logger.info(f"Маппинг загружен: {mapping_path}")
+        if current_tab == self.scm_tab:
+            saved_count = self.scm_tab.save_all()
+        elif current_tab == self.nanxing_tab:
+            saved_count = self.nanxing_tab.save_all()
+        
+        if saved_count > 0:
+            self._on_status_message(f"Сохранено файлов: {saved_count}")
         else:
-            logger.warning(f"Файл маппинга не найден: {mapping_path}")
-            self.mapping_config = MappingConfig()
-    
-    @Slot()
-    def _open_file(self):
-        """Открывает файл с автоопределением формата."""
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Открыть файл ЧПУ",
-            "",
-            "CNC Files (*.scx *.pgmx);;SCX Files (*.scx);;PGMX Files (*.pgmx);;XML Files (*.xml);;All Files (*)"
-        )
-        
-        if file_path:
-            path = Path(file_path)
-            # Автоопределение формата по расширению
-            if path.suffix.lower() == '.pgmx':
-                self._load_pgmx_file(path)
-            else:
-                self._load_scx_file(path)
-    
-    def _load_scx_file(self, file_path: Path):
-        """Загружает SCX файл."""
-        self.scx_document = SCXDocument()
-        success, error = self.scx_document.load(file_path, self.mapping_config)
-        
-        if success:
-            # Переключиться на вкладку SCX
-            self.format_tabs.setCurrentIndex(0)
-            
-            # Загрузить данные во вкладку SCX
-            self.scx_tab.load_data(self.scx_document)
-            
-            self.statusbar.set_file_path(str(file_path))
-            self.statusbar.set_encoding(self.scx_document.encoding)
-            
-            root = self.scx_document.get_root_element()
-            if root is not None:
-                tag = root.tag
-                if '}' in tag:
-                    tag = tag.split('}')[1]
-                self.statusbar.set_root_tag(tag)
-            
-            self.current_handler = self.scx_document
-            self.statusbar.set_status("SCX файл успешно открыт")
-            logger.info(f"SCX файл открыт: {file_path}")
+            self._on_status_message("Нет изменений для сохранения")
+
+    @Slot(int)
+    def _on_files_loaded_scm(self, count: int):
+        """Обработка загрузки файлов SCM."""
+        self.files_count_label.setText(f"SCM: {count}")
+
+    @Slot(int)
+    def _on_files_loaded_nanxing(self, count: int):
+        """Обработка загрузки файлов NANXING."""
+        self.files_count_label.setText(f"NANXING: {count}")
+
+    @Slot(bool)
+    def _on_modifications_changed_scm(self, has_changes: bool):
+        """Обработка изменений на вкладке SCM."""
+        if has_changes:
+            self.modified_label.setText("⚠ Есть несохранённые изменения (SCM)")
+            self.modified_label.setStyleSheet("color: orange; font-weight: bold;")
         else:
-            QMessageBox.critical(
-                self,
-                "Ошибка открытия файла",
-                f"Не удалось открыть SCX файл:\n{error}"
-            )
-            logger.error(f"Ошибка открытия SCX файла: {error}")
-    
-    def _load_pgmx_file(self, file_path: Path):
-        """Загружает PGMX файл."""
-        self.pgmx_handler = PgmxFormatHandler()
-        success = self.pgmx_handler.load(file_path)
-        
-        if success:
-            # Переключиться на вкладку PGMX
-            self.format_tabs.setCurrentIndex(1)
-            
-            # Загрузить данные во вкладку PGMX
-            self.pgmx_tab.load_data(self.pgmx_handler)
-            
-            self.statusbar.set_file_path(str(file_path))
-            self.statusbar.set_encoding("UTF-8 (ZIP)")
-            
-            if self.pgmx_handler.metadata:
-                meta = self.pgmx_handler.metadata
-                if meta.material:
-                    self.statusbar.set_status(f"Материал: {meta.material}, Толщина: {meta.thickness}мм")
-            
-            self.current_handler = self.pgmx_handler
-            self.statusbar.set_status("PGMX файл успешно открыт")
-            logger.info(f"PGMX файл открыт: {file_path}")
+            self.modified_label.setText("")
+
+    @Slot(bool)
+    def _on_modifications_changed_nanxing(self, has_changes: bool):
+        """Обработка изменений на вкладке NANXING."""
+        if has_changes:
+            self.modified_label.setText("⚠ Есть несохранённые изменения (NANXING)")
+            self.modified_label.setStyleSheet("color: orange; font-weight: bold;")
         else:
-            QMessageBox.critical(
-                self,
-                "Ошибка открытия файла",
-                f"Не удалось открыть PGMX файл:\nФайл может быть повреждён или иметь неверный формат"
-            )
-            logger.error(f"Ошибка открытия PGMX файла: {file_path}")
-    
-    @Slot()
-    def _save_file(self):
-        """Сохраняет файл текущего формата."""
-        current_index = self.format_tabs.currentIndex()
+            self.modified_label.setText("")
+
+    @Slot(str)
+    def _on_status_message(self, message: str):
+        """Показ сообщения в статус-баре."""
+        self.status_label.setText(message)
+        logger.info(f"Status: {message}")
+
+    @Slot(int)
+    def _on_tab_changed(self, index: int):
+        """Обработка переключения вкладки."""
+        tab_name = self.tabs.tabText(index)
+        self._on_status_message(f"Вкладка: {tab_name}")
         
-        if current_index == 0:  # SCX tab
-            if self.scx_document and self.scx_document.file_path is None:
-                self._save_file_as_scx()
-                return
-            self._do_save_scx()
-        elif current_index == 1:  # PGMX tab
-            if self.pgmx_handler and self.pgmx_handler.file_path is None:
-                self._save_file_as_pgmx()
-                return
-            self._do_save_pgmx()
-    
-    def _save_file_as_scx(self):
-        """Сохраняет SCX файл как."""
-        file_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Сохранить файл SCX",
-            "",
-            "SCX Files (*.scx);;XML Files (*.xml);;All Files (*)"
-        )
+        # Обновление кнопок тулбара для текущей вкладки
+        has_changes = False
+        if index == 0:
+            has_changes = self.scm_tab.has_unsaved_changes()
+        elif index == 1:
+            has_changes = self.nanxing_tab.has_unsaved_changes()
         
-        if file_path:
-            self.scx_document.file_path = Path(file_path)
-            self._do_save_scx()
-    
-    def _save_file_as_pgmx(self):
-        """Сохраняет PGMX файл как."""
-        file_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Сохранить файл PGMX",
-            "",
-            "PGMX Files (*.pgmx);;All Files (*)"
-        )
-        
-        if file_path:
-            self._do_save_pgmx(Path(file_path))
-    
-    @Slot()
-    def _save_file_as(self):
-        """Сохраняет файл текущего формата как (универсальный метод)."""
-        current_index = self.format_tabs.currentIndex()
-        
-        if current_index == 0:  # SCX tab
-            self._save_file_as_scx()
-        elif current_index == 1:  # PGMX tab
-            self._save_file_as_pgmx()
-    
-    def _do_save_scx(self):
-        """Выполняет сохранение SCX файла."""
-        if not self.scx_document:
-            return
-            
-        create_backup = self.settings.get('auto_backup', True)
-        backup_format = self.settings.get('backup_format', 'timestamp')
-        
-        success, error = self.scx_document.save(
-            create_backup=create_backup,
-            backup_format=backup_format,
-            pretty_print=self.settings.get('detailed_xml_mode', False)
-        )
-        
-        if success:
-            self.statusbar.set_status("SCX файл сохранён")
-            logger.info("SCX файл сохранён")
-        else:
-            QMessageBox.critical(
-                self,
-                "Ошибка сохранения",
-                f"Не удалось сохранить SCX файл:\n{error}"
-            )
-            logger.error(f"Ошибка сохранения SCX файла: {error}")
-    
-    def _do_save_pgmx(self, save_path: Optional[Path] = None):
-        """Выполняет сохранение PGMX файла."""
-        if not self.pgmx_handler:
-            return
-        
-        path_to_save = save_path or self.pgmx_handler.file_path
-        if not path_to_save:
-            return
-        
-        success = self.pgmx_handler.save(path_to_save)
-        
-        if success:
-            self.statusbar.set_status("PGMX файл сохранён")
-            logger.info(f"PGMX файл сохранён: {path_to_save}")
-        else:
-            QMessageBox.critical(
-                self,
-                "Ошибка сохранения",
-                f"Не удалось сохранить PGMX файл"
-            )
-            logger.error(f"Ошибка сохранения PGMX файла: {path_to_save}")
-    
-    @Slot()
-    def _undo(self):
-        """Отменяет действие."""
-        current_index = self.format_tabs.currentIndex()
-        if current_index == 0 and self.scx_tab:
-            # Логика отмены SCX (если реализовано)
-            pass
-        elif current_index == 1 and self.pgmx_tab:
-            # Логика отмены PGMX (если реализовано)
-            pass
-        
-        self.statusbar.set_status("Отменено")
-    
-    @Slot()
-    def _redo(self):
-        """Повторяет действие."""
-        current_index = self.format_tabs.currentIndex()
-        if current_index == 0 and self.scx_tab:
-            # Логика повтора SCX (если реализовано)
-            pass
-        elif current_index == 1 and self.pgmx_tab:
-            # Логика повтора PGMX (если реализовано)
-            pass
-        
-        self.statusbar.set_status("Повторено")
-    
-    @Slot()
-    def _show_diff(self):
-        """Показывает изменения."""
-        current_index = self.format_tabs.currentIndex()
-        changes = []
-        
-        if current_index == 0 and self.scx_document:
-            # Получить изменения SCX
-            pass
-        elif current_index == 1 and self.pgmx_handler:
-            # Получить изменения PGMX
-            pass
-        
-        dialog = DiffDialog(changes, self)
-        dialog.exec_()
-    
-    @Slot()
-    def _show_settings(self):
-        """Показывает настройки."""
-        dialog = SettingsDialog(self.settings, self)
-        if dialog.exec_() == SettingsDialog.Accepted:
-            self.settings = dialog.get_settings()
-            self._load_mapping()
-    
+        self.save_all_action.setEnabled(has_changes)
+
     @Slot()
     def _show_about(self):
-        """Показывает диалог о программе."""
+        """Показ диалога 'О программе'."""
         QMessageBox.about(
             self,
             "О программе",
-            "SCX/PGMX Editor v1.0\n\n"
-            "Редактор файлов ЧПУ для станков NANXING (.SCX) и SCM Group (.PGMX).\n\n"
-            "Технологии: Python, PySide6, lxml, zipfile\n\n"
-            "Поддерживаемые форматы:\n"
-            "• .SCX - NANXING (Китай)\n"
-            "• .PGMX - SCM Group (Италия)"
+            "<h2>Lithium Panel Editor 3.0</h2>"
+            "<p>Приложение для редактирования параметров обработки "
+            "в файлах форматов:</p>"
+            "<ul>"
+            "<li><b>.PGMX</b> — SCM Group (XCam / Maestro), Италия</li>"
+            "<li><b>.SCX</b> — NANXING (Guangdong Nanxing Equipment), Китай</li>"
+            "</ul>"
+            "<p>Версия: 3.0</p>"
+            "<p>Python + PySide6</p>"
         )
-    
-    @Slot()
-    def _open_folder(self):
-        """Открывает папку для пакетной обработки файлов."""
-        folder_path = QFileDialog.getExistingDirectory(
-            self,
-            "Выберите папку с файлами",
-            ""
+
+    def closeEvent(self, event):
+        """Обработка закрытия окна."""
+        # Проверка несохранённых изменений
+        has_unsaved = (
+            self.scm_tab.has_unsaved_changes() or
+            self.nanxing_tab.has_unsaved_changes()
         )
         
-        if folder_path:
-            path = Path(folder_path)
-            logger.info(f"Выбрана папка: {path}")
+        if has_unsaved:
+            reply = QMessageBox.question(
+                self,
+                "Несохранённые изменения",
+                "Есть несохранённые изменения. Закрыть приложение?",
+                QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel
+            )
             
-            # Создаем сканер и сканируем папку
-            from ..core.folder_scanner import FolderScanner
-            scanner = FolderScanner(recursive=True)
-            results = scanner.scan(path)
-            
-            # Показываем результаты
-            total_files = sum(len(files) for files in results.values())
-            if total_files > 0:
-                msg = f"Найдено файлов в папке:\n\n"
-                msg += f"📄 PGMX: {len(results['PGMX'])}\n"
-                msg += f"📄 SCX: {len(results['SCX'])}\n\n"
-                
-                if results['PGMX']:
-                    msg += "\nФайлы PGMX:\n"
-                    for fi in results['PGMX'][:10]:  # Показываем первые 10
-                        msg += f"  • {fi.path.name}\n"
-                    if len(results['PGMX']) > 10:
-                        msg += f"  ... и ещё {len(results['PGMX']) - 10}\n"
-                
-                if results['SCX']:
-                    msg += "\nФайлы SCX:\n"
-                    for fi in results['SCX'][:10]:  # Показываем первые 10
-                        msg += f"  • {fi.path.name}\n"
-                    if len(results['SCX']) > 10:
-                        msg += f"  ... и ещё {len(results['SCX']) - 10}\n"
-                
-                QMessageBox.information(
-                    self,
-                    "Результаты сканирования",
-                    msg
-                )
-                
-                # TODO: Здесь будет логика пакетной обработки файлов
-                # self._process_batch_files(results)
-            else:
-                QMessageBox.warning(
-                    self,
-                    "Файлы не найдены",
-                    f"В папке {path} не найдено поддерживаемых файлов (.scx, .pgmx)"
-                )
-    
-    @Slot(object)
-    def _on_tree_selection_changed(self, index):
-        """Обрабатывает изменение выделения в дереве."""
-        current_index = self.format_tabs.currentIndex()
-        
-        if current_index == 0 and self.scx_tab:
-            element = self.scx_tab.tree_model.get_element(index)
-            self.scx_tab.property_editor.set_element(element)
-        elif current_index == 1 and self.pgmx_tab:
-            element = self.pgmx_tab.tree_model.get_element(index)
-            self.pgmx_tab.property_editor.set_element(element)
-    
-    @Slot(str, str, str)
-    def _on_property_changed(self, attr_name: str, old_value: str, new_value: str):
-        """Обрабатывает изменение свойства."""
-        current_index = self.format_tabs.currentIndex()
-        
-        if current_index == 0 and self.scx_tab:
-            element = self.scx_tab.property_editor.get_current_element()
-            if element is None:
+            if reply == QMessageBox.Cancel:
+                event.ignore()
                 return
-            
-            if attr_name == 'text':
-                if self.scx_document:
-                    self.scx_document.set_text(element, new_value)
-            else:
-                if self.scx_document:
-                    self.scx_document.set_attribute(element, attr_name, new_value)
-            
-            self.scx_tab.tree_model.set_tree(self.scx_document.get_tree())
-            self.statusbar.set_status(f"SCX: Изменено {attr_name}")
-            
-        elif current_index == 1 and self.pgmx_tab:
-            element = self.pgmx_tab.property_editor.get_current_element()
-            if element is None or not self.pgmx_handler:
+            elif reply == QMessageBox.No:
+                event.ignore()
                 return
-            
-            # Обновить операцию PGMX
-            # Найти операцию по ссылке на элемент и обновить
-            self.statusbar.set_status(f"PGMX: Изменено {attr_name}")
-    
-    @Slot(int)
-    def _on_operation_selected(self, row: int):
-        """Обрабатывает выбор операции."""
-        current_index = self.format_tabs.currentIndex()
         
-        if current_index == 0 and self.scx_tab:
-            element = self.scx_tab.operations_model.get_element(row)
-            if element is not None:
-                self.scx_tab.property_editor.set_element(element)
-                self.scx_tab.tab_widget.setCurrentIndex(0)
-        elif current_index == 1 and self.pgmx_tab:
-            # Операции PGMX уже находятся в обработчике
-            if row < len(self.pgmx_tab.operations_model._operations):
-                op = self.pgmx_tab.operations_model._operations[row]
-                # Выделить в дереве или показать свойства
-                self.pgmx_tab.property_editor.set_element(op.xml_node_ref if hasattr(op, 'xml_node_ref') else None)
-                self.pgmx_tab.tab_widget.setCurrentIndex(0)
+        event.accept()
+        logger.info("Приложение закрыто")
