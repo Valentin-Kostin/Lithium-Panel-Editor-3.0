@@ -1,121 +1,26 @@
 {
-  "version": 1,
-  "description": "Маппинг параметров NANXING SCX по умолчанию",
-  "namespaces": {
-    "ns": "http://www.nanxing.com/scx"
+  "format": "SCX",
+  "vendor": "NANXING (Guangdong Nanxing Equipment Co., Ltd)",
+  "namespaces": {},
+  "workpiece": {
+    "length": {"xpath": "//Panel/@Length", "type": "float"},
+    "width": {"xpath": "//Panel/@Width", "type": "float"},
+    "thickness": {"xpath": "//Panel/@Thickness", "type": "float"}
   },
-  "fields": [
-    {
-      "id": "material.length",
-      "label_ru": "Длина заготовки",
-      "label_en": "Material length",
-      "type": "float",
-      "unit": "мм",
-      "min": 0,
-      "step": 1.0,
-      "xpath": "//Material/@Length|//ns:Material/@Length"
-    },
-    {
-      "id": "material.width",
-      "label_ru": "Ширина заготовки",
-      "label_en": "Material width",
-      "type": "float",
-      "unit": "мм",
-      "min": 0,
-      "step": 1.0,
-      "xpath": "//Material/@Width|//ns:Material/@Width"
-    },
-    {
-      "id": "material.thickness",
-      "label_ru": "Толщина заготовки",
-      "label_en": "Material thickness",
-      "type": "float",
-      "unit": "мм",
-      "min": 0,
-      "step": 0.1,
-      "xpath": "//Material/@Thickness|//ns:Material/@Thickness"
-    },
-    {
-      "id": "material.name",
-      "label_ru": "Имя заготовки",
-      "label_en": "Material name",
-      "type": "string",
-      "xpath": "//Material/@Name|//ns:Material/@Name"
-    },
-    {
-      "id": "operation.x",
-      "label_ru": "Координата X",
-      "label_en": "X coordinate",
-      "type": "float",
-      "unit": "мм",
-      "xpath": "//Operation/@X|//ns:Operation/@X"
-    },
-    {
-      "id": "operation.y",
-      "label_ru": "Координата Y",
-      "label_en": "Y coordinate",
-      "type": "float",
-      "unit": "мм",
-      "xpath": "//Operation/@Y|//ns:Operation/@Y"
-    },
-    {
-      "id": "operation.z",
-      "label_ru": "Координата Z",
-      "label_en": "Z coordinate",
-      "type": "float",
-      "unit": "мм",
-      "xpath": "//Operation/@Z|//ns:Operation/@Z"
-    },
-    {
-      "id": "operation.depth",
-      "label_ru": "Глубина обработки",
-      "label_en": "Depth",
-      "type": "float",
-      "unit": "мм",
-      "min": 0,
-      "xpath": "//Operation/@Depth|//ns:Operation/@Depth"
-    },
-    {
-      "id": "operation.type",
-      "label_ru": "Тип операции",
-      "label_en": "Operation type",
-      "type": "string",
-      "xpath": "//Operation/@Type|//ns:Operation/@Type"
-    },
-    {
-      "id": "operation.tool_id",
-      "label_ru": "Номер инструмента",
-      "label_en": "Tool ID",
-      "type": "int",
-      "min": 0,
-      "xpath": "//Operation/@ToolID|//ns:Operation/@ToolID"
-    },
-    {
-      "id": "tool.diameter",
-      "label_ru": "Диаметр инструмента",
-      "label_en": "Tool diameter",
-      "type": "float",
-      "unit": "мм",
-      "min": 0,
-      "xpath": "//Tool/@Diameter|//ns:Tool/@Diameter"
-    },
-    {
-      "id": "tool.spindle_speed",
-      "label_ru": "Скорость шпинделя",
-      "label_en": "Spindle speed",
-      "type": "int",
-      "unit": "об/мин",
-      "min": 0,
-      "xpath": "//Tool/@SpindleSpeed|//ns:Tool/@SpindleSpeed"
-    },
-    {
-      "id": "tool.feed_rate",
-      "label_ru": "Подача",
-      "label_en": "Feed rate",
-      "type": "float",
-      "unit": "мм/мин",
-      "min": 0,
-      "xpath": "//Tool/@FeedRate|//ns:Tool/@FeedRate"
-    }
-  ]
+  "operations": {
+    "container_xpath": "//Machining",
+    "fields": [
+      {"id": "type", "xpath": "@Type", "type": "string", "label": "Тип"},
+      {"id": "is_gen_code", "xpath": "@IsGenCode", "type": "int", "label": "Генерация кода"},
+      {"id": "face", "xpath": "@Face", "type": "int", "label": "Плоскость"},
+      {"id": "x", "xpath": "@X", "type": "float", "label": "X"},
+      {"id": "y", "xpath": "@Y", "type": "float", "label": "Y"},
+      {"id": "z", "xpath": "@Z", "type": "float", "label": "Z"},
+      {"id": "diameter", "xpath": "@Diameter", "type": "float", "label": "Диаметр"},
+      {"id": "depth", "xpath": "@Depth", "type": "float", "label": "Глубина"},
+      {"id": "tool_offset", "xpath": "@ToolOffset", "type": "string", "label": "Смещение инструмента"},
+      {"id": "pocket", "xpath": "@Pocket", "type": "int", "label": "Карман"},
+      {"id": "closed", "xpath": "@Closed", "type": "int", "label": "Закрыто"}
+    ]
+  }
 }

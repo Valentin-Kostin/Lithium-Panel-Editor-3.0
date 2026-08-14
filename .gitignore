@@ -1,38 +1,72 @@
 ```
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Dependencies
-.venv/
-venv/
-.env
-.env.local
-.env.*
-
-# Build artifacts
-dist/
+*.py[cod]
+*$py.class
+*.so
+.Python
 build/
-target/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Logs
-*.log
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
 
-# Editor/IDE
+# IDE and editor files
 .vscode/
 .idea/
 *.swp
 *.swo
 *.tmp
 
-# Coverage
-.coverage
-coverage/
-htmlcov/
+# Logs
+*.log
 
-# Testing
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Coverage reports
+.coverage
+htmlcov/
+.coverage.*
+.cache
+
+# Distribution / packaging
+.Python
+__pycache__/
+*.pyc
+*$py.class
+*.so
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# Pytest
 .pytest_cache/
+
+# MyPy
 .mypy_cache/
+
+# Build artifacts from the changes shown
+editor/src/core/__pycache__/
 ```

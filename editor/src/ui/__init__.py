@@ -1,19 +1,10 @@
-"""UI модуль приложения."""
+"""
+Модуль пользовательского интерфейса.
+"""
 
 from .main_window import MainWindow
-from .xml_tree_view import SCXTreeView
-from .property_editor import PropertyEditor
-from .operations_table import OperationsTable
+from .format_tab import FormatTab
+from .operations_table import OperationsTableView
 from .diff_dialog import DiffDialog
-from .settings_dialog import SettingsDialog
-from .status_bar import StatusBar
 
-__all__ = [
-    'MainWindow',
-    'SCXTreeView',
-    'PropertyEditor',
-    'OperationsTable',
-    'DiffDialog',
-    'SettingsDialog',
-    'StatusBar',
-]
+__all__ = ['MainWindow', 'FormatTab', 'OperationsTableView', 'DiffDialog']

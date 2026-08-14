@@ -1,14 +1,8 @@
-"""Модуль моделей данных."""
+"""
+Модуль моделей данных приложения.
+"""
 
-from .tree_model import SCXTreeModel
-from .operations_model import OperationsModel
-from .undo_commands import UndoCommand, SetAttributeCommand, SetTextCommand, UndoStack
+from .operations_model import OperationsTableModel
+from .file_list_model import FileListModel
 
-__all__ = [
-    'SCXTreeModel',
-    'OperationsModel',
-    'UndoCommand',
-    'SetAttributeCommand',
-    'SetTextCommand',
-    'UndoStack',
-]
+__all__ = ['OperationsTableModel', 'FileListModel']

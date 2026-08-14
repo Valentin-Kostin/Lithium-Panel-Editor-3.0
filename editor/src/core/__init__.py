@@ -1,35 +1,26 @@
-"""Core модуль для работы с SCX и PGMX файлами."""
+"""
+Базовый модуль ядра приложения.
+Определяет абстрактные классы и интерфейсы для обработчиков форматов.
+"""
 
-from .xml_utils import XMLUtils
-from .encoding_detector import detect_encoding, extract_xml_declaration_encoding, detect_and_validate
-from .mapping import MappingConfig, MappingField
-from .validation import ValidationUtils
-from .diff import DiffUtils, Change, ChangeType
-from .backup import BackupUtils
-from .scx_document import SCXDocument
-from .base_handler import BaseFormatHandler, OperationData, FileMetadata
+from .base_handler import BaseFormatHandler, FileInfo, DocumentModel, OperationRow, ValidationError
 from .pgmx_handler import PgmxFormatHandler
-from .zip_utils import ZipUtils
-from .folder_scanner import FolderScanner, FileInfo
+from .scx_handler import ScxFormatHandler
+from .xml_utils import safe_parse_xml, serialize_xml
+from .zip_utils import extract_xml_from_zip, update_xml_in_zip
+from .encoding_detector import detect_encoding
 
 __all__ = [
-    'XMLUtils',
-    'detect_encoding',
-    'extract_xml_declaration_encoding',
-    'detect_and_validate',
-    'MappingConfig',
-    'MappingField',
-    'ValidationUtils',
-    'DiffUtils',
-    'Change',
-    'ChangeType',
-    'BackupUtils',
-    'SCXDocument',
     'BaseFormatHandler',
-    'OperationData',
-    'FileMetadata',
-    'PgmxFormatHandler',
-    'ZipUtils',
-    'FolderScanner',
     'FileInfo',
+    'DocumentModel',
+    'OperationRow',
+    'ValidationError',
+    'PgmxFormatHandler',
+    'ScxFormatHandler',
+    'safe_parse_xml',
+    'serialize_xml',
+    'extract_xml_from_zip',
+    'update_xml_in_zip',
+    'detect_encoding'
 ]

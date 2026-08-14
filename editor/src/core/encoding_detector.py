@@ -1,148 +1,137 @@
 """
-Модуль определения кодировки XML-файлов.
-Поддерживает UTF-8, GB18030, GBK, Windows-1251 и другие.
+Модуль определения кодировки файлов.
+Использует charset-normalizer для автоматического определения.
 """
 
-import logging
-from typing import Optional, Tuple
 from pathlib import Path
+from typing import Optional, Tuple
+import logging
 
-import charset_normalizer
-from charset_normalizer import CharsetMatch
+try:
+    from charset_normalizer import detect as detect_charset
+except ImportError:
+    detect_charset = None
 
 logger = logging.getLogger(__name__)
 
 
-COMMON_ENCODINGS = [
-    'utf-8',
-    'utf-8-sig',
-    'gb18030',
-    'gbk',
-    'gb2312',
-    'windows-1251',
-    'cp1252',
-    'iso-8859-1',
-]
+# Приоритетные кодировки для проверки
+PRIORITY_ENCODINGS = ['utf-8', 'utf-8-sig', 'gb18030', 'gbk', 'windows-1251', 'cp1251']
 
 
-def detect_encoding(file_path: Path, xml_declaration_hint: Optional[str] = None) -> Tuple[str, bool]:
+def detect_encoding(
+    file_path: Path,
+    priority_encodings: Optional[list] = None
+) -> Tuple[Optional[str], str]:
     """
-    Определяет кодировку файла.
-    
+    Определение кодировки файла.
+
     Args:
         file_path: Путь к файлу.
-        xml_declaration_hint: Кодировка из XML declaration (если известна).
-    
+        priority_encodings: Список кодировок для приоритетной проверки.
+
     Returns:
-        Кортеж (кодировка, успешность_определения).
+        Кортеж (encoding, method) где method описывает способ определения.
     """
-    if xml_declaration_hint:
-        hint_lower = xml_declaration_hint.lower().strip('"\'')
-        if hint_lower in ['utf-8', 'utf8']:
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    f.read(1024)
-                logger.info(f"Кодировка определена из XML declaration: {hint_lower}")
-                return hint_lower, True
-            except UnicodeDecodeError:
-                pass
-        
-        if hint_lower in ['gb18030', 'gbk', 'gb2312']:
-            try:
-                with open(file_path, 'r', encoding=hint_lower) as f:
-                    f.read(1024)
-                logger.info(f"Кодировка определена из XML declaration: {hint_lower}")
-                return hint_lower, True
-            except UnicodeDecodeError:
-                pass
-    
+    encodings_to_try = priority_encodings or PRIORITY_ENCODINGS
+
+    if not file_path.exists():
+        logger.warning(f"Файл не найден: {file_path}")
+        return None, 'not_found'
+
+    # Чтение первых байтов файла
     try:
         with open(file_path, 'rb') as f:
-            raw_data = f.read(8192)
-        
-        result = charset_normalizer.from_bytes(raw_data).best()
-        if result:
-            encoding = result.encoding.lower()
-            # Обработка разных версий charset-normalizer
-            confidence = getattr(result, 'confidence', None)
-            if confidence is None:
-                # Для новых версий или когда уверенность недоступна, предполагать высокую уверенность
-                confidence = 1.0
-            
-            if confidence > 0.7:
-                logger.info(f"Кодировка определена через charset-normalizer: {encoding} (confidence={confidence:.2f})")
-                return encoding, True
-            else:
-                logger.warning(f"Низкая уверенность в кодировке: {encoding} (confidence={confidence:.2f})")
-                return encoding, False
-    except Exception as e:
-        logger.error(f"Ошибка при определении кодировки: {e}")
-    
-    for encoding in COMMON_ENCODINGS:
+            raw_data = f.read(4096)  # Первые 4KB
+    except IOError as e:
+        logger.error(f"Ошибка чтения файла {file_path}: {e}")
+        return None, 'io_error'
+
+    # Проверка XML declaration
+    xml_decl = raw_data[:200].decode('ascii', errors='ignore')
+    if '<?xml' in xml_decl:
+        import re
+        match = re.search(r'encoding=["\']([^"\']+)["\']', xml_decl)
+        if match:
+            encoding_from_decl = match.group(1)
+            logger.debug(f"Кодировка из XML declaration: {encoding_from_decl}")
+            return encoding_from_decl, 'xml_declaration'
+
+    # Проверка BOM
+    if raw_data.startswith(b'\xef\xbb\xbf'):
+        logger.debug("Обнаружен UTF-8 BOM")
+        return 'utf-8-sig', 'bom'
+    elif raw_data.startswith(b'\xff\xfe'):
+        logger.debug("Обнаружен UTF-16 LE BOM")
+        return 'utf-16-le', 'bom'
+    elif raw_data.startswith(b'\xfe\xff'):
+        logger.debug("Обнаружен UTF-16 BE BOM")
+        return 'utf-16-be', 'bom'
+
+    # Попытка декодирования с приоритетными кодировками
+    for encoding in encodings_to_try:
         try:
-            with open(file_path, 'r', encoding=encoding) as f:
-                f.read(1024)
-            logger.info(f"Кодировка подобрана перебором: {encoding}")
-            return encoding, True
+            raw_data.decode(encoding)
+            logger.debug(f"Успешное декодирование с кодировкой: {encoding}")
+            return encoding, 'priority_try'
         except UnicodeDecodeError:
             continue
-    
-    logger.error("Не удалось определить кодировку файла")
-    return 'utf-8', False
+
+    # Использование charset-normalizer если доступен
+    if detect_charset:
+        try:
+            result = detect_charset(raw_data)
+            if result and 'encoding' in result:
+                detected_encoding = result['encoding']
+                confidence = result.get('confidence', 0)
+                logger.debug(f"charset-normalizer определил: {detected_encoding} (уверенность: {confidence})")
+                return detected_encoding, 'charset_normalizer'
+        except Exception as e:
+            logger.warning(f"charset-normalizer вернул ошибку: {e}")
+
+    # Fallback на utf-8
+    logger.warning(f"Не удалось определить кодировку, используется utf-8 по умолчанию: {file_path}")
+    return 'utf-8', 'fallback'
 
 
-def extract_xml_declaration_encoding(file_path: Path) -> Optional[str]:
+def validate_encoding(
+    file_path: Path,
+    encoding: str
+) -> bool:
     """
-    Извлекает кодировку из XML declaration.
-    
+    Проверка корректности декодирования файла с указанной кодировкой.
+
     Args:
         file_path: Путь к файлу.
-    
+        encoding: Кодировка для проверки.
+
     Returns:
-        Кодировка или None.
+        True если файл корректно декодируется.
     """
     try:
-        with open(file_path, 'rb') as f:
-            first_bytes = f.read(512)
-        
-        first_line = first_bytes.split(b'\n')[0].decode('ascii', errors='ignore')
-        
-        if '<?xml' in first_line:
-            import re
-            match = re.search(r'encoding=["\']([^"\']+)["\']', first_line)
-            if match:
-                return match.group(1)
-    except Exception as e:
-        logger.debug(f"Не удалось извлечь кодировку из XML declaration: {e}")
-    
-    return None
-
-
-def detect_and_validate(file_path: Path) -> Tuple[str, str, bool]:
-    """
-    Полная проверка кодировки и валидности XML.
-    
-    Args:
-        file_path: Путь к файлу.
-    
-    Returns:
-        Кортеж (кодировка, сообщение, успешно).
-    """
-    xml_encoding = extract_xml_declaration_encoding(file_path)
-    encoding, success = detect_encoding(file_path, xml_encoding)
-    
-    if not success:
-        logger.warning(f"Кодировка определена с низкой уверенностью: {encoding}")
-    
-    try:
-        from lxml import etree
         with open(file_path, 'r', encoding=encoding) as f:
-            content = f.read()
-        etree.fromstring(content.encode(encoding))
-        return encoding, "Файл корректен", True
-    except etree.XMLSyntaxError as e:
-        return encoding, f"XML ошибка: {e}", False
-    except UnicodeDecodeError as e:
-        return encoding, f"Ошибка декодирования: {e}", False
-    except Exception as e:
-        return encoding, f"Неизвестная ошибка: {e}", False
+            f.read()
+        return True
+    except (UnicodeDecodeError, IOError) as e:
+        logger.warning(f"Ошибка валидации кодировки {encoding} для {file_path}: {e}")
+        return False
+
+
+def get_file_encoding_info(file_path: Path) -> dict:
+    """
+    Получение полной информации о кодировке файла.
+
+    Args:
+        file_path: Путь к файлу.
+
+    Returns:
+        Словарь с информацией о кодировке.
+    """
+    encoding, method = detect_encoding(file_path)
+
+    return {
+        'path': str(file_path),
+        'encoding': encoding,
+        'method': method,
+        'is_valid': validate_encoding(file_path, encoding) if encoding else False
+    }
