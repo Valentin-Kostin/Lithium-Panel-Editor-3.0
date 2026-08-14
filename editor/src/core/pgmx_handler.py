@@ -364,6 +364,11 @@ class PgmxFormatHandler(BaseFormatHandler):
     
     def get_xml_tree(self) -> Any:
         """Return the XML tree structure."""
+        if self.raw_data is None:
+            return None
+        # Wrap root element in ElementTree if it's just an Element
+        if isinstance(self.raw_data, etree._Element):
+            return etree.ElementTree(self.raw_data)
         return self.raw_data
     
     def cleanup(self):
