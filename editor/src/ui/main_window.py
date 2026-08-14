@@ -15,6 +15,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QAction, QIcon
 
+from lxml import etree
+
 from ..core.scx_document import SCXDocument
 from ..core.base_handler import BaseFormatHandler, OperationData, FileMetadata
 from ..core.pgmx_handler import PgmxFormatHandler
@@ -175,10 +177,17 @@ class MainWindow(QMainWindow):
         toolbar = QToolBar("Основная")
         self.addToolBar(toolbar)
         
-        self.open_action = QAction("Открыть", self)
+        self.open_action = QAction("Открыть файл", self)
         self.open_action.setShortcut("Ctrl+O")
         self.open_action.triggered.connect(self._open_file)
         toolbar.addAction(self.open_action)
+        
+        self.open_folder_action = QAction("📁 Открыть папку", self)
+        self.open_folder_action.setShortcut("Ctrl+Shift+O")
+        self.open_folder_action.triggered.connect(self._open_folder)
+        toolbar.addAction(self.open_folder_action)
+        
+        toolbar.addSeparator()
         
         self.save_action = QAction("Сохранить", self)
         self.save_action.setShortcut("Ctrl+S")
@@ -503,6 +512,60 @@ class MainWindow(QMainWindow):
             "• .SCX - NANXING (Китай)\n"
             "• .PGMX - SCM Group (Италия)"
         )
+    
+    @Slot()
+    def _open_folder(self):
+        """Открывает папку для пакетной обработки файлов."""
+        folder_path = QFileDialog.getExistingDirectory(
+            self,
+            "Выберите папку с файлами",
+            ""
+        )
+        
+        if folder_path:
+            path = Path(folder_path)
+            logger.info(f"Выбрана папка: {path}")
+            
+            # Создаем сканер и сканируем папку
+            from ..core.folder_scanner import FolderScanner
+            scanner = FolderScanner(recursive=True)
+            results = scanner.scan(path)
+            
+            # Показываем результаты
+            total_files = sum(len(files) for files in results.values())
+            if total_files > 0:
+                msg = f"Найдено файлов в папке:\n\n"
+                msg += f"📄 PGMX: {len(results['PGMX'])}\n"
+                msg += f"📄 SCX: {len(results['SCX'])}\n\n"
+                
+                if results['PGMX']:
+                    msg += "\nФайлы PGMX:\n"
+                    for fi in results['PGMX'][:10]:  # Показываем первые 10
+                        msg += f"  • {fi.path.name}\n"
+                    if len(results['PGMX']) > 10:
+                        msg += f"  ... и ещё {len(results['PGMX']) - 10}\n"
+                
+                if results['SCX']:
+                    msg += "\nФайлы SCX:\n"
+                    for fi in results['SCX'][:10]:  # Показываем первые 10
+                        msg += f"  • {fi.path.name}\n"
+                    if len(results['SCX']) > 10:
+                        msg += f"  ... и ещё {len(results['SCX']) - 10}\n"
+                
+                QMessageBox.information(
+                    self,
+                    "Результаты сканирования",
+                    msg
+                )
+                
+                # TODO: Здесь будет логика пакетной обработки файлов
+                # self._process_batch_files(results)
+            else:
+                QMessageBox.warning(
+                    self,
+                    "Файлы не найдены",
+                    f"В папке {path} не найдено поддерживаемых файлов (.scx, .pgmx)"
+                )
     
     @Slot(object)
     def _on_tree_selection_changed(self, index):

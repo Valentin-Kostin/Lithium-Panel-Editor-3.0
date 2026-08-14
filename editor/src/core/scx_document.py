@@ -98,6 +98,47 @@ class SCXDocument:
         """Получает XML дерево."""
         return self.tree
     
+    def get_xml_tree(self) -> Optional[etree.ElementTree]:
+        """Получает XML дерево (алиас для совместимости)."""
+        return self.get_tree()
+    
+    def get_operations(self) -> List[Dict[str, Any]]:
+        """
+        Извлекает список операций из SCX документа.
+        
+        Returns:
+            Список словарей с параметрами операций.
+        """
+        if self.tree is None:
+            return []
+        
+        operations = []
+        root = self.tree.getroot()
+        
+        # Ищем секцию Operations
+        ops_element = root.find('Operations')
+        if ops_element is None:
+            logger.warning("Секция Operations не найдена")
+            return []
+        
+        # Извлекаем каждую операцию
+        for op in ops_element.findall('Operation'):
+            op_data = {
+                'id': op.get('ID', ''),
+                'type': op.get('Type', ''),
+                'tool_id': op.get('ToolID', ''),
+                'x': op.get('X', '0'),
+                'y': op.get('Y', '0'),
+                'z': op.get('Z', '0'),
+                'depth': op.get('Depth', '0'),
+                'feed_rate': op.get('FeedRate', ''),
+                'element': op  # Сохраняем ссылку на элемент для редактирования
+            }
+            operations.append(op_data)
+        
+        logger.info(f"Найдено операций: {len(operations)}")
+        return operations
+    
     def find_by_xpath(self, xpath: str) -> List[etree.Element]:
         """
         Находит элементы по XPath.
