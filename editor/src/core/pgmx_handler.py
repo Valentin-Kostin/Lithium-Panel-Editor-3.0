@@ -1,6 +1,6 @@
 """
-Handler for SCM Group .PGMX format.
-PGMX files are ZIP archives containing XML files with CNC data.
+Обработчик формата .PGMX от SCM Group.
+PGMX файлы представляют собой ZIP-архивы, содержащие XML файлы с CNC данными.
 """
 import zipfile
 import tempfile
@@ -16,21 +16,21 @@ from .encoding_detector import detect_encoding
 
 class PgmxFormatHandler(BaseFormatHandler):
     """
-    Handler for .PGMX files (SCM Group format).
+    Обработчик файлов .PGMX (формат SCM Group).
     
-    Structure:
-    - .pgmx is a ZIP archive
-    - Contains main.xml or similar XML file with operations
-    - Operations are defined in specific XML nodes
+    Структура:
+    - .pgmx это ZIP-архив
+    - Содержит main.xml или подобный XML файл с операциями
+    - Операции определены в специфичных XML узлах
     """
     
-    # Common paths inside PGMX ZIP
+    # Распространённые пути внутри PGMX ZIP
     POSSIBLE_XML_PATHS = [
         'main.xml',
         'program.xml', 
         'data.xml',
         'content.xml',
-        ''  # Try root level
+        ''  # Попытаться на корневом уровне
     ]
     
     def __init__(self, file_path: Optional[Path] = None):
@@ -38,23 +38,23 @@ class PgmxFormatHandler(BaseFormatHandler):
         self.zip_path: Optional[Path] = None
         self.temp_dir: Optional[Path] = None
         self.internal_xml_path: str = ""
-        self.zip_contents: Dict[str, bytes] = {}  # Cache ZIP contents
+        self.zip_contents: Dict[str, bytes] = {}  # Кэшировать содержимое ZIP
         
     def load(self, path: Path) -> bool:
         """
-        Load PGMX file: extract ZIP, find XML, parse operations.
+        Загрузить PGMX файл: распаковать ZIP, найти XML, распарсить операции.
         """
         try:
             self.file_path = path
             self.temp_dir = Path(tempfile.mkdtemp(prefix="pgmx_"))
             
-            # Extract ZIP contents
+            # Распаковать содержимое ZIP
             with zipfile.ZipFile(path, 'r') as zf:
-                # Store all contents for later repacking
+                # Сохранить всё содержимое для последующей упаковки
                 for name in zf.namelist():
                     self.zip_contents[name] = zf.read(name)
                 
-                # Find the main XML file
+                # Найти главный XML файл
                 xml_found = False
                 for xml_name in self.POSSIBLE_XML_PATHS:
                     if xml_name in zf.namelist():
@@ -63,7 +63,7 @@ class PgmxFormatHandler(BaseFormatHandler):
                         break
                 
                 if not xml_found:
-                    # Try to find any XML file
+                    # Попытаться найти любой XML файл
                     for name in zf.namelist():
                         if name.endswith('.xml'):
                             self.internal_xml_path = name
@@ -73,11 +73,11 @@ class PgmxFormatHandler(BaseFormatHandler):
                 if not xml_found:
                     return False
                 
-                # Extract and parse the XML
+                # Извлечь и распарсить XML
                 xml_content = zf.read(self.internal_xml_path)
                 
-            # Detect encoding from bytes content
-            # Create a temporary file for encoding detection
+            # Определить кодировку из байтового содержимого
+            # Создать временный файл для определения кодировки
             import tempfile as tmp_module
             with tmp_module.NamedTemporaryFile(mode='wb', delete=False) as tmp:
                 tmp.write(xml_content)
@@ -86,20 +86,20 @@ class PgmxFormatHandler(BaseFormatHandler):
             try:
                 encoding, _ = detect_encoding(tmp_path)
             finally:
-                tmp_path.unlink()  # Clean up temp file
+                tmp_path.unlink()  # Очистить временный файл
             
             xml_str = xml_content.decode(encoding, errors='replace')
             
-            # Parse XML - keep original encoding for PGMX internal structure
-            # PGMX files typically use UTF-8 internally
+            # Парсинг XML - сохранить оригинальную кодировку для внутренней структуры PGMX
+            # PGMX файлы обычно используют UTF-8 внутри
             try:
                 self.raw_data = etree.fromstring(xml_str.encode('utf-8'))
             except Exception as parse_error:
-                # If UTF-8 parsing fails, try with detected encoding
+                # Если парсинг UTF-8 не удался, попробовать с определённой кодировкой
                 print(f"Warning: UTF-8 parsing failed, trying with detected encoding {encoding}: {parse_error}")
                 self.raw_data = etree.fromstring(xml_content)
             
-            # Extract metadata and operations
+            # Извлечь метаданные и операции
             self._extract_metadata()
             self._extract_operations()
             
@@ -110,28 +110,28 @@ class PgmxFormatHandler(BaseFormatHandler):
             return False
     
     def _extract_metadata(self):
-        """Extract file metadata from PGMX XML."""
+        """Извлечь метаданные файла из PGMX XML."""
         if self.raw_data is None:
             return
             
-        # Common PGMX metadata paths (adjust based on actual structure)
+        # Распространённые пути метаданных PGMX (настроить под реальную структуру)
         material = ""
         thickness = 0.0
         width = 0.0
         length = 0.0
         description = ""
         
-        # Try various possible locations for metadata
+        # Попробовать различные возможные расположения метаданных
         for elem in self.raw_data.iter():
             tag = elem.tag.lower()
             
-            # Material info
+            # Информация о материале
             if 'material' in tag or 'mat' in tag:
                 material = elem.text or elem.get('name', '')
                 if elem.get('thickness'):
                     thickness = float(elem.get('thickness', 0))
                     
-            # Dimensions
+            # Размеры
             if 'width' in tag or 'x_size' in tag:
                 try:
                     width = float(elem.text or 0)
@@ -144,7 +144,7 @@ class PgmxFormatHandler(BaseFormatHandler):
                 except (ValueError, TypeError):
                     pass
                     
-            # Description
+            # Описание
             if 'description' in tag or 'comment' in tag:
                 description = elem.text or ''
         
@@ -164,7 +164,7 @@ class PgmxFormatHandler(BaseFormatHandler):
             
         self.operations = []
         
-        # PGMX operation patterns (adjust based on actual structure)
+        # Шаблоны операций PGMX (настроить под реальную структуру)
         operation_tags = [
             './/Operation',
             './/Process',
@@ -185,28 +185,28 @@ class PgmxFormatHandler(BaseFormatHandler):
             except Exception:
                 continue
         
-        # If no operations found with standard tags, try generic approach
+        # Если операции не найдены со стандартными тегами, попробовать общий подход
         if not self.operations:
             self._extract_operations_generic()
     
     def _parse_operation_element(self, elem: Any, index: int) -> Optional[OperationData]:
         """Parse a single operation XML element."""
         try:
-            # Extract common fields
+            # Извлечь общие поля
             op_id = elem.get('id', f"op_{index}")
             name = elem.get('name', elem.get('description', f"Operation {index}"))
             
-            # Tool info
+            # Информация об инструменте
             tool_elem = elem.find('.//Tool') or elem.find('.//tool')
             tool_id = tool_elem.get('id', '') if tool_elem is not None else elem.get('tool_id', '')
             tool_name = tool_elem.get('name', '') if tool_elem is not None else elem.get('tool_name', '')
             
-            # Parameters
+            # Параметры
             feed_rate = 0.0
             speed = 0.0
             depth = 0.0
             
-            # Try to find feed rate
+            # Попытаться найти скорость подачи
             feed_elem = elem.find('.//FeedRate') or elem.find('.//feed') or elem.find('.//Feed')
             if feed_elem is not None:
                 try:
@@ -219,7 +219,7 @@ class PgmxFormatHandler(BaseFormatHandler):
                 except (ValueError, TypeError):
                     pass
             
-            # Try to find speed (RPM)
+            # Попытаться найти скорость (об/мин)
             speed_elem = elem.find('.//Speed') or elem.find('.//rpm') or elem.find('.//RPM')
             if speed_elem is not None:
                 try:
@@ -232,7 +232,7 @@ class PgmxFormatHandler(BaseFormatHandler):
                 except (ValueError, TypeError):
                     pass
             
-            # Try to find depth
+            # Попытаться найти глубину
             depth_elem = elem.find('.//Depth') or elem.find('.//depth') or elem.find('.//Z')
             if depth_elem is not None:
                 try:
@@ -245,7 +245,7 @@ class PgmxFormatHandler(BaseFormatHandler):
                 except (ValueError, TypeError):
                     pass
             
-            # Collect additional parameters
+            # Собрать дополнительные параметры
             params = {}
             for attr_name, attr_val in elem.attrib.items():
                 if attr_name not in ['id', 'name', 'tool_id', 'tool_name', 'feed', 'speed', 'depth']:
@@ -274,7 +274,7 @@ class PgmxFormatHandler(BaseFormatHandler):
             
         index = 0
         for elem in self.raw_data.iter():
-            # Look for elements that might be operations
+            # Искать элементы, которые могут быть операциями
             if any(k in elem.tag.lower() for k in ['op', 'process', 'work', 'tool', 'path']):
                 op_data = self._parse_operation_element(elem, index)
                 if op_data and op_data.name != f"Operation {index}":
@@ -290,7 +290,7 @@ class PgmxFormatHandler(BaseFormatHandler):
             if self.raw_data is None:
                 return False
             
-            # Serialize modified XML
+            # Сериализовать изменённый XML
             xml_bytes = etree.tostring(
                 self.raw_data,
                 pretty_print=True,
@@ -298,10 +298,10 @@ class PgmxFormatHandler(BaseFormatHandler):
                 encoding='UTF-8'
             )
             
-            # Update ZIP contents
+            # Обновить содержимое ZIP
             self.zip_contents[self.internal_xml_path] = xml_bytes
             
-            # Create new ZIP file
+            # Создать новый ZIP файл
             with zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED) as zf:
                 for name, content in self.zip_contents.items():
                     zf.writestr(name, content)
@@ -313,26 +313,26 @@ class PgmxFormatHandler(BaseFormatHandler):
             return False
     
     def get_operations(self) -> List[OperationData]:
-        """Return the list of parsed operations."""
+        """Вернуть список распарсенных операций."""
         return self.operations
     
     def update_operation(self, operation_id: str, changes: Dict[str, Any]) -> bool:
-        """Update a specific operation with new values."""
+        """Обновить конкретную операцию новыми значениями."""
         for op in self.operations:
             if op.id == operation_id:
                 try:
-                    # Update local data
+                    # Обновить локальные данные
                     for key, value in changes.items():
                         if hasattr(op, key):
                             setattr(op, key, value)
                     
-                    # Update XML node
+                    # Обновить XML узел
                     if op.xml_node_ref is not None:
                         for key, value in changes.items():
                             if key == 'name':
                                 op.xml_node_ref.set('name', str(value))
                             elif key == 'feed_rate':
-                                # Try to find and update feed rate element
+                                # Попытаться найти и обновить элемент скорости подачи
                                 feed_elem = op.xml_node_ref.find('.//FeedRate') or op.xml_node_ref.find('.//feed')
                                 if feed_elem is not None:
                                     feed_elem.text = str(value)
@@ -366,7 +366,7 @@ class PgmxFormatHandler(BaseFormatHandler):
         """Return the XML tree structure."""
         if self.raw_data is None:
             return None
-        # Wrap root element in ElementTree if it's just an Element
+        # Обернуть корневой элемент в ElementTree если это просто Element
         if isinstance(self.raw_data, etree._Element):
             return etree.ElementTree(self.raw_data)
         return self.raw_data

@@ -46,7 +46,7 @@ class FormatTab(QWidget):
         
         splitter = QSplitter(Qt.Horizontal)
         
-        # Left panel - XML Tree
+        # Левая панель - XML дерево
         left_widget = QWidget()
         left_layout = QVBoxLayout(left_widget)
         left_layout.setContentsMargins(0, 0, 0, 0)
@@ -57,7 +57,7 @@ class FormatTab(QWidget):
         
         splitter.addWidget(left_widget)
         
-        # Right panel - Tabs with Properties and Operations
+        # Правая панель - Вкладки со свойствами и операциями
         right_widget = QWidget()
         right_layout = QVBoxLayout(right_widget)
         right_layout.setContentsMargins(0, 0, 0, 0)
@@ -83,15 +83,15 @@ class FormatTab(QWidget):
         """Load data from handler into the UI components."""
         self.handler = handler
         
-        # Load tree
+        # Загрузить дерево
         xml_tree = handler.get_xml_tree()
         if xml_tree is not None:
-            # Ensure we have an ElementTree, not just an Element
+            # Убедиться что у нас ElementTree, а не просто Element
             if isinstance(xml_tree, etree._Element):
                 xml_tree = etree.ElementTree(xml_tree)
             self.tree_model.set_tree(xml_tree)
         
-        # Load operations
+        # Загрузить операции
         operations = handler.get_operations()
         if operations:
             self.operations_model.set_operations(operations)
@@ -138,23 +138,23 @@ class MainWindow(QMainWindow):
         
         main_layout = QVBoxLayout(central_widget)
         
-        # Main tab widget for formats
+        # Главный виджет вкладок для форматов
         self.format_tabs = QTabWidget()
         
-        # SCX Tab (NANXING)
+        # Вкладка SCX (NANXING)
         self.scx_tab = FormatTab(self)
         self.format_tabs.addTab(self.scx_tab, "🇨🇳 NANXING (.SCX)")
         
-        # PGMX Tab (SCM Group)
+        # Вкладка PGMX (SCM Group)
         self.pgmx_tab = FormatTab(self)
         self.format_tabs.addTab(self.pgmx_tab, "🇮🇹 SCM (.PGMX)")
         
-        # Connect tab change to update current handler
+        # Подключить смену вкладки для обновления текущего обработчика
         self.format_tabs.currentChanged.connect(self._on_format_tab_changed)
         
         main_layout.addWidget(self.format_tabs)
         
-        # Set initial current handler
+        # Установить начальный текущий обработчик
         self.current_handler = None
     
     def _on_format_tab_changed(self, index: int):
@@ -164,7 +164,7 @@ class MainWindow(QMainWindow):
         elif index == 1:  # PGMX tab
             self.current_handler = self.pgmx_handler
         
-        # Update status bar
+        # Обновить строку состояния
         if self.current_handler and self.current_handler.file_path:
             self.statusbar.set_file_path(str(self.current_handler.file_path))
         else:
@@ -223,7 +223,7 @@ class MainWindow(QMainWindow):
     
     def _connect_signals(self):
         """Подключает сигналы."""
-    # Connect signals for both tabs
+    # Подключить сигналы для обеих вкладок
         self.scx_tab.tree_view.selectionModel().currentChanged.connect(
             self._on_tree_selection_changed
         )
@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
         
         if file_path:
             path = Path(file_path)
-            # Auto-detect format by extension
+            # Автоопределение формата по расширению
             if path.suffix.lower() == '.pgmx':
                 self._load_pgmx_file(path)
             else:
@@ -284,10 +284,10 @@ class MainWindow(QMainWindow):
         success, error = self.scx_document.load(file_path, self.mapping_config)
         
         if success:
-            # Switch to SCX tab
+            # Переключиться на вкладку SCX
             self.format_tabs.setCurrentIndex(0)
             
-            # Load data into SCX tab
+            # Загрузить данные во вкладку SCX
             self.scx_tab.load_data(self.scx_document)
             
             self.statusbar.set_file_path(str(file_path))
@@ -317,10 +317,10 @@ class MainWindow(QMainWindow):
         success = self.pgmx_handler.load(file_path)
         
         if success:
-            # Switch to PGMX tab
+            # Переключиться на вкладку PGMX
             self.format_tabs.setCurrentIndex(1)
             
-            # Load data into PGMX tab
+            # Загрузить данные во вкладку PGMX
             self.pgmx_tab.load_data(self.pgmx_handler)
             
             self.statusbar.set_file_path(str(file_path))
@@ -445,10 +445,10 @@ class MainWindow(QMainWindow):
         """Отменяет действие."""
         current_index = self.format_tabs.currentIndex()
         if current_index == 0 and self.scx_tab:
-            # SCX undo logic (if implemented)
+            # Логика отмены SCX (если реализовано)
             pass
         elif current_index == 1 and self.pgmx_tab:
-            # PGMX undo logic (if implemented)
+            # Логика отмены PGMX (если реализовано)
             pass
         
         self.statusbar.set_status("Отменено")
@@ -458,10 +458,10 @@ class MainWindow(QMainWindow):
         """Повторяет действие."""
         current_index = self.format_tabs.currentIndex()
         if current_index == 0 and self.scx_tab:
-            # SCX redo logic (if implemented)
+            # Логика повтора SCX (если реализовано)
             pass
         elif current_index == 1 and self.pgmx_tab:
-            # PGMX redo logic (if implemented)
+            # Логика повтора PGMX (если реализовано)
             pass
         
         self.statusbar.set_status("Повторено")
@@ -473,10 +473,10 @@ class MainWindow(QMainWindow):
         changes = []
         
         if current_index == 0 and self.scx_document:
-            # Get SCX changes
+            # Получить изменения SCX
             pass
         elif current_index == 1 and self.pgmx_handler:
-            # Get PGMX changes
+            # Получить изменения PGMX
             pass
         
         dialog = DiffDialog(changes, self)
@@ -541,8 +541,8 @@ class MainWindow(QMainWindow):
             if element is None or not self.pgmx_handler:
                 return
             
-            # Update PGMX operation
-            # Find operation by element reference and update
+            # Обновить операцию PGMX
+            # Найти операцию по ссылке на элемент и обновить
             self.statusbar.set_status(f"PGMX: Изменено {attr_name}")
     
     @Slot(int)
@@ -556,9 +556,9 @@ class MainWindow(QMainWindow):
                 self.scx_tab.property_editor.set_element(element)
                 self.scx_tab.tab_widget.setCurrentIndex(0)
         elif current_index == 1 and self.pgmx_tab:
-            # PGMX operations are already in the handler
+            # Операции PGMX уже находятся в обработчике
             if row < len(self.pgmx_tab.operations_model._operations):
                 op = self.pgmx_tab.operations_model._operations[row]
-                # Highlight in tree or show properties
+                # Выделить в дереве или показать свойства
                 self.pgmx_tab.property_editor.set_element(op.xml_node_ref if hasattr(op, 'xml_node_ref') else None)
                 self.pgmx_tab.tab_widget.setCurrentIndex(0)
