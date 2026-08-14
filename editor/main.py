@@ -9,7 +9,8 @@ from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
 
-from src import setup_logging, MainWindow
+from src.utils.logger import setup_logging
+from src.ui.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
