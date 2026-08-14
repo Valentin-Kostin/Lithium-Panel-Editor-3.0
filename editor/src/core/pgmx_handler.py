@@ -76,12 +76,28 @@ class PgmxFormatHandler(BaseFormatHandler):
                 # Extract and parse the XML
                 xml_content = zf.read(self.internal_xml_path)
                 
-            # Detect encoding
-            encoding = detect_encoding(xml_content)
+            # Detect encoding from bytes content
+            # Create a temporary file for encoding detection
+            import tempfile as tmp_module
+            with tmp_module.NamedTemporaryFile(mode='wb', delete=False) as tmp:
+                tmp.write(xml_content)
+                tmp_path = Path(tmp.name)
+            
+            try:
+                encoding, _ = detect_encoding(tmp_path)
+            finally:
+                tmp_path.unlink()  # Clean up temp file
+            
             xml_str = xml_content.decode(encoding, errors='replace')
             
-            # Parse XML
-            self.raw_data = etree.fromstring(xml_str.encode('utf-8'))
+            # Parse XML - keep original encoding for PGMX internal structure
+            # PGMX files typically use UTF-8 internally
+            try:
+                self.raw_data = etree.fromstring(xml_str.encode('utf-8'))
+            except Exception as parse_error:
+                # If UTF-8 parsing fails, try with detected encoding
+                print(f"Warning: UTF-8 parsing failed, trying with detected encoding {encoding}: {parse_error}")
+                self.raw_data = etree.fromstring(xml_content)
             
             # Extract metadata and operations
             self._extract_metadata()
@@ -348,6 +364,11 @@ class PgmxFormatHandler(BaseFormatHandler):
     
     def get_xml_tree(self) -> Any:
         """Return the XML tree structure."""
+        if self.raw_data is None:
+            return None
+        # Wrap root element in ElementTree if it's just an Element
+        if isinstance(self.raw_data, etree._Element):
+            return etree.ElementTree(self.raw_data)
         return self.raw_data
     
     def cleanup(self):

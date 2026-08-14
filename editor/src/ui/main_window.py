@@ -86,6 +86,9 @@ class FormatTab(QWidget):
         # Load tree
         xml_tree = handler.get_xml_tree()
         if xml_tree is not None:
+            # Ensure we have an ElementTree, not just an Element
+            if isinstance(xml_tree, etree._Element):
+                xml_tree = etree.ElementTree(xml_tree)
             self.tree_model.set_tree(xml_tree)
         
         # Load operations
