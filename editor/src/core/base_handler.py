@@ -1,6 +1,6 @@
 """
-Base interface for file format handlers.
-Implements the Strategy pattern as per technical specification.
+Базовый интерфейс для обработчиков форматов файлов.
+Реализует паттерн Стратегия согласно техническому заданию.
 """
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -10,7 +10,7 @@ from dataclasses import dataclass
 
 @dataclass
 class OperationData:
-    """Unified representation of a CNC operation."""
+    """Унифицированное представление CNC-операции."""
     id: str
     name: str
     tool_id: str
@@ -18,13 +18,13 @@ class OperationData:
     feed_rate: float
     speed: float
     depth: float
-    parameters: Dict[str, str]  # Additional format-specific parameters
-    xml_node_ref: Any  # Reference to the original XML node
+    parameters: Dict[str, str]  # Дополнительные специфичные для формата параметры
+    xml_node_ref: Any  # Ссылка на оригинальный XML узел
 
 
 @dataclass
 class FileMetadata:
-    """File metadata extracted from the document."""
+    """Метаданные файла, извлечённые из документа."""
     filename: str
     material: str
     thickness: float
@@ -35,59 +35,59 @@ class FileMetadata:
 
 class BaseFormatHandler(ABC):
     """
-    Abstract base class for format handlers (SCX, PGMX).
-    Defines the common interface for parsing, editing, and saving.
+    Абстрактный базовый класс для обработчиков форматов (SCX, PGMX).
+    Определяет общий интерфейс для парсинга, редактирования и сохранения.
     """
 
     def __init__(self, file_path: Optional[Path] = None):
         self.file_path = file_path
         self.operations: List[OperationData] = []
         self.metadata: Optional[FileMetadata] = None
-        self.raw_data: Any = None  # Holds raw XML or ZIP content
+        self.raw_data: Any = None  # Хранит сырое XML или ZIP содержимое
 
     @abstractmethod
     def load(self, path: Path) -> bool:
         """
-        Load and parse the file.
-        Returns True if successful, False otherwise.
-        Must handle encoding detection and format-specific parsing.
+        Загрузить и распарсить файл.
+        Возвращает True если успешно, False иначе.
+        Должен обрабатывать определение кодировки и специфичный для формата парсинг.
         """
         pass
 
     @abstractmethod
     def save(self, path: Path) -> bool:
         """
-        Save changes back to the file.
-        Must preserve original formatting and encoding where possible.
-        Returns True if successful.
+        Сохранить изменения обратно в файл.
+        Должен сохранять оригинальное форматирование и кодировку где возможно.
+        Возвращает True если успешно.
         """
         pass
 
     @abstractmethod
     def get_operations(self) -> List[OperationData]:
-        """Return the list of parsed operations."""
+        """Вернуть список распарсенных операций."""
         pass
 
     @abstractmethod
     def update_operation(self, operation_id: str, changes: Dict[str, Any]) -> bool:
         """
-        Update a specific operation with new values.
-        Returns True if updated successfully.
+        Обновить конкретную операцию новыми значениями.
+        Возвращает True если обновлено успешно.
         """
         pass
 
     @abstractmethod
     def get_xml_tree(self) -> Any:
         """
-        Return the XML tree structure for the tree view.
+        Вернуть XML-дерево структуры для представления в виде дерева.
         """
         pass
 
     def validate(self) -> List[str]:
         """
-        Validate the current data.
-        Returns a list of error messages.
+        Валидировать текущие данные.
+        Возвращает список сообщений об ошибках.
         """
         errors = []
-        # Common validation logic can be implemented here
+        # Общая логика валидации может быть реализована здесь
         return errors

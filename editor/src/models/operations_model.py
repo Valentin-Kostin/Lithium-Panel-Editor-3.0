@@ -141,12 +141,12 @@ class OperationsModel(QAbstractTableModel):
         col = index.column()
         
         if self._is_pgmx_mode:
-            # PGMX mode - using BaseOperationData
+            # Режим PGMX - используется BaseOperationData
             if isinstance(operation, BaseOperationData):
                 if col == 0:
                     return operation.id
                 elif col == 1:
-                    return operation.name  # PGMX doesn't have type, use name
+                    return operation.name  # PGMX не имеет типа, использовать имя
                 elif col == 2:
                     return operation.name
                 elif col == 3:
@@ -166,7 +166,7 @@ class OperationsModel(QAbstractTableModel):
                 elif col == 10:
                     return str(operation.speed) if operation.speed else ''
         else:
-            # SCX mode - using SCXOperationData
+            # Режим SCX - используется SCXOperationData
             if isinstance(operation, SCXOperationData):
                 if col == 0:
                     return operation.data['id']
