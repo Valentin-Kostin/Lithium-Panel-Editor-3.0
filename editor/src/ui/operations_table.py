@@ -97,11 +97,15 @@ class OperationsTableView(QTableView):
     def _connect_signals(self):
         """Подключение сигналов."""
         self.customContextMenuRequested.connect(self._show_context_menu)
-        self.selectionModel().currentChanged.connect(self._on_selection_changed)
+        # Сигнал selectionModel будет подключен после установки модели
 
     def set_model(self, model: OperationsTableModel) -> None:
         """Установка модели."""
         self.setModel(model)
+        # Подключаем сигнал только после установки модели
+        sel_model = self.selectionModel()
+        if sel_model is not None:
+            sel_model.currentChanged.connect(self._on_selection_changed)
 
     def _on_selection_changed(self, current, previous):
         """Обработка изменения выделения."""
