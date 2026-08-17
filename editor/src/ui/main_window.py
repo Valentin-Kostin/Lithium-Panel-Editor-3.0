@@ -79,12 +79,20 @@ class MainWindow(QMainWindow):
         )
         self.btn_revert_dots.setMinimumHeight(40)
         
+        self.btn_compare_csv = QPushButton("🔍 Сравнить PGMX с CSV")
+        self.btn_compare_csv.setToolTip(
+            "Сравнить файлы .PGMX с записями в .CSV по материалу и номеру заказа\n"
+            "(ключ: всё что до первой точки, например DSP_25_U963-ST9_1971G1)"
+        )
+        self.btn_compare_csv.setMinimumHeight(40)
+        
         # Добавление кнопок в layout
         control_layout.addWidget(self.btn_select_folder)
         control_layout.addWidget(self.btn_load_tools)
         control_layout.addWidget(self.btn_fix_scx)
         control_layout.addWidget(self.btn_fix_pgmx)
         control_layout.addWidget(self.btn_revert_dots)
+        control_layout.addWidget(self.btn_compare_csv)
         
         # === ПРОГРЕСС БАР И СТАТУС ===
         status_layout = QHBoxLayout()
@@ -136,6 +144,7 @@ class MainWindow(QMainWindow):
         self.btn_fix_scx.clicked.connect(self._on_fix_scx)
         self.btn_fix_pgmx.clicked.connect(self._on_fix_pgmx)
         self.btn_revert_dots.clicked.connect(self._on_revert_dots)
+        self.btn_compare_csv.clicked.connect(self._on_compare_csv)
         
     def _log(self, message: str):
         """Вывод сообщения в лог."""
@@ -353,6 +362,39 @@ class MainWindow(QMainWindow):
                 
         except Exception as e:
             self._log(f"❌ Ошибка при возврате точек: {e}")
+        finally:
+            self.progress_bar.setVisible(False)
+            self.status_label.setText("Готов к работе")
+            
+    def _on_compare_csv(self):
+        """Обработчик кнопки сравнения PGMX с CSV."""
+        folder = getattr(self, '_current_folder', None)
+        if not folder:
+            self._log("\n⚠️ Нет выбранной папки! Сначала выберите папку.")
+            return
+            
+        self._log(f"\n{'='*60}")
+        self._log(f"🔍 СРАВНЕНИЕ PGMX С CSV")
+        self._log(f"{'='*60}")
+        
+        self.status_label.setText("Сравнение PGMX с CSV...")
+        self.progress_bar.setVisible(True)
+        self.progress_bar.setRange(0, 0)
+        
+        try:
+            stats = self.processor.compare_pgmx_csv()
+            
+            self._log(f"\n✅ Сравнение завершено!")
+            self._log(f"\n📊 Результаты:")
+            self._log(f"   Совпадений: {stats['matches']}")
+            
+            if stats['missing_in_csv']:
+                self._log(f"\n⚠️ Есть в PGMX, но отсутствуют в CSV: {len(stats['missing_in_csv'])}")
+            if stats['missing_in_pgmx']:
+                self._log(f"\n⚠️ Есть в CSV, но отсутствуют в PGMX: {len(stats['missing_in_pgmx'])}")
+                
+        except Exception as e:
+            self._log(f"❌ Ошибка при сравнении: {e}")
         finally:
             self.progress_bar.setVisible(False)
             self.status_label.setText("Готов к работе")

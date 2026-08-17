@@ -433,3 +433,89 @@ class BatchProcessor:
                 
         self.log(f"=== Завершено. Обработано файлов: {stats['processed']} ===")
         return stats
+
+    def compare_pgmx_csv(self) -> Dict:
+        """
+        Сравнивает файлы .PGMX с записями в .CSV по ключу:
+        - Всё что до первой точки в имени файла/записи (например, DSP_25_U963-ST9_1971G1 из DSP_25_U963-ST9_1971G1.01.07.pgmx)
+        
+        Returns:
+            Dict со статистикой сравнения.
+        """
+        if not self.folder_path:
+            self.log("❌ Папка не выбрана! Сначала выберите папку.")
+            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': []}
+            
+        if not self.pgmx_files or not self.csv_files:
+            self.log("⚠️ Нет файлов для сравнения (нужны и .PGMX, и .CSV)")
+            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': []}
+        
+        self.log("=== Сравнение PGMX с CSV по материалу и номеру заказа ===")
+        
+        # Извлекаем ключи из PGMX (всё до первой точки)
+        pgmx_keys = set()
+        for pgmx_file in self.pgmx_files:
+            # Пример: DSP_25_U963-ST9_1971G1.01.07.pgmx -> DSP_25_U963-ST9_1971G1
+            stem = pgmx_file.stem  # DSP_25_U963-ST9_1971G1.01.07
+            key = stem.split('.')[0]  # DSP_25_U963-ST9_1971G1
+            pgmx_keys.add(key)
+            self.log(f"   PGMX: {pgmx_file.name} -> ключ: {key}")
+        
+        # Извлекаем ключи из CSV (всё до первой точки в поле Name/PartName)
+        csv_keys = set()
+        csv_key_to_names = {}  # Для отладки: какой ключ каким именам соответствует
+        
+        for csv_file in self.csv_files:
+            try:
+                encoding = detect_encoding(csv_file)
+                with open(csv_file, 'r', encoding=encoding) as f:
+                    reader = csv.DictReader(f, delimiter=';')
+                    for row in reader:
+                        name = row.get('Name') or row.get('PartName') or row.get('Имя') or row.get('name')
+                        if name:
+                            key = name.split('.')[0]
+                            csv_keys.add(key)
+                            if key not in csv_key_to_names:
+                                csv_key_to_names[key] = []
+                            csv_key_to_names[key].append(name)
+            except Exception as e:
+                self.log(f"   ❌ Ошибка чтения CSV {csv_file.name}: {e}")
+        
+        self.log(f"   Найдено PGMX ключей: {len(pgmx_keys)}")
+        self.log(f"   Найдено CSV ключей: {len(csv_keys)}")
+        
+        # Находим совпадения и расхождения
+        matches = pgmx_keys & csv_keys
+        missing_in_csv = pgmx_keys - csv_keys  # Есть в PGMX, но нет в CSV
+        missing_in_pgmx = csv_keys - pgmx_keys  # Есть в CSV, но нет в PGMX
+        
+        self.log(f"\n✅ Совпадений: {len(matches)}")
+        if matches:
+            for key in list(matches)[:10]:
+                self.log(f"   - {key}")
+            if len(matches) > 10:
+                self.log(f"   ... и еще {len(matches) - 10}")
+        
+        if missing_in_csv:
+            self.log(f"\n⚠️ Есть в PGMX, но отсутствуют в CSV ({len(missing_in_csv)}):")
+            for key in list(missing_in_csv)[:10]:
+                self.log(f"   - {key}")
+            if len(missing_in_csv) > 10:
+                self.log(f"   ... и еще {len(missing_in_csv) - 10}")
+        
+        if missing_in_pgmx:
+            self.log(f"\n⚠️ Есть в CSV, но отсутствуют в PGMX ({len(missing_in_pgmx)}):")
+            for key in list(missing_in_pgmx)[:10]:
+                self.log(f"   - {key}")
+                # Показываем полные имена из CSV для отладки
+                if key in csv_key_to_names:
+                    for full_name in csv_key_to_names[key][:3]:
+                        self.log(f"      → {full_name}")
+            if len(missing_in_pgmx) > 10:
+                self.log(f"   ... и еще {len(missing_in_pgmx) - 10}")
+        
+        return {
+            'matches': len(matches),
+            'missing_in_csv': list(missing_in_csv),
+            'missing_in_pgmx': list(missing_in_pgmx)
+        }
