@@ -116,3 +116,723 @@
 2026-08-17 09:47:35 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.07.SCX
 2026-08-17 09:48:11 - src.ui.main_window - INFO - Приложение закрыто
 2026-08-17 09:48:11 - __main__ - INFO - Приложение завершено с кодом: 0
+2026-08-17 10:12:02 - root - INFO - ============================================================
+2026-08-17 10:12:02 - root - INFO - Запуск приложения: 2026-08-17T10:12:02.638417
+2026-08-17 10:12:02 - root - INFO - Лог файл: C:\Базис\Lithium Panel Editor_3.0\editor\logs\cnc_editor.log
+2026-08-17 10:12:02 - root - INFO - Уровень логирования: INFO
+2026-08-17 10:12:02 - root - INFO - ============================================================
+2026-08-17 10:12:02 - __main__ - INFO - Запуск Editor
+2026-08-17 10:12:02 - __main__ - INFO - Окно приложения показано
+2026-08-17 10:12:12 - src.ui.format_tab - INFO - Сканирование папки: C:\Базис\Lithium Panel Editor_3.0\1971 для формата SCM PGMX
+2026-08-17 10:12:12 - src.ui.main_window - INFO - Status: Найдено файлов: 606 (ошибок: 0)
+2026-08-17 10:12:12 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_10_U963-ST9_1971G1.18.13.pgmx
+2026-08-17 10:12:12 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_10_U963-ST9_1971G1.18.13.pgmx
+2026-08-17 10:12:12 - src.core.pgmx_handler - INFO - Всего извлечено операций: 2
+2026-08-17 10:12:12 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_10_U963-ST9_1971G1.18.13.pgmx, операций: 2
+2026-08-17 10:12:12 - src.ui.main_window - INFO - Status: Файл загружен: DSP_10_U963-ST9_1971G1.18.13.pgmx
+2026-08-17 10:14:11 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.01.19.pgmx
+2026-08-17 10:14:11 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.01.19.pgmx
+2026-08-17 10:14:11 - src.core.pgmx_handler - INFO - Всего извлечено операций: 0
+2026-08-17 10:14:11 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_16_U963-ST9_1971G1.01.19.pgmx, операций: 0
+2026-08-17 10:14:11 - src.ui.main_window - INFO - Status: Файл загружен: DSP_16_U963-ST9_1971G1.01.19.pgmx
+2026-08-17 10:14:12 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.01.20.pgmx
+2026-08-17 10:14:12 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.01.20.pgmx
+2026-08-17 10:14:12 - src.core.pgmx_handler - INFO - Всего извлечено операций: 4
+2026-08-17 10:14:12 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_16_U963-ST9_1971G1.01.20.pgmx, операций: 4
+2026-08-17 10:14:12 - src.ui.main_window - INFO - Status: Файл загружен: DSP_16_U963-ST9_1971G1.01.20.pgmx
+2026-08-17 10:14:14 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.03.15.pgmx
+2026-08-17 10:14:14 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.03.15.pgmx
+2026-08-17 10:14:14 - src.core.pgmx_handler - INFO - Всего извлечено операций: 0
+2026-08-17 10:14:14 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_16_U963-ST9_1971G1.03.15.pgmx, операций: 0
+2026-08-17 10:14:14 - src.ui.main_window - INFO - Status: Файл загружен: DSP_16_U963-ST9_1971G1.03.15.pgmx
+2026-08-17 10:14:21 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.03.01.pgmx
+2026-08-17 10:14:21 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.03.01.pgmx
+2026-08-17 10:14:21 - src.core.pgmx_handler - INFO - Всего извлечено операций: 10
+2026-08-17 10:14:21 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.03.01.pgmx, операций: 10
+2026-08-17 10:14:21 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.03.01.pgmx
+2026-08-17 10:14:29 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.07.pgmx
+2026-08-17 10:14:29 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.07.pgmx
+2026-08-17 10:14:29 - src.core.pgmx_handler - INFO - Всего извлечено операций: 34
+2026-08-17 10:14:29 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.07.pgmx, операций: 34
+2026-08-17 10:14:29 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.07.pgmx
+2026-08-17 10:14:30 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.11.pgmx
+2026-08-17 10:14:30 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.11.pgmx
+2026-08-17 10:14:30 - src.core.pgmx_handler - INFO - Всего извлечено операций: 26
+2026-08-17 10:14:30 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.11.pgmx, операций: 26
+2026-08-17 10:14:30 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.11.pgmx
+2026-08-17 10:14:34 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.15.pgmx
+2026-08-17 10:14:34 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.15.pgmx
+2026-08-17 10:14:34 - src.core.pgmx_handler - INFO - Всего извлечено операций: 8
+2026-08-17 10:14:34 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.15.pgmx, операций: 8
+2026-08-17 10:14:34 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.15.pgmx
+2026-08-17 10:14:35 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.17.pgmx
+2026-08-17 10:14:35 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.17.pgmx
+2026-08-17 10:14:35 - src.core.pgmx_handler - INFO - Всего извлечено операций: 6
+2026-08-17 10:14:35 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.17.pgmx, операций: 6
+2026-08-17 10:14:35 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.17.pgmx
+2026-08-17 10:14:36 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:14:36 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:14:36 - src.core.pgmx_handler - INFO - Всего извлечено операций: 6
+2026-08-17 10:14:36 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.20.pgmx, операций: 6
+2026-08-17 10:14:36 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:14:36 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.07.pgmx
+2026-08-17 10:14:36 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.07.pgmx
+2026-08-17 10:14:36 - src.core.pgmx_handler - INFO - Всего извлечено операций: 36
+2026-08-17 10:14:36 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.06.07.pgmx, операций: 36
+2026-08-17 10:14:36 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.06.07.pgmx
+2026-08-17 10:14:40 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.06.pgmx
+2026-08-17 10:14:40 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.06.pgmx
+2026-08-17 10:14:40 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:14:40 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.07.06.pgmx, операций: 12
+2026-08-17 10:14:40 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.07.06.pgmx
+2026-08-17 10:14:42 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.08.pgmx
+2026-08-17 10:14:42 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.08.pgmx
+2026-08-17 10:14:42 - src.core.pgmx_handler - INFO - Всего извлечено операций: 20
+2026-08-17 10:14:42 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.07.08.pgmx, операций: 20
+2026-08-17 10:14:42 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.07.08.pgmx
+2026-08-17 10:14:43 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:14:43 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:14:43 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:14:43 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.09.04.pgmx, операций: 12
+2026-08-17 10:14:43 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:14:43 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.06.pgmx
+2026-08-17 10:14:43 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.06.pgmx
+2026-08-17 10:14:43 - src.core.pgmx_handler - INFO - Всего извлечено операций: 8
+2026-08-17 10:14:43 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.10.06.pgmx, операций: 8
+2026-08-17 10:14:43 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.06.pgmx
+2026-08-17 10:14:44 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.09.pgmx
+2026-08-17 10:14:44 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.09.pgmx
+2026-08-17 10:14:44 - src.core.pgmx_handler - INFO - Всего извлечено операций: 16
+2026-08-17 10:14:44 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.10.09.pgmx, операций: 16
+2026-08-17 10:14:44 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.09.pgmx
+2026-08-17 10:14:52 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-17 10:14:56 - src.ui.main_window - INFO - Status: Вкладка: 🇮🇹 SCM (.PGMX)
+2026-08-17 10:14:59 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-17 10:15:02 - src.ui.format_tab - INFO - Сканирование папки: C:\Базис\Lithium Panel Editor_3.0\1971 для формата NANXING SCX
+2026-08-17 10:15:02 - src.ui.main_window - INFO - Status: Найдено файлов: 400 (ошибок: 0)
+2026-08-17 10:15:02 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.01.01.SCX
+2026-08-17 10:15:02 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.01.01.SCX
+2026-08-17 10:15:02 - src.core.scx_handler - INFO - Извлечено операций: 32
+2026-08-17 10:15:02 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.01.01.SCX, операций: 32
+2026-08-17 10:15:02 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.01.01.SCX
+2026-08-17 10:15:05 - src.ui.main_window - INFO - Status: Вкладка: 🇮🇹 SCM (.PGMX)
+2026-08-17 10:15:07 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-17 10:15:32 - src.ui.main_window - INFO - Status: Вкладка: 🇮🇹 SCM (.PGMX)
+2026-08-17 10:15:38 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-17 10:15:39 - src.ui.main_window - INFO - Status: Вкладка: 🇮🇹 SCM (.PGMX)
+2026-08-17 10:16:16 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-17 10:16:35 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.11.SCX
+2026-08-17 10:16:35 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.11.SCX
+2026-08-17 10:16:35 - src.core.scx_handler - INFO - Извлечено операций: 20
+2026-08-17 10:16:35 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.11.SCX, операций: 20
+2026-08-17 10:16:35 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.11.SCX
+2026-08-17 10:16:35 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.20.SCX
+2026-08-17 10:16:35 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.20.SCX
+2026-08-17 10:16:35 - src.core.scx_handler - INFO - Извлечено операций: 4
+2026-08-17 10:16:35 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.20.SCX, операций: 4
+2026-08-17 10:16:35 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.20.SCX
+2026-08-17 10:16:36 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.01.01.SCX
+2026-08-17 10:16:36 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.01.01.SCX
+2026-08-17 10:16:36 - src.core.scx_handler - INFO - Извлечено операций: 33
+2026-08-17 10:16:36 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.01.01.SCX, операций: 33
+2026-08-17 10:16:36 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.01.01.SCX
+2026-08-17 10:16:36 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.05.SCX
+2026-08-17 10:16:36 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.05.SCX
+2026-08-17 10:16:36 - src.core.scx_handler - INFO - Извлечено операций: 18
+2026-08-17 10:16:36 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.05.SCX, операций: 18
+2026-08-17 10:16:36 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.05.SCX
+2026-08-17 10:16:37 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.10.SCX
+2026-08-17 10:16:37 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.10.SCX
+2026-08-17 10:16:37 - src.core.scx_handler - INFO - Извлечено операций: 24
+2026-08-17 10:16:37 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.10.SCX, операций: 24
+2026-08-17 10:16:37 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.10.SCX
+2026-08-17 10:16:38 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.04.01.01.SCX
+2026-08-17 10:16:38 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.04.01.01.SCX
+2026-08-17 10:16:38 - src.core.scx_handler - INFO - Извлечено операций: 9
+2026-08-17 10:16:38 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.04.01.01.SCX, операций: 9
+2026-08-17 10:16:38 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.04.01.01.SCX
+2026-08-17 10:16:38 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.04.04.SCX
+2026-08-17 10:16:38 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.04.04.SCX
+2026-08-17 10:16:38 - src.core.scx_handler - INFO - Извлечено операций: 28
+2026-08-17 10:16:38 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.04.04.SCX, операций: 28
+2026-08-17 10:16:38 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.04.04.SCX
+2026-08-17 10:16:40 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.04.01.SCX
+2026-08-17 10:16:40 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.04.01.SCX
+2026-08-17 10:16:40 - src.core.scx_handler - INFO - Извлечено операций: 12
+2026-08-17 10:16:40 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.04.01.SCX, операций: 12
+2026-08-17 10:16:40 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.04.01.SCX
+2026-08-17 10:16:41 - src.ui.main_window - INFO - Status: Вкладка: 🇮🇹 SCM (.PGMX)
+2026-08-17 10:16:41 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:16:41 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:16:42 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.07.pgmx
+2026-08-17 10:16:42 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.07.pgmx
+2026-08-17 10:16:42 - src.core.pgmx_handler - INFO - Всего извлечено операций: 20
+2026-08-17 10:16:42 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.08.07.pgmx, операций: 20
+2026-08-17 10:16:42 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.08.07.pgmx
+2026-08-17 10:16:42 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:16:42 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:16:42 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.10.pgmx
+2026-08-17 10:16:42 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.10.pgmx
+2026-08-17 10:16:42 - src.core.pgmx_handler - INFO - Всего извлечено операций: 16
+2026-08-17 10:16:42 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.10.10.pgmx, операций: 16
+2026-08-17 10:16:42 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.10.pgmx
+2026-08-17 10:16:43 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.14.02.pgmx
+2026-08-17 10:16:43 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.14.02.pgmx
+2026-08-17 10:16:43 - src.core.pgmx_handler - INFO - Всего извлечено операций: 6
+2026-08-17 10:16:43 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.14.02.pgmx, операций: 6
+2026-08-17 10:16:43 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.14.02.pgmx
+2026-08-17 10:16:44 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.08.pgmx
+2026-08-17 10:16:44 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.08.pgmx
+2026-08-17 10:16:44 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:16:44 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.16.08.pgmx, операций: 12
+2026-08-17 10:16:44 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.16.08.pgmx
+2026-08-17 10:16:45 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.17.14.pgmx
+2026-08-17 10:16:45 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.17.14.pgmx
+2026-08-17 10:16:45 - src.core.pgmx_handler - INFO - Всего извлечено операций: 28
+2026-08-17 10:16:45 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.17.14.pgmx, операций: 28
+2026-08-17 10:16:45 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.17.14.pgmx
+2026-08-17 10:16:47 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.20.05.pgmx
+2026-08-17 10:16:47 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.20.05.pgmx
+2026-08-17 10:16:47 - src.core.pgmx_handler - INFO - Всего извлечено операций: 20
+2026-08-17 10:16:47 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.20.05.pgmx, операций: 20
+2026-08-17 10:16:47 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.20.05.pgmx
+2026-08-17 10:17:13 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-17 10:17:14 - src.ui.main_window - INFO - Status: Вкладка: 🇮🇹 SCM (.PGMX)
+2026-08-17 10:19:59 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.17.07.01.pgmx
+2026-08-17 10:19:59 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.17.07.01.pgmx
+2026-08-17 10:19:59 - src.core.pgmx_handler - INFO - Всего извлечено операций: 14
+2026-08-17 10:19:59 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.17.07.01.pgmx, операций: 14
+2026-08-17 10:19:59 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.17.07.01.pgmx
+2026-08-17 10:20:00 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.17.05.01.pgmx
+2026-08-17 10:20:00 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.17.05.01.pgmx
+2026-08-17 10:20:00 - src.core.pgmx_handler - INFO - Всего извлечено операций: 10
+2026-08-17 10:20:00 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.17.05.01.pgmx, операций: 10
+2026-08-17 10:20:00 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.17.05.01.pgmx
+2026-08-17 10:20:00 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.17.03.01.pgmx
+2026-08-17 10:20:00 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.17.03.01.pgmx
+2026-08-17 10:20:00 - src.core.pgmx_handler - INFO - Всего извлечено операций: 10
+2026-08-17 10:20:00 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.17.03.01.pgmx, операций: 10
+2026-08-17 10:20:00 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.17.03.01.pgmx
+2026-08-17 10:20:01 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.10.pgmx
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.10.pgmx
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - Всего извлечено операций: 60
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.16.10.pgmx, операций: 60
+2026-08-17 10:20:01 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.16.10.pgmx
+2026-08-17 10:20:01 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.09.pgmx
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.09.pgmx
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - Всего извлечено операций: 52
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.16.09.pgmx, операций: 52
+2026-08-17 10:20:01 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.16.09.pgmx
+2026-08-17 10:20:01 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.08.pgmx
+2026-08-17 10:20:01 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.16.08.pgmx
+2026-08-17 10:20:01 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.07.pgmx
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.07.pgmx
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.16.07.pgmx, операций: 12
+2026-08-17 10:20:01 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.16.07.pgmx
+2026-08-17 10:20:01 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.06.pgmx
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.16.06.pgmx
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - Всего извлечено операций: 14
+2026-08-17 10:20:01 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.16.06.pgmx, операций: 14
+2026-08-17 10:20:01 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.16.06.pgmx
+2026-08-17 10:20:02 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.15.01.pgmx
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.15.01.pgmx
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.15.01.pgmx, операций: 12
+2026-08-17 10:20:02 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.15.01.pgmx
+2026-08-17 10:20:02 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.14.02.pgmx
+2026-08-17 10:20:02 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.14.02.pgmx
+2026-08-17 10:20:02 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.13.02.pgmx
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.13.02.pgmx
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - Всего извлечено операций: 7
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.13.02.pgmx, операций: 7
+2026-08-17 10:20:02 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.13.02.pgmx
+2026-08-17 10:20:02 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.12.07.pgmx
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.12.07.pgmx
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - Всего извлечено операций: 20
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.12.07.pgmx, операций: 20
+2026-08-17 10:20:02 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.12.07.pgmx
+2026-08-17 10:20:02 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.12.06.pgmx
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.12.06.pgmx
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:02 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.12.06.pgmx, операций: 12
+2026-08-17 10:20:02 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.12.06.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.12.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.12.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.12.05.pgmx, операций: 12
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.12.05.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.07.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.07.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 20
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.11.07.pgmx, операций: 20
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.11.07.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.06.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.06.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.11.06.pgmx, операций: 12
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.11.06.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.11.05.pgmx, операций: 12
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.11.05.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.10.pgmx
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.10.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.09.pgmx
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.09.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.08.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.08.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 18
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.10.08.pgmx, операций: 18
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.08.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.07.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.07.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 18
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.10.07.pgmx, операций: 18
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.07.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.06.pgmx
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.06.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 16
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.10.05.pgmx, операций: 16
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.05.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.06.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.06.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 16
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.09.06.pgmx, операций: 16
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.09.06.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.09.05.pgmx, операций: 12
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.09.05.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.07.pgmx
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.08.07.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.06.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.06.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 14
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.08.06.pgmx, операций: 14
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.08.06.pgmx
+2026-08-17 10:20:03 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.05.pgmx
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - Всего извлечено операций: 14
+2026-08-17 10:20:03 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.08.05.pgmx, операций: 14
+2026-08-17 10:20:03 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.08.05.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.08.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.07.08.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.07.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.07.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.07.07.pgmx, операций: 12
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.07.07.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.06.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.07.06.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.07.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.06.07.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.06.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.06.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 36
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.06.06.pgmx, операций: 36
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.06.06.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.05.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.05.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 36
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.06.05.pgmx, операций: 36
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.06.05.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.19.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.19.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 3
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.19.pgmx, операций: 3
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.19.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.18.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.18.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 8
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.18.pgmx, операций: 8
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.18.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.17.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.17.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.16.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.16.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 3
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.16.pgmx, операций: 3
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.16.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.15.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.15.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.11.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.11.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.10.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.10.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 28
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.10.pgmx, операций: 28
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.10.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.08.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.08.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 34
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.05.08.pgmx, операций: 34
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.08.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.07.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.07.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.03.01.pgmx
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.03.01.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.11.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.11.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.04.11.pgmx, операций: 12
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.11.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.10.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.10.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 16
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.04.10.pgmx, операций: 16
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.10.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.09.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.09.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 16
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.04.09.pgmx, операций: 16
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.09.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.08.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.08.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 18
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.04.08.pgmx, операций: 18
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.08.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.07.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.07.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 18
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.04.07.pgmx, операций: 18
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.07.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.06.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.06.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 12
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.04.06.pgmx, операций: 12
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.06.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.05.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.05.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 16
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.04.05.pgmx, операций: 16
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.05.pgmx
+2026-08-17 10:20:04 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.03.18.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.03.18.pgmx
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - Всего извлечено операций: 4
+2026-08-17 10:20:04 - src.core.pgmx_handler - INFO - PGMX файл открыт: DSP_18_U963-ST9_1971G1.03.18.pgmx, операций: 4
+2026-08-17 10:20:04 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.03.18.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.05.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.05.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.06.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.06.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.07.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.07.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.08.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.08.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.09.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.09.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.10.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.10.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.04.11.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.04.11.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.03.01.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.03.01.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.07.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.07.pgmx
+2026-08-17 10:20:05 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.08.pgmx
+2026-08-17 10:20:05 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.08.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.10.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.10.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.11.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.11.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.15.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.15.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.16.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.16.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.17.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.17.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.18.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.18.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.19.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.19.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.05.20.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.05.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.06.05.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.06.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.06.06.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.06.07.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.06.07.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.06.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.07.06.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.07.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.07.07.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.07.08.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.07.08.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.05.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.08.05.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.06.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.08.06.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.08.07.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.08.07.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.09.04.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.05.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.09.05.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.09.06.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.09.06.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.05.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.05.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.06.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.06.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.07.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.07.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.08.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.08.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.09.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.09.pgmx
+2026-08-17 10:20:06 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.10.10.pgmx
+2026-08-17 10:20:06 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.10.10.pgmx
+2026-08-17 10:20:07 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.05.pgmx
+2026-08-17 10:20:07 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.11.05.pgmx
+2026-08-17 10:20:07 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.06.pgmx
+2026-08-17 10:20:07 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.11.06.pgmx
+2026-08-17 10:20:07 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.11.07.pgmx
+2026-08-17 10:20:07 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.11.07.pgmx
+2026-08-17 10:20:08 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.12.05.pgmx
+2026-08-17 10:20:08 - src.ui.main_window - INFO - Status: Файл загружен: DSP_18_U963-ST9_1971G1.12.05.pgmx
+2026-08-17 10:20:09 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-17 10:20:11 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.05.01.SCX
+2026-08-17 10:20:11 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.05.01.SCX
+2026-08-17 10:20:11 - src.core.scx_handler - INFO - Извлечено операций: 12
+2026-08-17 10:20:11 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.05.01.SCX, операций: 12
+2026-08-17 10:20:11 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.05.01.SCX
+2026-08-17 10:20:11 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.06.01.SCX
+2026-08-17 10:20:11 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.06.01.SCX
+2026-08-17 10:20:11 - src.core.scx_handler - INFO - Извлечено операций: 12
+2026-08-17 10:20:11 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.06.01.SCX, операций: 12
+2026-08-17 10:20:11 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.06.01.SCX
+2026-08-17 10:20:12 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.07.SCX
+2026-08-17 10:20:12 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.07.SCX
+2026-08-17 10:20:12 - src.core.scx_handler - INFO - Извлечено операций: 19
+2026-08-17 10:20:12 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.07.SCX, операций: 19
+2026-08-17 10:20:12 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.07.SCX
+2026-08-17 10:20:12 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.08.SCX
+2026-08-17 10:20:12 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.08.SCX
+2026-08-17 10:20:12 - src.core.scx_handler - INFO - Извлечено операций: 29
+2026-08-17 10:20:12 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.08.SCX, операций: 29
+2026-08-17 10:20:12 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.08.SCX
+2026-08-17 10:20:12 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.07.SCX
+2026-08-17 10:20:12 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.07.SCX
+2026-08-17 10:20:13 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.08.SCX
+2026-08-17 10:20:13 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.08.SCX
+2026-08-17 10:20:13 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.09.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.09.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Извлечено операций: 50
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.09.SCX, операций: 50
+2026-08-17 10:20:13 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.09.SCX
+2026-08-17 10:20:13 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.10.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.10.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Извлечено операций: 50
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.10.SCX, операций: 50
+2026-08-17 10:20:13 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.10.SCX
+2026-08-17 10:20:13 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.11.SCX
+2026-08-17 10:20:13 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.11.SCX
+2026-08-17 10:20:13 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.12.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.12.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Извлечено операций: 28
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.12.SCX, операций: 28
+2026-08-17 10:20:13 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.12.SCX
+2026-08-17 10:20:13 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.13.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.13.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Извлечено операций: 32
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.13.SCX, операций: 32
+2026-08-17 10:20:13 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.13.SCX
+2026-08-17 10:20:13 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.14.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.14.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Извлечено операций: 4
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.14.SCX, операций: 4
+2026-08-17 10:20:13 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.14.SCX
+2026-08-17 10:20:13 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.15.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.15.SCX
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - Извлечено операций: 20
+2026-08-17 10:20:13 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.15.SCX, операций: 20
+2026-08-17 10:20:13 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.15.SCX
+2026-08-17 10:20:16 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.14.SCX
+2026-08-17 10:20:16 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.14.SCX
+2026-08-17 10:20:16 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.13.SCX
+2026-08-17 10:20:16 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.13.SCX
+2026-08-17 10:20:17 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.12.SCX
+2026-08-17 10:20:17 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.12.SCX
+2026-08-17 10:20:18 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.11.SCX
+2026-08-17 10:20:18 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.11.SCX
+2026-08-17 10:20:25 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.10.SCX
+2026-08-17 10:20:25 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.10.SCX
+2026-08-17 10:20:25 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.09.SCX
+2026-08-17 10:20:25 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.09.SCX
+2026-08-17 10:20:26 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.10.SCX
+2026-08-17 10:20:26 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.10.SCX
+2026-08-17 10:20:26 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.11.SCX
+2026-08-17 10:20:26 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.11.SCX
+2026-08-17 10:20:30 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.10.SCX
+2026-08-17 10:20:30 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.10.SCX
+2026-08-17 10:20:30 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.09.SCX
+2026-08-17 10:20:30 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.09.SCX
+2026-08-17 10:20:31 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.08.SCX
+2026-08-17 10:20:31 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.08.SCX
+2026-08-17 10:20:31 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.07.SCX
+2026-08-17 10:20:31 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.07.SCX
+2026-08-17 10:20:32 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.06.01.SCX
+2026-08-17 10:20:32 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.06.01.SCX
+2026-08-17 10:20:32 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.05.01.SCX
+2026-08-17 10:20:32 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.05.01.SCX
+2026-08-17 10:20:32 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.04.01.SCX
+2026-08-17 10:20:32 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.04.01.SCX
+2026-08-17 10:20:32 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.03.01.SCX
+2026-08-17 10:20:32 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.03.01.SCX
+2026-08-17 10:20:32 - src.core.scx_handler - INFO - Извлечено операций: 9
+2026-08-17 10:20:32 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.03.01.SCX, операций: 9
+2026-08-17 10:20:32 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.03.01.SCX
+2026-08-17 10:20:33 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.02.01.SCX
+2026-08-17 10:20:33 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.02.01.SCX
+2026-08-17 10:20:33 - src.core.scx_handler - INFO - Извлечено операций: 33
+2026-08-17 10:20:33 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.02.01.SCX, операций: 33
+2026-08-17 10:20:33 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.02.01.SCX
+2026-08-17 10:20:33 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.01.01.SCX
+2026-08-17 10:20:33 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.01.01.SCX
+2026-08-17 10:20:33 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.02.01.SCX
+2026-08-17 10:20:33 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.02.01.SCX
+2026-08-17 10:20:34 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.03.01.SCX
+2026-08-17 10:20:34 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.03.01.SCX
+2026-08-17 10:20:39 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.02.01.SCX
+2026-08-17 10:20:39 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.02.01.SCX
+2026-08-17 10:20:39 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.01.01.SCX
+2026-08-17 10:20:39 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.01.01.SCX
+2026-08-17 10:20:40 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.02.01.SCX
+2026-08-17 10:20:40 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.02.01.SCX
+2026-08-17 10:20:40 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.03.01.SCX
+2026-08-17 10:20:40 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.03.01.SCX
+2026-08-17 10:20:41 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.04.01.SCX
+2026-08-17 10:20:41 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.04.01.SCX
+2026-08-17 10:20:41 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.05.01.SCX
+2026-08-17 10:20:41 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.05.01.SCX
+2026-08-17 10:20:41 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.06.01.SCX
+2026-08-17 10:20:41 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.06.01.SCX
+2026-08-17 10:20:41 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.07.SCX
+2026-08-17 10:20:41 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.07.SCX
+2026-08-17 10:20:42 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.08.SCX
+2026-08-17 10:20:42 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.08.SCX
+2026-08-17 10:20:42 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.09.SCX
+2026-08-17 10:20:42 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.09.SCX
+2026-08-17 10:20:42 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.10.SCX
+2026-08-17 10:20:42 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.10.SCX
+2026-08-17 10:20:43 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.11.SCX
+2026-08-17 10:20:43 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.11.SCX
+2026-08-17 10:20:43 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.12.SCX
+2026-08-17 10:20:43 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.12.SCX
+2026-08-17 10:20:44 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.13.SCX
+2026-08-17 10:20:44 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.13.SCX
+2026-08-17 10:20:44 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.14.SCX
+2026-08-17 10:20:44 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.14.SCX
+2026-08-17 10:20:44 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.15.SCX
+2026-08-17 10:20:44 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.15.SCX
+2026-08-17 10:20:45 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.16.SCX
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.16.SCX
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - Извлечено операций: 14
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.16.SCX, операций: 14
+2026-08-17 10:20:45 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.16.SCX
+2026-08-17 10:20:45 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.17.SCX
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.17.SCX
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - Извлечено операций: 20
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.17.SCX, операций: 20
+2026-08-17 10:20:45 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.17.SCX
+2026-08-17 10:20:45 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.18.SCX
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.18.SCX
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - Извлечено операций: 14
+2026-08-17 10:20:45 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.18.SCX, операций: 14
+2026-08-17 10:20:45 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.18.SCX
+2026-08-17 10:20:46 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.19.SCX
+2026-08-17 10:20:46 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.19.SCX
+2026-08-17 10:20:46 - src.core.scx_handler - INFO - Извлечено операций: 0
+2026-08-17 10:20:46 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.19.SCX, операций: 0
+2026-08-17 10:20:46 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.19.SCX
+2026-08-17 10:20:46 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.20.SCX
+2026-08-17 10:20:46 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.20.SCX
+2026-08-17 10:20:47 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.22.SCX
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.22.SCX
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - Извлечено операций: 4
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.22.SCX, операций: 4
+2026-08-17 10:20:47 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.22.SCX
+2026-08-17 10:20:47 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.01.01.SCX
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.01.01.SCX
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - Извлечено операций: 31
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.02.01.01.SCX, операций: 31
+2026-08-17 10:20:47 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.02.01.01.SCX
+2026-08-17 10:20:47 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.02.01.SCX
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.02.01.SCX
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - Извлечено операций: 32
+2026-08-17 10:20:47 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.02.02.01.SCX, операций: 32
+2026-08-17 10:20:47 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.02.02.01.SCX
+2026-08-17 10:20:48 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.03.01.SCX
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.03.01.SCX
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - Извлечено операций: 20
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.02.03.01.SCX, операций: 20
+2026-08-17 10:20:48 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.02.03.01.SCX
+2026-08-17 10:20:48 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.04.01.SCX
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.04.01.SCX
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - Извлечено операций: 20
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.02.04.01.SCX, операций: 20
+2026-08-17 10:20:48 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.02.04.01.SCX
+2026-08-17 10:20:48 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.05.01.SCX
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.05.01.SCX
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - Извлечено операций: 8
+2026-08-17 10:20:48 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.02.05.01.SCX, операций: 8
+2026-08-17 10:20:48 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.02.05.01.SCX
+2026-08-17 10:20:49 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.01.01.SCX
+2026-08-17 10:20:49 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.01.01.SCX
+2026-08-17 10:20:49 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.02.01.SCX
+2026-08-17 10:20:49 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.02.01.SCX
+2026-08-17 10:20:49 - src.core.scx_handler - INFO - Извлечено операций: 8
+2026-08-17 10:20:49 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.02.01.SCX, операций: 8
+2026-08-17 10:20:49 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.02.01.SCX
+2026-08-17 10:20:49 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.03.01.SCX
+2026-08-17 10:20:49 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.03.01.SCX
+2026-08-17 10:20:49 - src.core.scx_handler - INFO - Извлечено операций: 8
+2026-08-17 10:20:49 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.03.01.SCX, операций: 8
+2026-08-17 10:20:49 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.03.01.SCX
+2026-08-17 10:20:50 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.04.01.SCX
+2026-08-17 10:20:50 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.04.01.SCX
+2026-08-17 10:20:50 - src.core.scx_handler - INFO - Извлечено операций: 8
+2026-08-17 10:20:50 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.04.01.SCX, операций: 8
+2026-08-17 10:20:50 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.04.01.SCX
+2026-08-17 10:20:50 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.05.SCX
+2026-08-17 10:20:50 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.05.SCX
+2026-08-17 10:20:50 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.06.SCX
+2026-08-17 10:20:50 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.06.SCX
+2026-08-17 10:20:50 - src.core.scx_handler - INFO - Извлечено операций: 27
+2026-08-17 10:20:50 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.06.SCX, операций: 27
+2026-08-17 10:20:50 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.06.SCX
+2026-08-17 10:20:51 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.05.SCX
+2026-08-17 10:20:51 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.05.SCX
+2026-08-17 10:20:54 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.06.SCX
+2026-08-17 10:20:54 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.06.SCX
+2026-08-17 10:20:55 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.07.SCX
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.07.SCX
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - Извлечено операций: 46
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.07.SCX, операций: 46
+2026-08-17 10:20:55 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.07.SCX
+2026-08-17 10:20:55 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.08.SCX
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.08.SCX
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - Извлечено операций: 50
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.08.SCX, операций: 50
+2026-08-17 10:20:55 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.08.SCX
+2026-08-17 10:20:55 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.09.SCX
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.09.SCX
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - Извлечено операций: 14
+2026-08-17 10:20:55 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.09.SCX, операций: 14
+2026-08-17 10:20:55 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.09.SCX
+2026-08-17 10:20:56 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.10.SCX
+2026-08-17 10:20:56 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.10.SCX
+2026-08-17 10:20:57 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.09.SCX
+2026-08-17 10:20:57 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.09.SCX
+2026-08-17 10:22:35 - src.ui.main_window - INFO - Приложение закрыто
+2026-08-17 10:22:35 - __main__ - INFO - Приложение завершено с кодом: 0
