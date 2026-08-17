@@ -8928,3 +8928,44 @@
 2026-08-17 13:51:56 - src.core.batch_processor - INFO - Уникальных имен в CSV: 0
 2026-08-17 13:51:56 - src.core.batch_processor - INFO - Файлов PGMX найдено: 606
 2026-08-17 13:52:02 - __main__ - INFO - Приложение завершено с кодом: 0
+2026-08-17 14:02:20 - root - INFO - ============================================================
+2026-08-17 14:02:20 - root - INFO - Запуск приложения: 2026-08-17T14:02:20.521643
+2026-08-17 14:02:20 - root - INFO - Лог файл: C:\Базис\Lithium Panel Editor_3.0\logs\cnc_editor.log
+2026-08-17 14:02:20 - root - INFO - Уровень логирования: INFO
+2026-08-17 14:02:20 - root - INFO - ============================================================
+2026-08-17 14:02:20 - __main__ - INFO - Запуск Editor
+2026-08-17 14:02:20 - __main__ - INFO - Окно приложения показано
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Начало сканирования папки: C:/Базис/Lithium Panel Editor_3.0/1971
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Найдено файлов: SCX=800, PGMX=1212, CSV=28
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_DSP_10_U963-ST9(DSP_10_U963-ST9).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_DSP_16_U963-ST9(DSP_16_U963-ST9).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_DSP_18_U963-ST9(DSP_18_U963-ST9).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_DSP_25_U963-ST9(DSP_25_U963-ST9).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MDF_19_L2(W)(MDF_19_L2(W))_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MDF_22_L2(W)(MDF_22_L2(W))_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MDF_25_L2(W)(MDF_25_L2(W)).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MDF_25_L2(W)(MDF_25_L2(W))_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_13.2_DE.T(MSP2_13.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_19.2_DE.T(MSP2_19.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_23.2_DE.T(MSP2_23.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_26.2_DE.T(MSP2_26.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_30_DE.T(MSP2_30_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_35.2_DE.T(MSP2_35.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_DSP_10_U963-ST9(DSP_10_U963-ST9).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_DSP_16_U963-ST9(DSP_16_U963-ST9).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_DSP_18_U963-ST9(DSP_18_U963-ST9).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_DSP_25_U963-ST9(DSP_25_U963-ST9).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MDF_19_L2(W)(MDF_19_L2(W))_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MDF_22_L2(W)(MDF_22_L2(W))_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MDF_25_L2(W)(MDF_25_L2(W)).csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MDF_25_L2(W)(MDF_25_L2(W))_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_13.2_DE.T(MSP2_13.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_19.2_DE.T(MSP2_19.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_23.2_DE.T(MSP2_23.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_26.2_DE.T(MSP2_26.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_30_DE.T(MSP2_30_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Ошибка чтения CSV 1971G1_MSP2_35.2_DE.T(MSP2_35.2_DE.T)_with_Painting.csv: open() argument 'encoding' must be str or None, not tuple
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Всего деталей в CSV: 0
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Уникальных имен в CSV: 0
+2026-08-17 14:02:31 - src.core.batch_processor - INFO - Файлов PGMX найдено: 606
+2026-08-17 14:03:34 - __main__ - INFO - Приложение завершено с кодом: 0
