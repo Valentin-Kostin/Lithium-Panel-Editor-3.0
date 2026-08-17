@@ -128,27 +128,13 @@ class FormatTab(QWidget):
 
         splitter.addWidget(left_widget)
 
-        # Правая панель - таблица операций и список файлов
+        # Правая панель - сводная таблица операций (без списка файлов)
         right_widget = QWidget()
         right_layout = QVBoxLayout(right_widget)
         right_layout.setContentsMargins(5, 5, 5, 5)
 
-        # Список файлов
-        file_list_header = QLabel("📄 Список файлов")
-        file_list_header.setStyleSheet("font-weight: bold; font-size: 12px;")
-        right_layout.addWidget(file_list_header)
-        
-        from PySide6.QtWidgets import QListView
-        from ..models.file_list_model import FileListModel
-        
-        self.file_list_view = QListView()
-        self.file_list_model = FileListModel(self)
-        self.file_list_view.setModel(self.file_list_model)
-        self.file_list_view.setSelectionMode(QListView.SingleSelection)
-        right_layout.addWidget(self.file_list_view)
-
         # Заголовок таблицы
-        table_header = QLabel("📊 Найденные операции")
+        table_header = QLabel("📊 Сводная таблица операций")
         table_header.setStyleSheet("font-weight: bold; font-size: 12px;")
         right_layout.addWidget(table_header)
 
@@ -158,7 +144,7 @@ class FormatTab(QWidget):
         self.operations_table.set_model(self.operations_model)
         right_layout.addWidget(self.operations_table)
 
-        # Информация о файле
+        # Информация о файле (теперь показывает общую сводку)
         self.file_info_label = QLabel("")
         self.file_info_label.setStyleSheet("color: gray; font-style: italic;")
         right_layout.addWidget(self.file_info_label)
@@ -176,10 +162,11 @@ class FormatTab(QWidget):
         """Подключение сигналов."""
         self.open_folder_btn.clicked.connect(self._on_open_folder)
         self.save_btn.clicked.connect(self._on_save)
+        self.clear_log_btn.clicked.connect(self.log_text.clear)
+        self.find_btn.clicked.connect(self._on_find_operations)
+        self.apply_all_btn.clicked.connect(self._on_apply_all)
         
-        self.file_list_view.selectionModel().currentChanged.connect(
-            self._on_file_selection_changed
-        )
+        # Убрано подключение file_list_view так как виджет удален
         
         self.operations_table.model().data_changed_signal.connect(
             self._on_operation_data_changed
@@ -239,13 +226,8 @@ class FormatTab(QWidget):
 
     @Slot(object)
     def _on_file_selection_changed(self, current, previous):
-        """Обработка выбора файла в списке."""
-        if not current.isValid():
-            return
-
-        file_info = self.file_list_model.get_file_at(current.row())
-        if file_info and file_info.is_valid:
-            self.load_file(file_info.path)
+        """Обработка выбора файла в списке (удалено вместе с file_list_view)."""
+        pass  # Метод больше не используется
 
     @Slot(int, str, object)
     def _on_operation_data_changed(self, operation_id: int, field: str, value: any):
@@ -255,33 +237,106 @@ class FormatTab(QWidget):
         self.save_btn.setEnabled(has_modifications)
         self.status_message.emit(f"Изменено: операция #{operation_id}, {field} = {value}")
 
+    @Slot()
+    def _on_find_operations(self):
+        """Поиск операций по критериям во всех загруженных файлах."""
+        diameter = self.diameter_input.value()
+        max_depth = self.max_depth_input.value()
+        op_type = self.operation_type_combo.currentText()
+        
+        all_operations = []
+        
+        for path, doc in self._documents.items():
+            for op in doc.operations:
+                # Фильтрация по диаметру
+                if hasattr(op, 'diameter') and abs(op.diameter - diameter) < 0.01:
+                    # Фильтрация по глубине
+                    if hasattr(op, 'depth') and op.depth > max_depth:
+                        op._source_file = path  # Добавляем ссылку на файл
+                        op._original_depth = op.depth  # Сохраняем оригинальную глубину
+                        all_operations.append(op)
+                
+                # Фильтрация по типу операции
+                if op_type != "Все":
+                    # Логика фильтрации по типу (зависит от реализации модели)
+                    pass
+        
+        self.operations_model.set_operations(all_operations)
+        self.apply_all_btn.setEnabled(len(all_operations) > 0)
+        
+        # Обновление сводной информации
+        self.file_info_label.setText(
+            f"Найдено операций: {len(all_operations)} в {len(self._documents)} файлах"
+        )
+        
+        # Логирование
+        self.log_text.append(f"🔍 Поиск: диаметр={diameter}мм, макс.глубина={max_depth}мм")
+        self.log_text.append(f"   Найдено {len(all_operations)} операций")
+        if all_operations:
+            files_with_issues = set(op._source_file.name for op in all_operations)
+            self.log_text.append(f"   Файлы с замечаниями: {', '.join(files_with_issues)}")
+        self.log_text.append("-" * 50)
+
+    @Slot()
+    def _on_apply_all(self):
+        """Применить изменения ко всем найденным операциям."""
+        operations = self.operations_model.get_all_operations()
+        if not operations:
+            return
+        
+        count = 0
+        for op in operations:
+            if hasattr(op, 'depth') and hasattr(op, '_original_depth'):
+                op.depth = self.max_depth_input.value()
+                count += 1
+        
+        self.log_text.append(f"✅ Применено изменений: {count}")
+        self.operations_model.dataChanged.emit(
+            self.operations_model.index(0, 0),
+            self.operations_model.index(self.operations_model.rowCount()-1, 
+                                       self.operations_model.columnCount()-1)
+        )
+        self.save_btn.setEnabled(True)
+
     def scan_folder(self, folder_path: Path) -> None:
         """Сканирование папки на наличие файлов."""
         logger.info(f"Сканирование папки: {folder_path} для формата {self.format_handler.format_name}")
         
         try:
             files = self.format_handler.scan_folder(folder_path)
-            self.file_list_model.set_files(files)
             
-            valid_count = sum(1 for f in files if f.is_valid)
-            invalid_count = sum(1 for f in files if not f.is_valid)
+            # Загружаем все файлы сразу для сводной таблицы
+            valid_count = 0
+            invalid_count = 0
+            
+            for file_info in files:
+                if file_info.is_valid:
+                    try:
+                        doc = self.format_handler.open_file(file_info.path)
+                        self._documents[file_info.path] = doc
+                        valid_count += 1
+                    except Exception as e:
+                        logger.error(f"Ошибка загрузки файла {file_info.path}: {e}")
+                        invalid_count += 1
+                else:
+                    invalid_count += 1
             
             self.files_loaded.emit(valid_count)
             self.status_message.emit(
-                f"Найдено файлов: {valid_count} (ошибок: {invalid_count})"
+                f"Загружено файлов: {valid_count} (ошибок: {invalid_count})"
             )
             
-            if valid_count > 0:
-                self.file_list_view.setCurrentIndex(
-                    self.file_list_model.index(0, 0)
-                )
+            # Обновляем сводную информацию
+            self.file_info_label.setText(
+                f"Загружено файлов: {valid_count} | Всего операций: {sum(len(doc.operations) for doc in self._documents.values())}"
+            )
                 
         except Exception as e:
             logger.error(f"Ошибка сканирования папки: {e}")
             self.status_message.emit(f"Ошибка сканирования: {e}")
 
     def load_file(self, file_path: Path) -> None:
-        """Загрузка файла."""
+        """Загрузка файла (устарело, используется загрузка всех файлов сразу)."""
         logger.info(f"Загрузка файла: {file_path}")
         
         try:
