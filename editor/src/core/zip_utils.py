@@ -116,11 +116,8 @@ def update_xml_in_zip(
 
         # Атомарное перемещение
         if target_path == zip_path:
-            # Резервная копия
-            backup_path = zip_path.with_suffix('.bak')
-            shutil.copy2(zip_path, backup_path)
             temp_path.replace(zip_path)
-            logger.info(f"ZIP обновлён: {zip_path}, резервная копия: {backup_path}")
+            logger.info(f"ZIP обновлён: {zip_path}")
         else:
             temp_path.replace(target_path)
             logger.info(f"ZIP сохранён: {target_path}")

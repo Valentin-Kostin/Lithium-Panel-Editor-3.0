@@ -14,6 +14,7 @@ from PySide6.QtGui import QFont
 import os
 
 from ..core.batch_processor import BatchProcessor
+from ..utils.settings import Settings
 
 
 class MainWindow(QMainWindow):
@@ -22,6 +23,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.processor = BatchProcessor()
+        self.settings = Settings()
         self.setWindowTitle("Lithium Panel Editor v3.0")
         self.setMinimumSize(900, 700)
         

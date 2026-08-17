@@ -394,12 +394,6 @@ class ScxFormatHandler(BaseFormatHandler):
             with open(temp_path, 'wb') as f:
                 f.write(xml_bytes)
             
-            # Резервная копия если перезаписываем исходный файл
-            if target_path == doc.file_info.path and target_path.exists():
-                backup_path = target_path.with_suffix('.bak')
-                shutil.copy2(target_path, backup_path)
-                logger.debug(f"Резервная копия создана: {backup_path}")
-            
             # Перемещение временного файла
             shutil.move(temp_path, target_path)
             logger.info(f"SCX файл сохранён: {target_path}")
