@@ -323,29 +323,34 @@ class BatchProcessor:
                         encoding = detect_encoding(data) if isinstance(data, bytes) else 'utf-8'
                         content = data.decode(encoding) if isinstance(data, bytes) else data
                         
-                        # Ищем операции сверления с диаметром ~2.22
-                        # В PGMX обычно используются namespaces
-                        # Pattern для поиска диаметра в любом месте
-                        drill_pattern = r'(Diameter|Dia|D)=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])["\']?'
+                        # Ищем операции сверления с диаметром ~2.22 и заменяем ToolId на E007
+                        # Pattern для поиска тега с Diameter и ToolId
+                        tag_pattern = r'<[^>]*Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])["\']?[^>]*ToolId=["\'][^"\']+["\'][^>]*>'
                         
-                        # Более точный поиск: ищем элементы с ToolId и Diameter
-                        # Замена ToolId на E007 если диаметр подходит
-                        def replace_tool(match):
+                        def fix_tag(full_match):
                             nonlocal tool_count, modified
-                            attr = match.group(1)
-                            dia_str = match.group(2)
-                            dia = float(dia_str.replace(',', '.'))
+                            # Извлекаем диаметр из匹配的字符串
+                            dia_match = re.search(r'Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])', full_match)
+                            if not dia_match:
+                                return full_match
                             
-                            if 2.15 <= dia <= 2.30: # Допуск для 2.22
-                                tool_count += 1
-                                modified = True
-                                self.log(f"   🔧 Найдено сверло Ø{dia:.2f}, замена на {replacement_tool['id']}")
-                                # Нужно заменить соответствующий ToolId атрибут
-                                # Это сложно сделать одним regex, нужен парсинг
-                                return match.group(0) # Пока просто логгируем
-                            return match.group(0)
-                            
-                        content = re.sub(drill_pattern, replace_tool, content)
+                            dia_str = dia_match.group(1)
+                            try:
+                                dia = float(dia_str.replace(',', '.'))
+                            except:
+                                return full_match
+                                
+                            if 2.15 <= dia <= 2.30:
+                                # Заменяем ToolId в этом теге
+                                new_tag = re.sub(r'ToolId=["\'][^"\']+["\']', f'ToolId="{replacement_tool["id"]}"', full_match)
+                                if new_tag != full_match:
+                                    tool_count += 1
+                                    modified = True
+                                    self.log(f"   🔧 Найдено сверло Ø{dia:.2f}, замена ToolId на {replacement_tool['id']}")
+                                return new_tag
+                            return full_match
+                        
+                        content = re.sub(tag_pattern, fix_tag, content)
                         new_xml_data[name] = content.encode(encoding)
                         
                     except Exception as e:

@@ -289,12 +289,12 @@ class MainWindow(QMainWindow):
             return
             
         # Проверяем загружена ли база инструментов
-        tool_db = self.processor.get_tool_db()
-        if tool_db is None:
+        tool_db = global_tool_db
+        if tool_db is None or not tool_db.tools:
             self._log("\n⚠️ База инструментов не загружена! Укажите путь к def.tlgx в настройках.")
             return
             
-        e007_id = self.processor.find_tool_e007(tool_db)
+        e007_id = global_tool_db.get_replacement_tool("E007")
         if not e007_id:
             self._log("\n⚠️ Инструмент E007 не найден в базе!")
             return
