@@ -144,6 +144,7 @@ def get_element_by_xpath(
 ) -> Optional[etree._Element]:
     """
     Поиск элемента по XPath.
+    Автоматически обрабатывает default namespace (None ключ) заменяя на 'ns'.
 
     Args:
         root: Корневой элемент.
@@ -153,8 +154,17 @@ def get_element_by_xpath(
     Returns:
         Найденный элемент или None.
     """
+    # Обработка namespaces: замена None ключа на 'ns'
+    processed_ns = {}
+    if namespaces:
+        for prefix, uri in namespaces.items():
+            if prefix is None:
+                processed_ns['ns'] = uri
+            else:
+                processed_ns[prefix] = uri
+    
     try:
-        elements = root.xpath(xpath, namespaces=namespaces)
+        elements = root.xpath(xpath, namespaces=processed_ns)
         if elements:
             return elements[0]
         return None
@@ -170,6 +180,7 @@ def get_elements_by_xpath(
 ) -> list:
     """
     Поиск всех элементов по XPath.
+    Автоматически обрабатывает default namespace (None ключ) заменяя на 'ns'.
 
     Args:
         root: Корневой элемент.
@@ -179,8 +190,17 @@ def get_elements_by_xpath(
     Returns:
         Список найденных элементов.
     """
+    # Обработка namespaces: замена None ключа на 'ns'
+    processed_ns = {}
+    if namespaces:
+        for prefix, uri in namespaces.items():
+            if prefix is None:
+                processed_ns['ns'] = uri
+            else:
+                processed_ns[prefix] = uri
+    
     try:
-        return root.xpath(xpath, namespaces=namespaces) or []
+        return root.xpath(xpath, namespaces=processed_ns) or []
     except etree.XPathError as e:
         logger.error(f"Ошибка XPath '{xpath}': {e}")
         return []
