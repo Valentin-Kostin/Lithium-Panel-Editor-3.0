@@ -14,6 +14,7 @@ from PySide6.QtGui import QFont
 import os
 
 from ..core.batch_processor import BatchProcessor
+from ..core.tool_db import global_tool_db
 from ..utils.settings import Settings
 
 
@@ -217,7 +218,7 @@ class MainWindow(QMainWindow):
         if file_path:
             if self._load_tool_database(file_path):
                 # Сохраняем путь
-                self.processor.settings.set_tool_db_path(file_path)
+                self.settings.set_tool_db_path(file_path)
                 self._log(f"💾 Путь сохранен в настройках")
     
     def _load_tool_database(self, file_path: str) -> bool:
@@ -225,16 +226,16 @@ class MainWindow(QMainWindow):
         self._log(f"\n{'='*60}")
         self._log(f"🔧 Загрузка базы инструментов: {file_path}")
         
-        tool_db = self.processor.get_tool_db()
-        if tool_db is None:
+        # Загружаем базу через глобальный экземпляр
+        if not global_tool_db.load(file_path):
             self._log(f"❌ Ошибка загрузки базы инструментов!")
             self.btn_fix_pgmx.setEnabled(False)
             return False
             
-        e007_id = self.processor.find_tool_e007(tool_db)
-        if e007_id:
+        e007 = global_tool_db.get_replacement_tool("E007")
+        if e007:
             self._log(f"✅ База инструментов успешно загружена!")
-            self._log(f"   🎯 Инструмент E007 найден (ID: {e007_id})")
+            self._log(f"   🎯 Инструмент E007 найден (ID: {e007['id']})")
             self.btn_fix_pgmx.setEnabled(True)
             return True
         else:
