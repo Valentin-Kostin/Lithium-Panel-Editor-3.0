@@ -164,10 +164,6 @@ class BatchProcessor:
         self.log("=== Начало исправления файлов .SCX (NANXING) ===")
         stats = {'processed': 0, 'holes_fixed': 0, 'panels_found': 0, 'dots_replaced': 0, 'face_fixed': 0, 'errors': 0}
         
-        # Создаем бэкап перед массовым изменением
-        for f in self.scx_files:
-            self._create_backup(f)
-            
         for file_path in self.scx_files:
             try:
                 self.log(f"Обработка файла: {file_path.name}")
@@ -430,8 +426,6 @@ class BatchProcessor:
                 content = re.sub(type4_pattern, revert_numbers, content)
                 
                 if content != original_content:
-                    # Создаем бэкап перед записью
-                    self._create_backup(file_path)
                     with open(file_path, 'w', encoding=encoding) as f:
                         f.write(content)
                     stats['processed'] += 1
