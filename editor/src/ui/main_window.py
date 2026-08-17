@@ -163,12 +163,12 @@ class MainWindow(QMainWindow):
     @Slot(int)
     def _on_files_loaded_scm(self, count: int):
         """Обработка загрузки файлов SCM."""
-        self.files_count_label.setText(f"SCM: {count}")
+        self.files_count_label.setText(f"SCM файлов: {count}")
 
     @Slot(int)
     def _on_files_loaded_nanxing(self, count: int):
         """Обработка загрузки файлов NANXING."""
-        self.files_count_label.setText(f"NANXING: {count}")
+        self.files_count_label.setText(f"NANXING файлов: {count}")
 
     @Slot(bool)
     def _on_modifications_changed_scm(self, has_changes: bool):
