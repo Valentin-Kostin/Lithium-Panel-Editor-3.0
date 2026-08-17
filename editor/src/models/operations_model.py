@@ -65,6 +65,10 @@ class OperationsTableModel(QAbstractTableModel):
             if column == self.COL_ID:
                 return operation.id
             elif column == self.COL_FILE:
+                # Показываем имя файла из атрибута _source_file если есть
+                source_file = getattr(operation, '_source_file', None)
+                if source_file:
+                    return source_file.name if hasattr(source_file, 'name') else str(source_file)
                 return operation.file_name
             elif column == self.COL_NAME:
                 return operation.operation_name
@@ -91,6 +95,9 @@ class OperationsTableModel(QAbstractTableModel):
             tooltip = f"Операция #{operation.id}\n"
             tooltip += f"Имя: {operation.operation_name}\n"
             tooltip += f"Тип: {operation.operation_type}\n"
+            source_file = getattr(operation, '_source_file', None)
+            if source_file:
+                tooltip += f"Файл: {source_file.name if hasattr(source_file, 'name') else str(source_file)}\n"
             if operation.z is not None:
                 tooltip += f"Z: {operation.z:.3f}\n"
             if operation.diameter is not None:
