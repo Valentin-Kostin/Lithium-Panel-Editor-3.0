@@ -1,253 +1,313 @@
 """
-Главное окно приложения.
-Содержит вкладки для SCM (.PGMX) и NANXING (.SCX) форматов.
+Главное окно приложения Lithium Panel Editor.
+Новый интерфейс:
+- Верхняя панель с кнопками управления
+- Большое текстовое окно логов внизу
 """
-
-import logging
-from pathlib import Path
-
 from PySide6.QtWidgets import (
-    QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout,
-    QPushButton, QToolBar, QStatusBar, QLabel, QMessageBox, QFileDialog
+    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
+    QPushButton, QTextEdit, QFileDialog, QLabel, QProgressBar,
+    QGroupBox, QApplication
 )
-from PySide6.QtCore import Qt, Slot
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 
-from ..core.pgmx_handler import PgmxFormatHandler
-from ..core.scx_handler import ScxFormatHandler
-from .format_tab import FormatTab
-
-logger = logging.getLogger(__name__)
+from ..core.batch_processor import BatchProcessor
+from ..core.tool_db import global_tool_db
 
 
 class MainWindow(QMainWindow):
-    """
-    Главное окно приложения Lithium Panel Editor.
-    """
-
+    """Главное окно приложения с новым интерфейсом."""
+    
     def __init__(self):
         super().__init__()
-        
-        self.setWindowTitle("Lithium Panel Editor 3.0")
-        self.setMinimumSize(1024, 768)
-        
-        # Инициализация обработчиков форматов
-        self.pgmx_handler = PgmxFormatHandler()
-        self.scx_handler = ScxFormatHandler()
-        
-        # Вкладки
-        self.tabs = QTabWidget()
-        
-        # Создание вкладок форматов
-        self.scm_tab = FormatTab(self.pgmx_handler, self)
-        self.nanxing_tab = FormatTab(self.scx_handler, self)
-        
-        self.tabs.addTab(self.scm_tab, "🇮🇹 SCM (.PGMX)")
-        self.tabs.addTab(self.nanxing_tab, "🇨🇳 NANXING (.SCX)")
-        
-        self.setCentralWidget(self.tabs)
+        self.processor = BatchProcessor()
+        self.setWindowTitle("Lithium Panel Editor v3.0")
+        self.setMinimumSize(900, 700)
         
         self._setup_ui()
-        self._create_actions()
-        self._create_toolbar()
-        self._create_statusbar()
         self._connect_signals()
-
+        
     def _setup_ui(self):
-        """Настройка UI."""
-        # Центральная виджет уже установлен (tabs)
-        pass
-
-    def _create_actions(self):
-        """Создание действий меню."""
-        # Меню Файл
-        self.open_folder_action = QAction("📁 Открыть папку", self)
-        self.open_folder_action.setShortcut("Ctrl+O")
-        self.open_folder_action.setToolTip("Открыть папку со сканированием файлов")
+        """Создание интерфейса."""
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        main_layout = QVBoxLayout(central_widget)
+        main_layout.setSpacing(10)
+        main_layout.setContentsMargins(15, 15, 15, 15)
         
-        self.save_all_action = QAction("💾 Сохранить всё", self)
-        self.save_all_action.setShortcut("Ctrl+S")
-        self.save_all_action.setToolTip("Сохранить все изменённые файлы")
+        # === ВЕРХНЯЯ ПАНЕЛЬ С КНОПКАМИ ===
+        control_group = QGroupBox("🛠️ Панель управления")
+        control_layout = QHBoxLayout(control_group)
+        control_layout.setSpacing(10)
         
-        self.exit_action = QAction("Выход", self)
-        self.exit_action.setShortcut("Ctrl+Q")
-        self.exit_action.setToolTip("Закрыть приложение")
+        # Кнопки
+        self.btn_select_folder = QPushButton("📁 Выбрать папку")
+        self.btn_select_folder.setToolTip("Выбрать папку с файлами .SCX, .PGMX, .CSV")
+        self.btn_select_folder.setMinimumHeight(40)
         
-        # Меню Правка
-        self.undo_action = QAction("↶ Отменить", self)
-        self.undo_action.setShortcut("Ctrl+Z")
-        self.undo_action.setEnabled(False)  # TODO
+        self.btn_load_tools = QPushButton("🔧 База инструментов")
+        self.btn_load_tools.setToolTip("Загрузить файл def.tlgx с базой инструментов")
+        self.btn_load_tools.setMinimumHeight(40)
         
-        self.redo_action = QAction("↷ Повторить", self)
-        self.redo_action.setShortcut("Ctrl+Y")
-        self.redo_action.setEnabled(False)  # TODO
+        self.btn_fix_scx = QPushButton("✏️ Исправить .SCX (NANXING)")
+        self.btn_fix_scx.setToolTip(
+            "Исправить файлы .SCX:\n"
+            "- Отверстия Ø2.5мм с глубиной >5мм → 5мм\n"
+            "- Найти панели >1200×1200мм\n"
+            "- Type=4: точки → запятые\n"
+            "- Type=4 Face=0 → взять Face из метки Ø12.222"
+        )
+        self.btn_fix_scx.setMinimumHeight(40)
         
-        # Меню Помощь
-        self.about_action = QAction("О программе", self)
-        self.about_action.setToolTip("Информация о приложении")
-
-    def _create_toolbar(self):
-        """Создание панели инструментов."""
-        toolbar = QToolBar("Основная панель")
-        toolbar.setMovable(False)
-        self.addToolBar(toolbar)
+        self.btn_fix_pgmx = QPushButton("⚙️ Править .PGMX (SCM)")
+        self.btn_fix_pgmx.setToolTip(
+            "Исправить файлы .PGMX:\n"
+            "- Найти сверления Ø~2.22мм\n"
+            "- Заменить инструмент на E007"
+        )
+        self.btn_fix_pgmx.setMinimumHeight(40)
+        self.btn_fix_pgmx.setEnabled(False)  # Пока база не загружена
         
-        toolbar.addAction(self.open_folder_action)
-        toolbar.addAction(self.save_all_action)
-        toolbar.addSeparator()
-        toolbar.addAction(self.undo_action)
-        toolbar.addAction(self.redo_action)
-        toolbar.addSeparator()
-        toolbar.addAction(self.about_action)
-
-    def _create_statusbar(self):
-        """Создание статус-бара."""
-        self.statusbar = QStatusBar()
-        self.setStatusBar(self.statusbar)
+        self.btn_revert_dots = QPushButton("↩️ Вернуть точки")
+        self.btn_revert_dots.setToolTip(
+            "Вернуть точки вместо запятых в Type=4\n"
+            "(откат изменений для .SCX)"
+        )
+        self.btn_revert_dots.setMinimumHeight(40)
         
-        # Метки статуса
-        self.status_label = QLabel("Готов")
-        self.statusbar.addWidget(self.status_label, 1)
+        # Добавление кнопок в layout
+        control_layout.addWidget(self.btn_select_folder)
+        control_layout.addWidget(self.btn_load_tools)
+        control_layout.addWidget(self.btn_fix_scx)
+        control_layout.addWidget(self.btn_fix_pgmx)
+        control_layout.addWidget(self.btn_revert_dots)
         
-        self.files_count_label = QLabel("")
-        self.statusbar.addPermanentWidget(self.files_count_label)
+        # === ПРОГРЕСС БАР И СТАТУС ===
+        status_layout = QHBoxLayout()
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setVisible(False)
+        self.progress_bar.setMaximumWidth(300)
         
-        self.modified_label = QLabel("")
-        self.statusbar.addPermanentWidget(self.modified_label)
-
+        self.status_label = QLabel("Готов к работе")
+        self.status_label.setAlignment(Qt.AlignCenter)
+        
+        status_layout.addWidget(self.status_label)
+        status_layout.addWidget(self.progress_bar)
+        
+        # === ТЕКСТОВОЕ ОКНО ЛОГОВ ===
+        log_group = QGroupBox("📋 Журнал операций")
+        log_layout = QVBoxLayout(log_group)
+        
+        self.log_text = QTextEdit()
+        self.log_text.setReadOnly(True)
+        self.log_text.setFont(QFont("Consolas", 9))
+        self.log_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #1e1e1e;
+                color: #d4d4d4;
+                border: 1px solid #3e3e3e;
+                border-radius: 5px;
+                padding: 5px;
+            }
+        """)
+        self.log_text.setPlaceholderText("Здесь будет выводиться информация о обработанных файлах...")
+        
+        log_layout.addWidget(self.log_text)
+        
+        # Кнопка очистки лога
+        btn_clear_log = QPushButton("🗑️ Очистить лог")
+        btn_clear_log.setMaximumWidth(120)
+        btn_clear_log.clicked.connect(self.log_text.clear)
+        log_layout.addWidget(btn_clear_log, alignment=Qt.AlignRight)
+        
+        # === СБОРКА ИНТЕРФЕЙСА ===
+        main_layout.addWidget(control_group)
+        main_layout.addLayout(status_layout)
+        main_layout.addWidget(log_group, stretch=1)  # Растягиваем лог
+        
     def _connect_signals(self):
-        """Подключение сигналов."""
-        # Меню
-        self.open_folder_action.triggered.connect(self._on_open_folder)
-        self.save_all_action.triggered.connect(self._on_save_all)
-        self.exit_action.triggered.connect(self.close)
-        self.about_action.triggered.connect(self._show_about)
+        """Подключение сигналов к слотам."""
+        self.btn_select_folder.clicked.connect(self._on_select_folder)
+        self.btn_load_tools.clicked.connect(self._on_load_tools)
+        self.btn_fix_scx.clicked.connect(self._on_fix_scx)
+        self.btn_fix_pgmx.clicked.connect(self._on_fix_pgmx)
+        self.btn_revert_dots.clicked.connect(self._on_revert_dots)
         
-        # Сигналы от вкладок
-        self.scm_tab.files_loaded.connect(self._on_files_loaded_scm)
-        self.scm_tab.modifications_changed.connect(self._on_modifications_changed_scm)
-        self.scm_tab.status_message.connect(self._on_status_message)
+    def _log(self, message: str):
+        """Вывод сообщения в лог."""
+        self.log_text.append(message)
+        # Прокрутка вниз
+        scrollbar = self.log_text.verticalScrollBar()
+        scrollbar.setValue(scrollbar.maximum())
+        QApplication.processEvents()
         
-        self.nanxing_tab.files_loaded.connect(self._on_files_loaded_nanxing)
-        self.nanxing_tab.modifications_changed.connect(self._on_modifications_changed_nanxing)
-        self.nanxing_tab.status_message.connect(self._on_status_message)
-        
-        # Переключение вкладок
-        self.tabs.currentChanged.connect(self._on_tab_changed)
-
-    @Slot()
-    def _on_open_folder(self):
-        """Обработка открытия папки с текущей вкладки."""
-        current_tab = self.tabs.currentWidget()
-        if current_tab == self.scm_tab:
-            self.scm_tab.open_folder_btn.click()
-        elif current_tab == self.nanxing_tab:
-            self.nanxing_tab.open_folder_btn.click()
-
-    @Slot()
-    def _on_save_all(self):
-        """Сохранение всех изменённых файлов на текущей вкладке."""
-        current_tab = self.tabs.currentWidget()
-        saved_count = 0
-        
-        if current_tab == self.scm_tab:
-            saved_count = self.scm_tab.save_all()
-        elif current_tab == self.nanxing_tab:
-            saved_count = self.nanxing_tab.save_all()
-        
-        if saved_count > 0:
-            self._on_status_message(f"Сохранено файлов: {saved_count}")
-        else:
-            self._on_status_message("Нет изменений для сохранения")
-
-    @Slot(int)
-    def _on_files_loaded_scm(self, count: int):
-        """Обработка загрузки файлов SCM."""
-        self.files_count_label.setText(f"SCM файлов: {count}")
-
-    @Slot(int)
-    def _on_files_loaded_nanxing(self, count: int):
-        """Обработка загрузки файлов NANXING."""
-        self.files_count_label.setText(f"NANXING файлов: {count}")
-
-    @Slot(bool)
-    def _on_modifications_changed_scm(self, has_changes: bool):
-        """Обработка изменений на вкладке SCM."""
-        if has_changes:
-            self.modified_label.setText("⚠ Есть несохранённые изменения (SCM)")
-            self.modified_label.setStyleSheet("color: orange; font-weight: bold;")
-        else:
-            self.modified_label.setText("")
-
-    @Slot(bool)
-    def _on_modifications_changed_nanxing(self, has_changes: bool):
-        """Обработка изменений на вкладке NANXING."""
-        if has_changes:
-            self.modified_label.setText("⚠ Есть несохранённые изменения (NANXING)")
-            self.modified_label.setStyleSheet("color: orange; font-weight: bold;")
-        else:
-            self.modified_label.setText("")
-
-    @Slot(str)
-    def _on_status_message(self, message: str):
-        """Показ сообщения в статус-баре."""
-        self.status_label.setText(message)
-        logger.info(f"Status: {message}")
-
-    @Slot(int)
-    def _on_tab_changed(self, index: int):
-        """Обработка переключения вкладки."""
-        tab_name = self.tabs.tabText(index)
-        self._on_status_message(f"Вкладка: {tab_name}")
-        
-        # Обновление кнопок тулбара для текущей вкладки
-        has_changes = False
-        if index == 0:
-            has_changes = self.scm_tab.has_unsaved_changes()
-        elif index == 1:
-            has_changes = self.nanxing_tab.has_unsaved_changes()
-        
-        self.save_all_action.setEnabled(has_changes)
-
-    @Slot()
-    def _show_about(self):
-        """Показ диалога 'О программе'."""
-        QMessageBox.about(
-            self,
-            "О программе",
-            "<h2>Lithium Panel Editor 3.0</h2>"
-            "<p>Приложение для редактирования параметров обработки "
-            "в файлах форматов:</p>"
-            "<ul>"
-            "<li><b>.PGMX</b> — SCM Group (XCam / Maestro), Италия</li>"
-            "<li><b>.SCX</b> — NANXING (Guangdong Nanxing Equipment), Китай</li>"
-            "</ul>"
-            "<p>Версия: 3.0</p>"
-            "<p>Python + PySide6</p>"
-        )
-
-    def closeEvent(self, event):
-        """Обработка закрытия окна."""
-        # Проверка несохранённых изменений
-        has_unsaved = (
-            self.scm_tab.has_unsaved_changes() or
-            self.nanxing_tab.has_unsaved_changes()
+    def _on_select_folder(self):
+        """Обработчик кнопки выбора папки."""
+        folder = QFileDialog.getExistingDirectory(
+            self, "Выберите папку с файлами", "",
+            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks
         )
         
-        if has_unsaved:
-            reply = QMessageBox.question(
-                self,
-                "Несохранённые изменения",
-                "Есть несохранённые изменения. Закрыть приложение?",
-                QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel
-            )
+        if folder:
+            self._log(f"\n{'='*60}")
+            self._log(f"📂 Выбрана папка: {folder}")
+            self._log(f"{'='*60}")
             
-            if reply == QMessageBox.Cancel:
-                event.ignore()
-                return
-            elif reply == QMessageBox.No:
-                event.ignore()
-                return
+            self.status_label.setText("Сканирование папки...")
+            self.progress_bar.setVisible(True)
+            self.progress_bar.setRange(0, 0)  # Indeterminate mode
+            
+            try:
+                stats = self.processor.scan_folder(folder)
+                
+                self._log(f"\n✅ Сканирование завершено!")
+                self._log(f"\n📊 Статистика:")
+                self._log(f"   Файлов .SCX найдено: {stats['scx_count']}")
+                self._log(f"   Файлов .PGMX найдено: {stats['pgmx_count']}")
+                self._log(f"   Файлов .CSV найдено: {stats['csv_count']}")
+                self._log(f"   Всего записей в CSV: {stats['csv_parts_total']}")
+                
+                if stats['missing_pgmx']:
+                    self._log(f"\n⚠️ Отсутствуют PGMX файлы для {len(stats['missing_pgmx'])} деталей:")
+                    for name in stats['missing_pgmx'][:10]:
+                        self._log(f"   - {name}")
+                    if len(stats['missing_pgmx']) > 10:
+                        self._log(f"   ... и еще {len(stats['missing_pgmx']) - 10}")
+                        
+                if stats['oborot_issues']:
+                    self._log(f"\n⚠️ Несоответствие OBOROT для {len(stats['oborot_issues'])} деталей:")
+                    for name in stats['oborot_issues'][:10]:
+                        self._log(f"   - {name}")
+                        
+                self._log(f"\n💡 Теперь можно нажать 'Исправить .SCX' или 'Править .PGMX'")
+                
+            except Exception as e:
+                self._log(f"❌ Ошибка сканирования: {e}")
+            finally:
+                self.progress_bar.setVisible(False)
+                self.status_label.setText("Готов к работе")
+                
+    def _on_load_tools(self):
+        """Обработчик кнопки загрузки базы инструментов."""
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Выберите файл базы инструментов", "",
+            "Tool Library Files (*.tlgx);;All Files (*)"
+        )
         
-        event.accept()
-        logger.info("Приложение закрыто")
+        if file_path:
+            self._log(f"\n{'='*60}")
+            self._log(f"🔧 Загрузка базы инструментов: {file_path}")
+            
+            if global_tool_db.load(file_path):
+                self._log(f"✅ База инструментов успешно загружена!")
+                self._log(f"   Найдено инструментов: {len(global_tool_db.tools)}")
+                
+                # Проверяем наличие E007
+                e007 = global_tool_db.get_replacement_tool("E007")
+                if e007:
+                    self._log(f"   🎯 Инструмент E007 найден: {e007['name']} (Ø{e007['diameter']}мм)")
+                    self.btn_fix_pgmx.setEnabled(True)
+                else:
+                    self._log(f"   ⚠️ Инструмент E007 НЕ найден в базе!")
+                    self._log(f"   Кнопка 'Править .PGMX' останется отключенной.")
+            else:
+                self._log(f"❌ Ошибка загрузки базы инструментов!")
+                self.btn_fix_pgmx.setEnabled(False)
+                
+    def _on_fix_scx(self):
+        """Обработчик кнопки исправления .SCX файлов."""
+        if not self.processor.scx_files:
+            self._log("\n⚠️ Нет файлов .SCX! Сначала выберите папку.")
+            return
+            
+        self._log(f"\n{'='*60}")
+        self._log(f"✏️ ЗАПУСК ИСПРАВЛЕНИЯ .SCX ({len(self.processor.scx_files)} файлов)")
+        self._log(f"{'='*60}")
+        
+        self.status_label.setText("Исправление .SCX файлов...")
+        self.progress_bar.setVisible(True)
+        self.progress_bar.setRange(0, 0)
+        
+        try:
+            stats = self.processor.fix_scx_batch()
+            
+            self._log(f"\n✅ Исправление .SCX завершено!")
+            self._log(f"\n📊 Результаты:")
+            self._log(f"   Обработано файлов: {stats['processed']}")
+            self._log(f"   Исправлено отверстий Ø2.5: {stats['holes_fixed']}")
+            self._log(f"   Найдено панелей >1200×1200: {stats['panels_found']}")
+            self._log(f"   Заменено точек на запятые (Type=4): {stats['dots_replaced']}")
+            self._log(f"   Исправлено Face=0 в Type=4: {stats['face_fixed']}")
+            if stats['errors'] > 0:
+                self._log(f"   Ошибок: {stats['errors']}")
+                
+        except Exception as e:
+            self._log(f"❌ Ошибка при исправлении .SCX: {e}")
+        finally:
+            self.progress_bar.setVisible(False)
+            self.status_label.setText("Готов к работе")
+            
+    def _on_fix_pgmx(self):
+        """Обработчик кнопки исправления .PGMX файлов."""
+        if not self.processor.pgmx_files:
+            self._log("\n⚠️ Нет файлов .PGMX! Сначала выберите папку.")
+            return
+            
+        if not global_tool_db.is_loaded:
+            self._log("\n⚠️ База инструментов не загружена! Нажмите 'База инструментов'.")
+            return
+            
+        self._log(f"\n{'='*60}")
+        self._log(f"⚙️ ЗАПУСК ИСПРАВЛЕНИЯ .PGMX ({len(self.processor.pgmx_files)} файлов)")
+        self._log(f"{'='*60}")
+        
+        self.status_label.setText("Исправление .PGMX файлов...")
+        self.progress_bar.setVisible(True)
+        self.progress_bar.setRange(0, 0)
+        
+        try:
+            stats = self.processor.fix_pgmx_batch()
+            
+            self._log(f"\n✅ Исправление .PGMX завершено!")
+            self._log(f"\n📊 Результаты:")
+            self._log(f"   Обработано файлов: {stats['processed']}")
+            self._log(f"   Заменено инструментов: {stats['tools_replaced']}")
+            if stats['errors'] > 0:
+                self._log(f"   Ошибок: {stats['errors']}")
+                
+        except Exception as e:
+            self._log(f"❌ Ошибка при исправлении .PGMX: {e}")
+        finally:
+            self.progress_bar.setVisible(False)
+            self.status_label.setText("Готов к работе")
+            
+    def _on_revert_dots(self):
+        """Обработчик кнопки возврата точек."""
+        if not self.processor.scx_files:
+            self._log("\n⚠️ Нет файлов .SCX! Сначала выберите папку.")
+            return
+            
+        self._log(f"\n{'='*60}")
+        self._log(f"↩️ ВОЗВРАТ ТОЧЕК В .SCX ({len(self.processor.scx_files)} файлов)")
+        self._log(f"{'='*60}")
+        
+        self.status_label.setText("Возврат точек...")
+        self.progress_bar.setVisible(True)
+        self.progress_bar.setRange(0, 0)
+        
+        try:
+            stats = self.processor.revert_dots()
+            
+            self._log(f"\n✅ Возврат точек завершен!")
+            self._log(f"\n📊 Результаты:")
+            self._log(f"   Обработано файлов: {stats['processed']}")
+            self._log(f"   Возвращено значений: {stats['reverted']}")
+            if stats['errors'] > 0:
+                self._log(f"   Ошибок: {stats['errors']}")
+                
+        except Exception as e:
+            self._log(f"❌ Ошибка при возврате точек: {e}")
+        finally:
+            self.progress_bar.setVisible(False)
+            self.status_label.setText("Готов к работе")
