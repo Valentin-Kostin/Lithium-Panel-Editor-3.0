@@ -31,6 +31,7 @@ class BatchProcessor:
         self.pgmx_files: List[Path] = []
         self.csv_files: List[Path] = []
         self.log_messages: List[str] = []
+        self.csv_key_to_names: Dict[str, List[str]] = {}  # Для хранения соответствий ключей CSV
         
     def log(self, message: str):
         """Добавляет сообщение в лог."""
@@ -444,11 +445,11 @@ class BatchProcessor:
         """
         if not self.folder_path:
             self.log("❌ Папка не выбрана! Сначала выберите папку.")
-            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': []}
+            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': [], 'csv_key_to_names': {}}
             
         if not self.pgmx_files or not self.csv_files:
             self.log("⚠️ Нет файлов для сравнения (нужны и .PGMX, и .CSV)")
-            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': []}
+            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': [], 'csv_key_to_names': {}}
         
         self.log("=== Сравнение PGMX с CSV по материалу и номеру заказа ===")
         
@@ -480,6 +481,9 @@ class BatchProcessor:
                             csv_key_to_names[key].append(name)
             except Exception as e:
                 self.log(f"   ❌ Ошибка чтения CSV {csv_file.name}: {e}")
+        
+        # Сохраняем csv_key_to_names для использования в UI
+        self.csv_key_to_names = csv_key_to_names
         
         self.log(f"   Найдено PGMX ключей: {len(pgmx_keys)}")
         self.log(f"   Найдено CSV ключей: {len(csv_keys)}")
@@ -517,5 +521,6 @@ class BatchProcessor:
         return {
             'matches': len(matches),
             'missing_in_csv': list(missing_in_csv),
-            'missing_in_pgmx': list(missing_in_pgmx)
+            'missing_in_pgmx': list(missing_in_pgmx),
+            'csv_key_to_names': csv_key_to_names
         }

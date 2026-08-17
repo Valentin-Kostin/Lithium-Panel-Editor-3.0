@@ -49,10 +49,6 @@ class MainWindow(QMainWindow):
         self.btn_select_folder.setToolTip("Выбрать папку с файлами .SCX, .PGMX, .CSV")
         self.btn_select_folder.setMinimumHeight(40)
         
-        self.btn_load_tools = QPushButton("🔧 База инструментов")
-        self.btn_load_tools.setToolTip("Загрузить файл def.tlgx с базой инструментов")
-        self.btn_load_tools.setMinimumHeight(40)
-        
         self.btn_fix_scx = QPushButton("✏️ Исправить .SCX (NANXING)")
         self.btn_fix_scx.setToolTip(
             "Исправить файлы .SCX:\n"
@@ -86,13 +82,17 @@ class MainWindow(QMainWindow):
         )
         self.btn_compare_csv.setMinimumHeight(40)
         
+        self.btn_load_tools = QPushButton("🔧 База инструментов")
+        self.btn_load_tools.setToolTip("Загрузить файл def.tlgx с базой инструментов")
+        self.btn_load_tools.setMinimumHeight(40)
+        
         # Добавление кнопок в layout
         control_layout.addWidget(self.btn_select_folder)
-        control_layout.addWidget(self.btn_load_tools)
         control_layout.addWidget(self.btn_fix_scx)
         control_layout.addWidget(self.btn_fix_pgmx)
         control_layout.addWidget(self.btn_revert_dots)
         control_layout.addWidget(self.btn_compare_csv)
+        control_layout.addWidget(self.btn_load_tools)
         
         # === ПРОГРЕСС БАР И СТАТУС ===
         status_layout = QHBoxLayout()
@@ -389,9 +389,21 @@ class MainWindow(QMainWindow):
             self._log(f"   Совпадений: {stats['matches']}")
             
             if stats['missing_in_csv']:
-                self._log(f"\n⚠️ Есть в PGMX, но отсутствуют в CSV: {len(stats['missing_in_csv'])}")
+                self._log(f"\n⚠️ Есть в PGMX, но отсутствуют в CSV ({len(stats['missing_in_csv'])}):")
+                for key in stats['missing_in_csv']:
+                    # Находим полные имена файлов PGMX для этого ключа
+                    pgmx_files = [f.name for f in self.processor.pgmx_files if f.stem.split('.')[0] == key]
+                    for fname in pgmx_files:
+                        self._log(f"   - {fname}")
+                        
             if stats['missing_in_pgmx']:
-                self._log(f"\n⚠️ Есть в CSV, но отсутствуют в PGMX: {len(stats['missing_in_pgmx'])}")
+                self._log(f"\n⚠️ Есть в CSV, но отсутствуют в PGMX ({len(stats['missing_in_pgmx'])}):")
+                for key in stats['missing_in_pgmx']:
+                    self._log(f"   - {key}")
+                    # Показываем полные имена из CSV для отладки
+                    if key in self.processor.csv_key_to_names:
+                        for full_name in self.processor.csv_key_to_names[key][:5]:
+                            self._log(f"      → {full_name}")
                 
         except Exception as e:
             self._log(f"❌ Ошибка при сравнении: {e}")
