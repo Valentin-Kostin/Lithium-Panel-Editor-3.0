@@ -60,18 +60,20 @@ class PgmxFormatHandler(BaseFormatHandler):
             'format': 'SCM',
             'vendor': 'SCM Group (XCam/Maestro)',
             'namespaces': {
-                'project': 'http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.ProjectModule',
+                'ns': 'http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.ProjectModule',
                 'utility': 'http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Utility',
                 'parametrics': 'http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Parametrics',
-                'i': 'http://www.w3.org/2001/XMLSchema-instance'
+                'drilling': 'http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Drilling',
+                'i': 'http://www.w3.org/2001/XMLSchema-instance',
+                'a': 'http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Utility'
             },
             'operations': {
                 'drilling': {
-                    'container_xpath': ".//ManufacturingFeature[@i:type='RoundHole']",
+                    'container_xpath': ".//ns:ManufacturingFeature[@i:type='a:RoundHole']",
                     'fields': [
                         {'id': 'name', 'xpath': '@Name', 'type': 'string', 'label': 'Имя операции'},
-                        {'id': 'diameter', 'xpath': 'Diameter', 'type': 'float', 'label': 'Диаметр'},
-                        {'id': 'depth', 'xpath': 'EndDepth', 'type': 'float', 'label': 'Глубина'}
+                        {'id': 'diameter', 'xpath': 'drilling:Diameter', 'type': 'float', 'label': 'Диаметр'},
+                        {'id': 'depth', 'xpath': 'ns:EndDepth', 'type': 'float', 'label': 'Глубина'}
                     ]
                 }
             }
@@ -197,13 +199,29 @@ class PgmxFormatHandler(BaseFormatHandler):
             logger.warning("Корневой элемент отсутствует")
             return operations
 
+        # Обработка namespaces: замена None ключа на 'ns'
+        processed_ns = {}
+        for prefix, uri in (namespaces or {}).items():
+            if prefix is None:
+                processed_ns['ns'] = uri
+            else:
+                processed_ns[prefix] = uri
+        
         # Добавление namespace i по умолчанию если отсутствует
-        if 'i' not in namespaces:
-            namespaces['i'] = 'http://www.w3.org/2001/XMLSchema-instance'
+        if 'i' not in processed_ns:
+            processed_ns['i'] = 'http://www.w3.org/2001/XMLSchema-instance'
+        
+        # Добавление namespace a для типов элементов Utility
+        if 'a' not in processed_ns:
+            processed_ns['a'] = 'http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Utility'
+        
+        # Добавление namespace drilling для элементов Diameter, TaperAngle и т.д.
+        if 'drilling' not in processed_ns:
+            processed_ns['drilling'] = 'http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Drilling'
 
         # Поиск элементов ManufacturingFeature с типом RoundHole (сверление)
-        drilling_xpath = ".//ManufacturingFeature[@i:type='RoundHole']"
-        drilling_elements = get_elements_by_xpath(root, drilling_xpath, namespaces)
+        drilling_xpath = ".//ns:ManufacturingFeature[@i:type='a:RoundHole']"
+        drilling_elements = get_elements_by_xpath(root, drilling_xpath, processed_ns)
         
         logger.debug(f"Найдено элементов сверления: {len(drilling_elements)}")
 
@@ -217,24 +235,24 @@ class PgmxFormatHandler(BaseFormatHandler):
             op_name = elem.get('Name', f'Сверление #{operation_id}')
             
             # Извлечение Diameter и EndDepth
-            diameter_elem = elem.find('Diameter', namespaces=namespaces)
-            depth_elem = elem.find('EndDepth', namespaces=namespaces)
+            diameter_elem = elem.find('drilling:Diameter', namespaces=processed_ns)
+            depth_elem = elem.find('ns:EndDepth', namespaces=processed_ns)
             
             diameter = float(diameter_elem.text) if diameter_elem is not None and diameter_elem.text else None
             depth = float(depth_elem.text) if depth_elem is not None and depth_elem.text else None
             
             # Извлечение GeometryID для координат
-            geom_id_elem = elem.find('GeometryID', namespaces=namespaces)
+            geom_id_elem = elem.find('ns:GeometryID', namespaces=processed_ns)
             geometry_id = geom_id_elem.text if geom_id_elem is not None else None
             
             # Поиск координат по GeometryID
             x, y, z = None, None, None
             if geometry_id:
-                coords = self._find_coordinates_by_id(root, geometry_id, namespaces)
+                coords = self._find_coordinates_by_id(root, geometry_id, processed_ns)
                 x, y, z = coords
             
             # Извлечение PlaneID для определения плоскости
-            plane_id_elem = elem.find('PlaneID', namespaces=namespaces)
+            plane_id_elem = elem.find('ns:PlaneID', namespaces=processed_ns)
             plane_id = plane_id_elem.text if plane_id_elem is not None else None
             face = self._plane_id_to_face(plane_id)
             
@@ -255,13 +273,13 @@ class PgmxFormatHandler(BaseFormatHandler):
                     'geometry_id': geometry_id,
                     'plane_id': plane_id
                 },
-                xml_path=f'//ManufacturingFeature[{operation_id}]'
+                xml_path=f'//ns:ManufacturingFeature[{operation_id}]'
             )
             operations.append(operation)
 
         # Поиск элементов ManufacturingFeature с типом PocketRectangular (фрезерование)
-        milling_xpath = ".//ManufacturingFeature[@i:type='PocketRectangular']"
-        milling_elements = get_elements_by_xpath(root, milling_xpath, namespaces)
+        milling_xpath = ".//ns:ManufacturingFeature[@i:type='a:PocketRectangular']"
+        milling_elements = get_elements_by_xpath(root, milling_xpath, processed_ns)
         
         logger.debug(f"Найдено элементов фрезерования: {len(milling_elements)}")
         
@@ -270,10 +288,10 @@ class PgmxFormatHandler(BaseFormatHandler):
             
             op_name = elem.get('Name', f'Фрезерование #{operation_id}')
             
-            depth_elem = elem.find('EndDepth', namespaces=namespaces)
+            depth_elem = elem.find('ns:EndDepth', namespaces=processed_ns)
             depth = float(depth_elem.text) if depth_elem is not None and depth_elem.text else None
             
-            tool_key_elem = elem.find('ToolKey', namespaces=namespaces)
+            tool_key_elem = elem.find('ns:ToolKey', namespaces=processed_ns)
             tool_id = tool_key_elem.text if tool_key_elem is not None else None
             
             operation = OperationRow(
@@ -292,7 +310,7 @@ class PgmxFormatHandler(BaseFormatHandler):
                     'element': elem,
                     'tool_key': tool_id
                 },
-                xml_path=f'//ManufacturingFeature[{operation_id}]'
+                xml_path=f'//ns:ManufacturingFeature[{operation_id}]'
             )
             operations.append(operation)
 
@@ -307,14 +325,14 @@ class PgmxFormatHandler(BaseFormatHandler):
     ) -> tuple:
         """Поиск координат по ID геометрии."""
         # Поиск элемента Geometries с matching Key/ID
-        xpath = f".//Geometries/*[Key/ID='{geometry_id}']"
+        xpath = f".//ns:Geometries/*[ns:Key/ns:ID='{geometry_id}']"
         elements = get_elements_by_xpath(root, xpath, namespaces)
         
         if elements:
             elem = elements[0]
-            x_elem = elem.find('_x', namespaces=namespaces)
-            y_elem = elem.find('_y', namespaces=namespaces)
-            z_elem = elem.find('_z', namespaces=namespaces)
+            x_elem = elem.find('ns:_x', namespaces=namespaces)
+            y_elem = elem.find('ns:_y', namespaces=namespaces)
+            z_elem = elem.find('ns:_z', namespaces=namespaces)
             
             x = float(x_elem.text) if x_elem is not None and x_elem.text else None
             y = float(y_elem.text) if y_elem is not None and y_elem.text else None
@@ -348,16 +366,24 @@ class PgmxFormatHandler(BaseFormatHandler):
         if root is None:
             return params
 
+        # Обработка namespaces: замена None ключа на 'ns'
+        processed_ns = {}
+        for prefix, uri in (namespaces or {}).items():
+            if prefix is None:
+                processed_ns['ns'] = uri
+            else:
+                processed_ns[prefix] = uri
+
         # Поиск WorkPiece элемента
-        workpiece_xpath = ".//WorkPiece"
-        workpiece_elems = get_elements_by_xpath(root, workpiece_xpath, namespaces)
+        workpiece_xpath = ".//ns:WorkPiece"
+        workpiece_elems = get_elements_by_xpath(root, workpiece_xpath, processed_ns)
         
         if workpiece_elems:
             wp = workpiece_elems[0]
             
-            length_elem = wp.find('Length', namespaces=namespaces)
-            width_elem = wp.find('Width', namespaces=namespaces)
-            depth_elem = wp.find('Depth', namespaces=namespaces)
+            length_elem = wp.find('ns:Length', namespaces=processed_ns)
+            width_elem = wp.find('ns:Width', namespaces=processed_ns)
+            depth_elem = wp.find('ns:Depth', namespaces=processed_ns)
             
             if length_elem is not None and length_elem.text:
                 params['length'] = float(length_elem.text)
@@ -376,8 +402,16 @@ class PgmxFormatHandler(BaseFormatHandler):
         if root is None:
             raise ValueError("Документ не имеет корневого элемента")
 
-        if 'i' not in namespaces:
-            namespaces['i'] = 'http://www.w3.org/2001/XMLSchema-instance'
+        # Обработка namespaces: замена None ключа на 'ns'
+        processed_ns = {}
+        for prefix, uri in (namespaces or {}).items():
+            if prefix is None:
+                processed_ns['ns'] = uri
+            else:
+                processed_ns[prefix] = uri
+        
+        if 'i' not in processed_ns:
+            processed_ns['i'] = 'http://www.w3.org/2001/XMLSchema-instance'
 
         for change in changes:
             if not change.is_modified:
@@ -394,19 +428,19 @@ class PgmxFormatHandler(BaseFormatHandler):
             # Обновление параметров сверления
             if change.operation_type == 'Сверление':
                 if change.diameter is not None:
-                    diam_elem = elem.find('Diameter', namespaces=namespaces)
+                    diam_elem = elem.find('drilling:Diameter', namespaces=processed_ns)
                     if diam_elem is not None:
                         diam_elem.text = str(change.diameter)
                 
                 if change.depth is not None:
-                    depth_elem = elem.find('EndDepth', namespaces=namespaces)
+                    depth_elem = elem.find('ns:EndDepth', namespaces=processed_ns)
                     if depth_elem is not None:
                         depth_elem.text = str(change.depth)
 
             # Обновление параметров фрезерования
             elif change.operation_type == 'Фрезерование':
                 if change.depth is not None:
-                    depth_elem = elem.find('EndDepth', namespaces=namespaces)
+                    depth_elem = elem.find('ns:EndDepth', namespaces=processed_ns)
                     if depth_elem is not None:
                         depth_elem.text = str(change.depth)
 
