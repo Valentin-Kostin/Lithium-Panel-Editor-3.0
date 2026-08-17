@@ -28,8 +28,8 @@
 					<Machining Type="1" IsGenCode="2" Face="2" X="722" Y="45" Z="14.2" Diameter="12.222" Depth="5" />
 					<Machining Type="1" IsGenCode="2" Face="2" X="328.5" Y="0" Z="11.6" Diameter="10" Depth="40" />
 					<Machining Type="1" IsGenCode="2" Face="2" X="432.5" Y="0" Z="11.6" Diameter="10" Depth="40" />
-					<Machining Type="4" IsGenCode="2" Face="0" X="4,2" Y="0" Z="14.2" EndX="73,8" EndY="0" EndZ="14.2" Depth="45" Width="12,6" ToolOffset="中" />
-					<Machining Type="4" IsGenCode="2" Face="0" X="687,2" Y="0" Z="14.2" EndX="756,8" EndY="0" EndZ="14.2" Depth="45" Width="12,6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="0" X="4,2" Y="0" Z="14,2" EndX="73,8" EndY="0" EndZ="14,2" Depth="45" Width="12,6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="0" X="687,2" Y="0" Z="14,2" EndX="756,8" EndY="0" EndZ="14,2" Depth="45" Width="12,6" ToolOffset="中" />
 					<Machining Type="2" IsGenCode="2" Face="6" X="770.9" Y="64" Diameter="8" Depth="13" />
 					<Machining Type="2" IsGenCode="2" Face="6" X="772.5" Y="100" Diameter="5" Depth="11" />
 					<Machining Type="2" IsGenCode="2" Face="6" X="772.5" Y="277" Diameter="5" Depth="11" />
