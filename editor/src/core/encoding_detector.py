@@ -22,7 +22,7 @@ PRIORITY_ENCODINGS = ['utf-8', 'utf-8-sig', 'gb18030', 'gbk', 'windows-1251', 'c
 def detect_encoding(
     file_path: Path,
     priority_encodings: Optional[list] = None
-) -> Tuple[Optional[str], str]:
+) -> str:
     """
     Определение кодировки файла.
 
@@ -31,13 +31,13 @@ def detect_encoding(
         priority_encodings: Список кодировок для приоритетной проверки.
 
     Returns:
-        Кортеж (encoding, method) где method описывает способ определения.
+        Кодировка в виде строки.
     """
     encodings_to_try = priority_encodings or PRIORITY_ENCODINGS
 
     if not file_path.exists():
         logger.warning(f"Файл не найден: {file_path}")
-        return None, 'not_found'
+        return 'utf-8'
 
     # Чтение первых байтов файла
     try:
@@ -45,7 +45,7 @@ def detect_encoding(
             raw_data = f.read(4096)  # Первые 4KB
     except IOError as e:
         logger.error(f"Ошибка чтения файла {file_path}: {e}")
-        return None, 'io_error'
+        return 'utf-8'
 
     # Проверка XML declaration
     xml_decl = raw_data[:200].decode('ascii', errors='ignore')
@@ -55,25 +55,25 @@ def detect_encoding(
         if match:
             encoding_from_decl = match.group(1)
             logger.debug(f"Кодировка из XML declaration: {encoding_from_decl}")
-            return encoding_from_decl, 'xml_declaration'
+            return encoding_from_decl
 
     # Проверка BOM
     if raw_data.startswith(b'\xef\xbb\xbf'):
         logger.debug("Обнаружен UTF-8 BOM")
-        return 'utf-8-sig', 'bom'
+        return 'utf-8-sig'
     elif raw_data.startswith(b'\xff\xfe'):
         logger.debug("Обнаружен UTF-16 LE BOM")
-        return 'utf-16-le', 'bom'
+        return 'utf-16-le'
     elif raw_data.startswith(b'\xfe\xff'):
         logger.debug("Обнаружен UTF-16 BE BOM")
-        return 'utf-16-be', 'bom'
+        return 'utf-16-be'
 
     # Попытка декодирования с приоритетными кодировками
     for encoding in encodings_to_try:
         try:
             raw_data.decode(encoding)
             logger.debug(f"Успешное декодирование с кодировкой: {encoding}")
-            return encoding, 'priority_try'
+            return encoding
         except UnicodeDecodeError:
             continue
 
@@ -85,13 +85,13 @@ def detect_encoding(
                 detected_encoding = result['encoding']
                 confidence = result.get('confidence', 0)
                 logger.debug(f"charset-normalizer определил: {detected_encoding} (уверенность: {confidence})")
-                return detected_encoding, 'charset_normalizer'
+                return detected_encoding
         except Exception as e:
             logger.warning(f"charset-normalizer вернул ошибку: {e}")
 
     # Fallback на utf-8
     logger.warning(f"Не удалось определить кодировку, используется utf-8 по умолчанию: {file_path}")
-    return 'utf-8', 'fallback'
+    return 'utf-8'
 
 
 def validate_encoding(

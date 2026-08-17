@@ -257,13 +257,20 @@ class MainWindow(QMainWindow):
         self.progress_bar.setRange(0, 0)
         
         try:
-            fixed_count = self.processor.fix_scx_batch(folder)
+            stats = self.processor.fix_scx_batch()
             
             self._log(f"\n✅ Исправление .SCX завершено!")
-            if fixed_count > 0:
-                self._log(f"🎉 Исправлено файлов: {fixed_count}")
+            if stats['processed'] > 0:
+                self._log(f"🎉 Исправлено файлов: {stats['processed']}")
+                self._log(f"   - Отверстий Ø2.5 исправлено: {stats['holes_fixed']}")
+                self._log(f"   - Панелей >1200 найдено: {stats['panels_found']}")
+                self._log(f"   - Type=4 с запятыми: {stats['dots_replaced']}")
+                self._log(f"   - Face=0 исправлено: {stats['face_fixed']}")
             else:
-                self._log("ℹ️ Нет файлов для исправления")
+                self._log("ℹ️ Нет файлов для исправления или изменений не требуется")
+                
+            if stats['errors'] > 0:
+                self._log(f"⚠️ Ошибок: {stats['errors']}")
                 
         except Exception as e:
             self._log(f"❌ Ошибка при исправлении .SCX: {e}")
@@ -298,13 +305,17 @@ class MainWindow(QMainWindow):
         self.progress_bar.setRange(0, 0)
         
         try:
-            fixed_count = self.processor.fix_pgmx_batch(folder)
+            stats = self.processor.fix_pgmx_batch()
             
             self._log(f"\n✅ Исправление .PGMX завершено!")
-            if fixed_count > 0:
-                self._log(f"🎉 Исправлено файлов: {fixed_count}")
+            if stats['processed'] > 0:
+                self._log(f"🎉 Исправлено файлов: {stats['processed']}")
+                self._log(f"   - Инструментов заменено на E007: {stats['tools_replaced']}")
             else:
-                self._log("ℹ️ Нет файлов для исправления")
+                self._log("ℹ️ Нет файлов для исправления или изменений не требуется")
+                
+            if stats['errors'] > 0:
+                self._log(f"⚠️ Ошибок: {stats['errors']}")
                 
         except Exception as e:
             self._log(f"❌ Ошибка при исправлении .PGMX: {e}")
