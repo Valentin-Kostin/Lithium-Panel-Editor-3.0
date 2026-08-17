@@ -4,3 +4,115 @@
 2026-08-14 16:48:47 - root - INFO - Уровень логирования: INFO
 2026-08-14 16:48:47 - root - INFO - ============================================================
 2026-08-14 16:48:47 - __main__ - INFO - Запуск Editor
+2026-08-14 17:00:01 - root - INFO - ============================================================
+2026-08-14 17:00:01 - root - INFO - Запуск приложения: 2026-08-14T17:00:01.199299
+2026-08-14 17:00:01 - root - INFO - Лог файл: C:\Базис\Lithium Panel Editor_3.0\editor\logs\cnc_editor.log
+2026-08-14 17:00:01 - root - INFO - Уровень логирования: INFO
+2026-08-14 17:00:01 - root - INFO - ============================================================
+2026-08-14 17:00:01 - __main__ - INFO - Запуск Editor
+2026-08-14 17:00:01 - __main__ - INFO - Окно приложения показано
+2026-08-14 17:00:17 - src.ui.format_tab - INFO - Сканирование папки: C:\SCM_Projects\7022d1W1 для формата SCM PGMX
+2026-08-14 17:00:17 - src.ui.main_window - INFO - Status: Найдено файлов: 12 (ошибок: 0)
+2026-08-14 17:00:17 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\DSP_16_H3152-ST19_7022d1W1.01.08.pgmx
+2026-08-14 17:00:17 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\SCM_Projects\7022d1W1\DSP_16_H3152-ST19_7022d1W1.01.08.pgmx
+2026-08-14 17:00:17 - src.ui.format_tab - ERROR - Ошибка загрузки файла C:\SCM_Projects\7022d1W1\DSP_16_H3152-ST19_7022d1W1.01.08.pgmx: empty namespace prefix is not supported in XPath
+2026-08-14 17:00:17 - src.ui.main_window - INFO - Status: Ошибка загрузки: empty namespace prefix is not supported in XPath
+2026-08-14 17:01:29 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\DSP_18_H3152-ST19_7022d1W1.01.01.01.pgmx
+2026-08-14 17:01:29 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\SCM_Projects\7022d1W1\DSP_18_H3152-ST19_7022d1W1.01.01.01.pgmx
+2026-08-14 17:01:29 - src.ui.format_tab - ERROR - Ошибка загрузки файла C:\SCM_Projects\7022d1W1\DSP_18_H3152-ST19_7022d1W1.01.01.01.pgmx: empty namespace prefix is not supported in XPath
+2026-08-14 17:01:29 - src.ui.main_window - INFO - Status: Ошибка загрузки: empty namespace prefix is not supported in XPath
+2026-08-14 17:01:38 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-14 17:01:49 - src.ui.main_window - INFO - Status: Вкладка: 🇮🇹 SCM (.PGMX)
+2026-08-14 17:01:52 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-14 17:01:56 - src.ui.format_tab - INFO - Сканирование папки: C:\SCM_Projects\7022d1W1 для формата NANXING SCX
+2026-08-14 17:01:56 - src.ui.main_window - INFO - Status: Найдено файлов: 12 (ошибок: 0)
+2026-08-14 17:01:56 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.01.01.SCX
+2026-08-14 17:01:56 - src.core.scx_handler - INFO - Открытие SCX файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.01.01.SCX
+2026-08-14 17:01:56 - src.core.scx_handler - INFO - Извлечено операций: 12
+2026-08-14 17:01:56 - src.core.scx_handler - INFO - SCX файл открыт: 7022d1W1.01.01.01.SCX, операций: 12
+2026-08-14 17:01:56 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.01.01.SCX
+2026-08-14 17:03:07 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.09.SCX
+2026-08-14 17:03:07 - src.core.scx_handler - INFO - Открытие SCX файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.09.SCX
+2026-08-14 17:03:07 - src.core.scx_handler - INFO - Извлечено операций: 6
+2026-08-14 17:03:07 - src.core.scx_handler - INFO - SCX файл открыт: 7022d1W1.01.09.SCX, операций: 6
+2026-08-14 17:03:07 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.09.SCX
+2026-08-14 17:03:08 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.12.SCX
+2026-08-14 17:03:08 - src.core.scx_handler - INFO - Открытие SCX файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.12.SCX
+2026-08-14 17:03:08 - src.core.scx_handler - INFO - Извлечено операций: 18
+2026-08-14 17:03:08 - src.core.scx_handler - INFO - SCX файл открыт: 7022d1W1.01.12.SCX, операций: 18
+2026-08-14 17:03:08 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.12.SCX
+2026-08-14 17:03:08 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.14.SCX
+2026-08-14 17:03:08 - src.core.scx_handler - INFO - Открытие SCX файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.14.SCX
+2026-08-14 17:03:08 - src.core.scx_handler - INFO - Извлечено операций: 8
+2026-08-14 17:03:08 - src.core.scx_handler - INFO - SCX файл открыт: 7022d1W1.01.14.SCX, операций: 8
+2026-08-14 17:03:08 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.14.SCX
+2026-08-14 17:03:31 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.01.01.SCX
+2026-08-14 17:03:31 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.01.01.SCX
+2026-08-14 17:03:32 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.07.SCX
+2026-08-14 17:03:32 - src.core.scx_handler - INFO - Открытие SCX файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.07.SCX
+2026-08-14 17:03:32 - src.core.scx_handler - INFO - Извлечено операций: 12
+2026-08-14 17:03:32 - src.core.scx_handler - INFO - SCX файл открыт: 7022d1W1.01.07.SCX, операций: 12
+2026-08-14 17:03:32 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.07.SCX
+2026-08-14 17:03:32 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.11.SCX
+2026-08-14 17:03:32 - src.core.scx_handler - INFO - Открытие SCX файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.11.SCX
+2026-08-14 17:03:32 - src.core.scx_handler - INFO - Извлечено операций: 6
+2026-08-14 17:03:32 - src.core.scx_handler - INFO - SCX файл открыт: 7022d1W1.01.11.SCX, операций: 6
+2026-08-14 17:03:32 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.11.SCX
+2026-08-14 17:03:33 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.12.SCX
+2026-08-14 17:03:33 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.12.SCX
+2026-08-14 17:03:33 - src.ui.format_tab - INFO - Загрузка файла: C:\SCM_Projects\7022d1W1\7022d1W1.01.14.SCX
+2026-08-14 17:03:33 - src.ui.main_window - INFO - Status: Файл загружен: 7022d1W1.01.14.SCX
+2026-08-14 17:03:40 - src.ui.main_window - INFO - Status: Вкладка: 🇮🇹 SCM (.PGMX)
+2026-08-14 17:03:42 - src.ui.main_window - INFO - Приложение закрыто
+2026-08-14 17:03:42 - __main__ - INFO - Приложение завершено с кодом: 0
+2026-08-17 09:45:19 - root - INFO - ============================================================
+2026-08-17 09:45:19 - root - INFO - Запуск приложения: 2026-08-17T09:45:19.243831
+2026-08-17 09:45:19 - root - INFO - Лог файл: C:\Базис\Lithium Panel Editor_3.0\editor\logs\cnc_editor.log
+2026-08-17 09:45:19 - root - INFO - Уровень логирования: INFO
+2026-08-17 09:45:19 - root - INFO - ============================================================
+2026-08-17 09:45:19 - __main__ - INFO - Запуск Editor
+2026-08-17 09:45:19 - __main__ - INFO - Окно приложения показано
+2026-08-17 09:45:32 - src.ui.format_tab - INFO - Сканирование папки: C:\Базис\Lithium Panel Editor_3.0\1971 для формата SCM PGMX
+2026-08-17 09:45:36 - src.ui.main_window - INFO - Status: Найдено файлов: 606 (ошибок: 0)
+2026-08-17 09:45:36 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_10_U963-ST9_1971G1.18.13.pgmx
+2026-08-17 09:45:36 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_10_U963-ST9_1971G1.18.13.pgmx
+2026-08-17 09:45:36 - src.ui.format_tab - ERROR - Ошибка загрузки файла C:\Базис\Lithium Panel Editor_3.0\1971\DSP_10_U963-ST9_1971G1.18.13.pgmx: empty namespace prefix is not supported in XPath
+2026-08-17 09:45:36 - src.ui.main_window - INFO - Status: Ошибка загрузки: empty namespace prefix is not supported in XPath
+2026-08-17 09:45:55 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.17.21.pgmx
+2026-08-17 09:45:55 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.17.21.pgmx
+2026-08-17 09:45:55 - src.ui.format_tab - ERROR - Ошибка загрузки файла C:\Базис\Lithium Panel Editor_3.0\1971\DSP_16_U963-ST9_1971G1.17.21.pgmx: empty namespace prefix is not supported in XPath
+2026-08-17 09:45:55 - src.ui.main_window - INFO - Status: Ошибка загрузки: empty namespace prefix is not supported in XPath
+2026-08-17 09:45:58 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.01.18.pgmx
+2026-08-17 09:45:58 - src.core.pgmx_handler - INFO - Открытие PGMX файла: C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.01.18.pgmx
+2026-08-17 09:45:58 - src.ui.format_tab - ERROR - Ошибка загрузки файла C:\Базис\Lithium Panel Editor_3.0\1971\DSP_18_U963-ST9_1971G1.01.18.pgmx: empty namespace prefix is not supported in XPath
+2026-08-17 09:45:58 - src.ui.main_window - INFO - Status: Ошибка загрузки: empty namespace prefix is not supported in XPath
+2026-08-17 09:46:05 - src.ui.main_window - INFO - Status: Вкладка: 🇨🇳 NANXING (.SCX)
+2026-08-17 09:47:07 - src.ui.format_tab - INFO - Сканирование папки: C:\Базис\Lithium Panel Editor_3.0\1971 для формата NANXING SCX
+2026-08-17 09:47:10 - src.ui.main_window - INFO - Status: Найдено файлов: 400 (ошибок: 0)
+2026-08-17 09:47:10 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.01.01.SCX
+2026-08-17 09:47:10 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.01.01.01.SCX
+2026-08-17 09:47:10 - src.core.scx_handler - INFO - Извлечено операций: 32
+2026-08-17 09:47:10 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.01.01.01.SCX, операций: 32
+2026-08-17 09:47:10 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.01.01.01.SCX
+2026-08-17 09:47:30 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.05.01.SCX
+2026-08-17 09:47:30 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.02.05.01.SCX
+2026-08-17 09:47:30 - src.core.scx_handler - INFO - Извлечено операций: 8
+2026-08-17 09:47:30 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.02.05.01.SCX, операций: 8
+2026-08-17 09:47:30 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.02.05.01.SCX
+2026-08-17 09:47:32 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.02.01.SCX
+2026-08-17 09:47:32 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.02.01.SCX
+2026-08-17 09:47:32 - src.core.scx_handler - INFO - Извлечено операций: 8
+2026-08-17 09:47:32 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.02.01.SCX, операций: 8
+2026-08-17 09:47:32 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.02.01.SCX
+2026-08-17 09:47:33 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.06.SCX
+2026-08-17 09:47:33 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.06.SCX
+2026-08-17 09:47:33 - src.core.scx_handler - INFO - Извлечено операций: 27
+2026-08-17 09:47:33 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.06.SCX, операций: 27
+2026-08-17 09:47:33 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.06.SCX
+2026-08-17 09:47:35 - src.ui.format_tab - INFO - Загрузка файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.07.SCX
+2026-08-17 09:47:35 - src.core.scx_handler - INFO - Открытие SCX файла: C:\Базис\Lithium Panel Editor_3.0\1971\1971G1.03.07.SCX
+2026-08-17 09:47:35 - src.core.scx_handler - INFO - Извлечено операций: 46
+2026-08-17 09:47:35 - src.core.scx_handler - INFO - SCX файл открыт: 1971G1.03.07.SCX, операций: 46
+2026-08-17 09:47:35 - src.ui.main_window - INFO - Status: Файл загружен: 1971G1.03.07.SCX
+2026-08-17 09:48:11 - src.ui.main_window - INFO - Приложение закрыто
+2026-08-17 09:48:11 - __main__ - INFO - Приложение завершено с кодом: 0
