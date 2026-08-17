@@ -115,18 +115,37 @@ class FormatTab(QWidget):
         self.open_folder_btn.setToolTip("Выбрать папку для сканирования файлов")
         btn_layout.addWidget(self.open_folder_btn)
 
+        self.save_btn = QPushButton("💾 Сохранить")
+        self.save_btn.setToolTip("Сохранить текущий файл с изменениями")
+        self.save_btn.setEnabled(False)
+        btn_layout.addWidget(self.save_btn)
+
         self.clear_log_btn = QPushButton("🗑 Очистить лог")
         self.clear_log_btn.setToolTip("Очистить журнал изменений")
         btn_layout.addWidget(self.clear_log_btn)
-
+        
         left_layout.addLayout(btn_layout)
 
         splitter.addWidget(left_widget)
 
-        # Правая панель - таблица операций
+        # Правая панель - таблица операций и список файлов
         right_widget = QWidget()
         right_layout = QVBoxLayout(right_widget)
         right_layout.setContentsMargins(5, 5, 5, 5)
+
+        # Список файлов
+        file_list_header = QLabel("📄 Список файлов")
+        file_list_header.setStyleSheet("font-weight: bold; font-size: 12px;")
+        right_layout.addWidget(file_list_header)
+        
+        from PySide6.QtWidgets import QListView
+        from ..models.file_list_model import FileListModel
+        
+        self.file_list_view = QListView()
+        self.file_list_model = FileListModel(self)
+        self.file_list_view.setModel(self.file_list_model)
+        self.file_list_view.setSelectionMode(QListView.SingleSelection)
+        right_layout.addWidget(self.file_list_view)
 
         # Заголовок таблицы
         table_header = QLabel("📊 Найденные операции")
@@ -162,7 +181,7 @@ class FormatTab(QWidget):
             self._on_file_selection_changed
         )
         
-        self.operations_model.data_changed_signal.connect(
+        self.operations_table.model().data_changed_signal.connect(
             self._on_operation_data_changed
         )
 
