@@ -367,7 +367,7 @@ class MainWindow(QMainWindow):
             self.status_label.setText("Готов к работе")
             
     def _on_compare_csv(self):
-        """Обработчик кнопки сравнения PGMX с CSV."""
+        """Обработчик кнопки сравнения PGMX с CSV (логика ZPT-TCHK.py)."""
         folder = getattr(self, '_current_folder', None)
         if not folder:
             self._log("\n⚠️ Нет выбранной папки! Сначала выберите папку.")
@@ -385,25 +385,7 @@ class MainWindow(QMainWindow):
             stats = self.processor.compare_pgmx_csv()
             
             self._log(f"\n✅ Сравнение завершено!")
-            self._log(f"\n📊 Результаты:")
-            self._log(f"   Совпадений: {stats['matches']}")
-            
-            if stats['missing_in_csv']:
-                self._log(f"\n⚠️ Есть в PGMX, но отсутствуют в CSV ({len(stats['missing_in_csv'])}):")
-                for key in stats['missing_in_csv']:
-                    # Находим полные имена файлов PGMX для этого ключа
-                    pgmx_files = [f.name for f in self.processor.pgmx_files if f.stem.split('.')[0] == key]
-                    for fname in pgmx_files:
-                        self._log(f"   - {fname}")
-                        
-            if stats['missing_in_pgmx']:
-                self._log(f"\n⚠️ Есть в CSV, но отсутствуют в PGMX ({len(stats['missing_in_pgmx'])}):")
-                for key in stats['missing_in_pgmx']:
-                    self._log(f"   - {key}")
-                    # Показываем полные имена из CSV для отладки
-                    if key in self.processor.csv_key_to_names:
-                        for full_name in self.processor.csv_key_to_names[key][:5]:
-                            self._log(f"      → {full_name}")
+            # Результаты уже выведены в логе из compare_pgmx_csv()
                 
         except Exception as e:
             self._log(f"❌ Ошибка при сравнении: {e}")

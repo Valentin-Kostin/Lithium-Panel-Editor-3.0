@@ -437,90 +437,93 @@ class BatchProcessor:
 
     def compare_pgmx_csv(self) -> Dict:
         """
-        Сравнивает файлы .PGMX с записями в .CSV по ключу:
-        - Всё что до первой точки в имени файла/записи (например, DSP_25_U963-ST9_1971G1 из DSP_25_U963-ST9_1971G1.01.07.pgmx)
+        Сравнивает файлы .PGMX с записями в .CSV по логике ZPT-TCHK.py:
+        - CSV: ключ = первая колонка (имя детали) с удалением первых 18 символов
+        - PGMX: ключ = полное имя файла без расширения
+        - Использует симметричную разность для сравнения
+        - Сначала выводит OBOROT, затем !ФАЙЛА НЕТ
         
         Returns:
             Dict со статистикой сравнения.
         """
         if not self.folder_path:
             self.log("❌ Папка не выбрана! Сначала выберите папку.")
-            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': [], 'csv_key_to_names': {}}
+            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': [], 'oborot_keys': []}
             
         if not self.pgmx_files or not self.csv_files:
             self.log("⚠️ Нет файлов для сравнения (нужны и .PGMX, и .CSV)")
-            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': [], 'csv_key_to_names': {}}
+            return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': [], 'oborot_keys': []}
         
-        self.log("=== Сравнение PGMX с CSV по материалу и номеру заказа ===")
+        self.log("=== Сравнение PGMX с CSV (логика ZPT-TCHK.py) ===")
         
-        # Извлекаем ключи из PGMX (всё до первой точки)
-        pgmx_keys = set()
-        for pgmx_file in self.pgmx_files:
-            # Пример: DSP_25_U963-ST9_1971G1.01.07.pgmx -> DSP_25_U963-ST9_1971G1
-            stem = pgmx_file.stem  # DSP_25_U963-ST9_1971G1.01.07
-            key = stem.split('.')[0]  # DSP_25_U963-ST9_1971G1
-            pgmx_keys.add(key)
-            self.log(f"   PGMX: {pgmx_file.name} -> ключ: {key}")
-        
-        # Извлекаем ключи из CSV (всё до первой точки в поле Name/PartName)
+        # Извлекаем ключи из CSV: первая колонка, удаляем первые 18 символов
         csv_keys = set()
-        csv_key_to_names = {}  # Для отладки: какой ключ каким именам соответствует
-        
         for csv_file in self.csv_files:
             try:
                 encoding = detect_encoding(csv_file)
                 with open(csv_file, 'r', encoding=encoding) as f:
-                    reader = csv.DictReader(f, delimiter=';')
-                    for row in reader:
-                        name = row.get('Name') or row.get('PartName') or row.get('Имя') or row.get('name')
-                        if name:
-                            key = name.split('.')[0]
+                    content = f.read()
+                    # Убираем последний символ (как в оригинале)
+                    if content:
+                        content = content[:-1]
+                    lines = content.split("\n")
+                    for line in lines:
+                        parts = line.split(";")
+                        if len(parts) >= 1:
+                            key = str(parts[0])
+                            # Удаляем первые 18 символов (как в оригинале ZPT-TCHK.py)
+                            if len(key) > 18:
+                                key = key[18:]
                             csv_keys.add(key)
-                            if key not in csv_key_to_names:
-                                csv_key_to_names[key] = []
-                            csv_key_to_names[key].append(name)
+                            self.log(f"   CSV: {key}")
             except Exception as e:
                 self.log(f"   ❌ Ошибка чтения CSV {csv_file.name}: {e}")
         
-        # Сохраняем csv_key_to_names для использования в UI
-        self.csv_key_to_names = csv_key_to_names
+        # Извлекаем ключи из PGMX: полное имя файла без расширения
+        pgmx_keys = set()
+        for pgmx_file in self.pgmx_files:
+            key = pgmx_file.stem  # Полное имя без расширения, например DSP_25_U963-ST9_1971G1.01.07
+            pgmx_keys.add(key)
+            self.log(f"   PGMX: {key}")
         
+        self.log(f"\n   Найдено CSV ключей: {len(csv_keys)}")
         self.log(f"   Найдено PGMX ключей: {len(pgmx_keys)}")
-        self.log(f"   Найдено CSV ключей: {len(csv_keys)}")
         
-        # Находим совпадения и расхождения
-        matches = pgmx_keys & csv_keys
-        missing_in_csv = pgmx_keys - csv_keys  # Есть в PGMX, но нет в CSV
-        missing_in_pgmx = csv_keys - pgmx_keys  # Есть в CSV, но нет в PGMX
+        # Сравниваем списки ключей
+        if csv_keys == pgmx_keys:
+            self.log("\n✅ Все файлы есть. Оборотов нет!")
+            return {'matches': len(csv_keys), 'missing_in_csv': [], 'missing_in_pgmx': [], 'oborot_keys': []}
         
-        self.log(f"\n✅ Совпадений: {len(matches)}")
-        if matches:
-            for key in list(matches)[:10]:
-                self.log(f"   - {key}")
-            if len(matches) > 10:
-                self.log(f"   ... и еще {len(matches) - 10}")
+        # Симметричная разность (как в оригинале)
+        diff_keys = csv_keys ^ pgmx_keys
         
-        if missing_in_csv:
-            self.log(f"\n⚠️ Есть в PGMX, но отсутствуют в CSV ({len(missing_in_csv)}):")
-            for key in list(missing_in_csv)[:10]:
-                self.log(f"   - {key}")
-            if len(missing_in_csv) > 10:
-                self.log(f"   ... и еще {len(missing_in_csv) - 10}")
+        # Разделяем на OBOROT и остальные
+        oborot_keys = []
+        other_keys = []
+        for key in diff_keys:
+            if 'OBOROT' in key:
+                oborot_keys.append(key)
+            else:
+                other_keys.append(key)
         
-        if missing_in_pgmx:
-            self.log(f"\n⚠️ Есть в CSV, но отсутствуют в PGMX ({len(missing_in_pgmx)}):")
-            for key in list(missing_in_pgmx)[:10]:
-                self.log(f"   - {key}")
-                # Показываем полные имена из CSV для отладки
-                if key in csv_key_to_names:
-                    for full_name in csv_key_to_names[key][:3]:
-                        self.log(f"      → {full_name}")
-            if len(missing_in_pgmx) > 10:
-                self.log(f"   ... и еще {len(missing_in_pgmx) - 10}")
+        # Сортируем (как в оригинале)
+        oborot_keys = sorted(oborot_keys)
+        other_keys = sorted(other_keys)
+        
+        # Вывод результатов (сначала OBOROT, затем !ФАЙЛА НЕТ)
+        if oborot_keys:
+            self.log(f"\n⚠️ OBOROT файлы ({len(oborot_keys)}):")
+            for key in oborot_keys:
+                self.log(f"   {key}")
+        
+        if other_keys:
+            self.log(f"\n⚠️ Отсутствующие файлы ({len(other_keys)}):")
+            for key in other_keys:
+                self.log(f"   !ФАЙЛА НЕТ -- {key}")
         
         return {
-            'matches': len(matches),
-            'missing_in_csv': list(missing_in_csv),
-            'missing_in_pgmx': list(missing_in_pgmx),
-            'csv_key_to_names': csv_key_to_names
+            'matches': 0,
+            'missing_in_csv': other_keys,
+            'missing_in_pgmx': other_keys,
+            'oborot_keys': oborot_keys
         }
