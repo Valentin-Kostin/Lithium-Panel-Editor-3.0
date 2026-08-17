@@ -11,9 +11,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
+import os
 
 from ..core.batch_processor import BatchProcessor
-from ..core.tool_db import global_tool_db
 
 
 class MainWindow(QMainWindow):
@@ -150,6 +150,7 @@ class MainWindow(QMainWindow):
         )
         
         if folder:
+            self._current_folder = folder  # Сохраняем путь к папке
             self._log(f"\n{'='*60}")
             self._log(f"📂 Выбрана папка: {folder}")
             self._log(f"{'='*60}")
@@ -166,8 +167,12 @@ class MainWindow(QMainWindow):
                 self._log(f"   Файлов .SCX найдено: {stats['scx_count']}")
                 self._log(f"   Файлов .PGMX найдено: {stats['pgmx_count']}")
                 self._log(f"   Файлов .CSV найдено: {stats['csv_count']}")
-                self._log(f"   Всего записей в CSV: {stats['csv_parts_total']}")
                 
+                # Подсчет общего количества записей в CSV
+                total_csv_parts = sum(stats['csv_parts'].values())
+                self._log(f"   Всего записей в CSV: {total_csv_parts}")
+                
+                # Отсутствующие PGMX
                 if stats['missing_pgmx']:
                     self._log(f"\n⚠️ Отсутствуют PGMX файлы для {len(stats['missing_pgmx'])} деталей:")
                     for name in stats['missing_pgmx'][:10]:
@@ -175,10 +180,13 @@ class MainWindow(QMainWindow):
                     if len(stats['missing_pgmx']) > 10:
                         self._log(f"   ... и еще {len(stats['missing_pgmx']) - 10}")
                         
-                if stats['oborot_issues']:
-                    self._log(f"\n⚠️ Несоответствие OBOROT для {len(stats['oborot_issues'])} деталей:")
-                    for name in stats['oborot_issues'][:10]:
+                # OBOROT файлы
+                if stats['oborot_files']:
+                    self._log(f"\n⚠️ Найдено OBOROT файлов: {len(stats['oborot_files'])}:")
+                    for name in stats['oborot_files'][:10]:
                         self._log(f"   - {name}")
+                    if len(stats['oborot_files']) > 10:
+                        self._log(f"   ... и еще {len(stats['oborot_files']) - 10}")
                         
                 self._log(f"\n💡 Теперь можно нажать 'Исправить .SCX' или 'Править .PGMX'")
                 
@@ -190,39 +198,58 @@ class MainWindow(QMainWindow):
                 
     def _on_load_tools(self):
         """Обработчик кнопки загрузки базы инструментов."""
+        # Проверяем есть ли сохраненный путь
+        saved_path = self.processor.settings.get_tool_db_path()
+        
+        if saved_path and os.path.exists(saved_path):
+            self._log(f"\n✅ Найден сохраненный путь к базе инструментов: {saved_path}")
+            if self._load_tool_database(saved_path):
+                return
+                
+        # Если нет сохраненного пути или файл не найден, запрашиваем у пользователя
         file_path, _ = QFileDialog.getOpenFileName(
             self, "Выберите файл базы инструментов", "",
             "Tool Library Files (*.tlgx);;All Files (*)"
         )
         
         if file_path:
-            self._log(f"\n{'='*60}")
-            self._log(f"🔧 Загрузка базы инструментов: {file_path}")
+            if self._load_tool_database(file_path):
+                # Сохраняем путь
+                self.processor.settings.set_tool_db_path(file_path)
+                self._log(f"💾 Путь сохранен в настройках")
+    
+    def _load_tool_database(self, file_path: str) -> bool:
+        """Загружает базу инструментов и обновляет UI"""
+        self._log(f"\n{'='*60}")
+        self._log(f"🔧 Загрузка базы инструментов: {file_path}")
+        
+        tool_db = self.processor.get_tool_db()
+        if tool_db is None:
+            self._log(f"❌ Ошибка загрузки базы инструментов!")
+            self.btn_fix_pgmx.setEnabled(False)
+            return False
             
-            if global_tool_db.load(file_path):
-                self._log(f"✅ База инструментов успешно загружена!")
-                self._log(f"   Найдено инструментов: {len(global_tool_db.tools)}")
-                
-                # Проверяем наличие E007
-                e007 = global_tool_db.get_replacement_tool("E007")
-                if e007:
-                    self._log(f"   🎯 Инструмент E007 найден: {e007['name']} (Ø{e007['diameter']}мм)")
-                    self.btn_fix_pgmx.setEnabled(True)
-                else:
-                    self._log(f"   ⚠️ Инструмент E007 НЕ найден в базе!")
-                    self._log(f"   Кнопка 'Править .PGMX' останется отключенной.")
-            else:
-                self._log(f"❌ Ошибка загрузки базы инструментов!")
-                self.btn_fix_pgmx.setEnabled(False)
-                
+        e007_id = self.processor.find_tool_e007(tool_db)
+        if e007_id:
+            self._log(f"✅ База инструментов успешно загружена!")
+            self._log(f"   🎯 Инструмент E007 найден (ID: {e007_id})")
+            self.btn_fix_pgmx.setEnabled(True)
+            return True
+        else:
+            self._log(f"⚠️ Инструмент E007 НЕ найден в базе!")
+            self._log(f"   Кнопка 'Править .PGMX' останется отключенной.")
+            self.btn_fix_pgmx.setEnabled(False)
+            return False
+            
     def _on_fix_scx(self):
         """Обработчик кнопки исправления .SCX файлов."""
-        if not self.processor.scx_files:
-            self._log("\n⚠️ Нет файлов .SCX! Сначала выберите папку.")
+        folder = getattr(self, '_current_folder', None)
+        if not folder:
+            self._log("\n⚠️ Нет выбранной папки! Сначала выберите папку.")
             return
             
         self._log(f"\n{'='*60}")
-        self._log(f"✏️ ЗАПУСК ИСПРАВЛЕНИЯ .SCX ({len(self.processor.scx_files)} файлов)")
+        self._log(f"✏️ ЗАПУСК ИСПРАВЛЕНИЯ .SCX")
         self._log(f"{'='*60}")
         
         self.status_label.setText("Исправление .SCX файлов...")
@@ -230,17 +257,13 @@ class MainWindow(QMainWindow):
         self.progress_bar.setRange(0, 0)
         
         try:
-            stats = self.processor.fix_scx_batch()
+            fixed_count = self.processor.fix_scx_batch(folder)
             
             self._log(f"\n✅ Исправление .SCX завершено!")
-            self._log(f"\n📊 Результаты:")
-            self._log(f"   Обработано файлов: {stats['processed']}")
-            self._log(f"   Исправлено отверстий Ø2.5: {stats['holes_fixed']}")
-            self._log(f"   Найдено панелей >1200×1200: {stats['panels_found']}")
-            self._log(f"   Заменено точек на запятые (Type=4): {stats['dots_replaced']}")
-            self._log(f"   Исправлено Face=0 в Type=4: {stats['face_fixed']}")
-            if stats['errors'] > 0:
-                self._log(f"   Ошибок: {stats['errors']}")
+            if fixed_count > 0:
+                self._log(f"🎉 Исправлено файлов: {fixed_count}")
+            else:
+                self._log("ℹ️ Нет файлов для исправления")
                 
         except Exception as e:
             self._log(f"❌ Ошибка при исправлении .SCX: {e}")
@@ -250,16 +273,24 @@ class MainWindow(QMainWindow):
             
     def _on_fix_pgmx(self):
         """Обработчик кнопки исправления .PGMX файлов."""
-        if not self.processor.pgmx_files:
-            self._log("\n⚠️ Нет файлов .PGMX! Сначала выберите папку.")
+        folder = getattr(self, '_current_folder', None)
+        if not folder:
+            self._log("\n⚠️ Нет выбранной папки! Сначала выберите папку.")
             return
             
-        if not global_tool_db.is_loaded:
-            self._log("\n⚠️ База инструментов не загружена! Нажмите 'База инструментов'.")
+        # Проверяем загружена ли база инструментов
+        tool_db = self.processor.get_tool_db()
+        if tool_db is None:
+            self._log("\n⚠️ База инструментов не загружена! Укажите путь к def.tlgx в настройках.")
+            return
+            
+        e007_id = self.processor.find_tool_e007(tool_db)
+        if not e007_id:
+            self._log("\n⚠️ Инструмент E007 не найден в базе!")
             return
             
         self._log(f"\n{'='*60}")
-        self._log(f"⚙️ ЗАПУСК ИСПРАВЛЕНИЯ .PGMX ({len(self.processor.pgmx_files)} файлов)")
+        self._log(f"⚙️ ЗАПУСК ИСПРАВЛЕНИЯ .PGMX")
         self._log(f"{'='*60}")
         
         self.status_label.setText("Исправление .PGMX файлов...")
@@ -267,14 +298,13 @@ class MainWindow(QMainWindow):
         self.progress_bar.setRange(0, 0)
         
         try:
-            stats = self.processor.fix_pgmx_batch()
+            fixed_count = self.processor.fix_pgmx_batch(folder)
             
             self._log(f"\n✅ Исправление .PGMX завершено!")
-            self._log(f"\n📊 Результаты:")
-            self._log(f"   Обработано файлов: {stats['processed']}")
-            self._log(f"   Заменено инструментов: {stats['tools_replaced']}")
-            if stats['errors'] > 0:
-                self._log(f"   Ошибок: {stats['errors']}")
+            if fixed_count > 0:
+                self._log(f"🎉 Исправлено файлов: {fixed_count}")
+            else:
+                self._log("ℹ️ Нет файлов для исправления")
                 
         except Exception as e:
             self._log(f"❌ Ошибка при исправлении .PGMX: {e}")
@@ -284,12 +314,13 @@ class MainWindow(QMainWindow):
             
     def _on_revert_dots(self):
         """Обработчик кнопки возврата точек."""
-        if not self.processor.scx_files:
-            self._log("\n⚠️ Нет файлов .SCX! Сначала выберите папку.")
+        folder = getattr(self, '_current_folder', None)
+        if not folder:
+            self._log("\n⚠️ Нет выбранной папки! Сначала выберите папку.")
             return
             
         self._log(f"\n{'='*60}")
-        self._log(f"↩️ ВОЗВРАТ ТОЧЕК В .SCX ({len(self.processor.scx_files)} файлов)")
+        self._log(f"↩️ ВОЗВРАТ ТОЧЕК В .SCX")
         self._log(f"{'='*60}")
         
         self.status_label.setText("Возврат точек...")
