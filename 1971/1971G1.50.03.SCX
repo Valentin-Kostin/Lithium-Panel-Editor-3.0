@@ -10,9 +10,9 @@
 					<Point X="780.5" Y="0" />
 				</Outline>
 				<Machines>
-					<Machining Type="2" IsGenCode="2" Face="5" X="130.01" Y="37" Diameter="2.5" Depth="8" />
-					<Machining Type="2" IsGenCode="2" Face="5" X="405" Y="37" Diameter="2.5" Depth="8" />
-					<Machining Type="2" IsGenCode="2" Face="5" X="680" Y="37" Diameter="2.5" Depth="8" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="130.01" Y="37" Diameter="2.5" Depth="5.0" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="405" Y="37" Diameter="2.5" Depth="5.0" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="680" Y="37" Diameter="2.5" Depth="5.0" />
 					<Machining Type="2" IsGenCode="2" Face="5" X="771" Y="100" Diameter="2.22" Depth="14.7" />
 					<Machining Type="2" IsGenCode="2" Face="5" X="771" Y="100" Diameter="20" Depth="13.5" />
 					<Machining Type="2" IsGenCode="2" Face="5" X="771" Y="277" Diameter="2.22" Depth="14.7" />
