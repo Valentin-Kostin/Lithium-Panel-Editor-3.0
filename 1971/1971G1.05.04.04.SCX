@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <Root Cad="BuiltInCad" version="2.0">
 	<Project>
 		<Panels>
@@ -10,8 +10,8 @@
 					<Point X="463" Y="0" />
 				</Outline>
 				<Machines>
-					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="9.002" Diameter="2.5" Depth="5" />
-					<Machining Type="2" IsGenCode="2" Face="5" X="453.5" Y="9.002" Diameter="2.5" Depth="5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="9.002" Diameter="2.5" Depth="25.5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="453.5" Y="9.002" Diameter="2.5" Depth="25.5" />
 					<Machining Type="2" IsGenCode="2" Face="5" X="9.5" Y="35.002" Diameter="8" Depth="25.5" />
 					<Machining Type="2" IsGenCode="2" Face="5" X="453.5" Y="35.002" Diameter="8" Depth="25.5" />
 					<Machining Type="2" IsGenCode="2" Face="5" X="36" Y="37.502" Diameter="8" Depth="16.5" />

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <Root Cad="BuiltInCad" version="2.0">
 	<Project>
 		<Panels>
@@ -10,15 +10,15 @@
 					<Point X="800" Y="0" />
 				</Outline>
 				<Machines>
-					<Machining Type="2" IsGenCode="2" Face="5" X="105" Y="37" Diameter="2.5" Depth="5" />
-					<Machining Type="2" IsGenCode="2" Face="5" X="380" Y="37" Diameter="2.5" Depth="5" />
-					<Machining Type="2" IsGenCode="2" Face="5" X="655" Y="37" Diameter="2.5" Depth="5" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="105" Y="37" Diameter="2.5" Depth="8" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="380" Y="37" Diameter="2.5" Depth="8" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="655" Y="37" Diameter="2.5" Depth="8" />
 					<Machining Type="1" IsGenCode="2" Face="2" X="741.5" Y="45" Z="10.2" Diameter="12.222" Depth="5" />
 					<Machining Type="1" IsGenCode="2" Face="2" X="58.5" Y="45" Z="10.2" Diameter="12.222" Depth="5" />
 					<Machining Type="1" IsGenCode="2" Face="2" X="348" Y="0" Z="11.6" Diameter="10" Depth="40" />
 					<Machining Type="1" IsGenCode="2" Face="2" X="452" Y="0" Z="11.6" Diameter="10" Depth="40" />
-					<Machining Type="4" IsGenCode="2" Face="0" X="93,3" Y="0" Z="10.2" EndX="23,7" EndY="0" EndZ="10,2" Depth="45" Width="12,6" ToolOffset="中" />
-					<Machining Type="4" IsGenCode="2" Face="0" X="776,3" Y="0" Z="10.2" EndX="706,7" EndY="0" EndZ="10,2" Depth="45" Width="12,6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="0" X="93.3" Y="0" Z="13" EndX="23.7" EndY="0" EndZ="13.000" Depth="45" Width="12.6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="0" X="776.3" Y="0" Z="13" EndX="706.7" EndY="0" EndZ="13.000" Depth="45" Width="12.6" ToolOffset="中" />
 					<Machining Type="3" IsGenCode="2" Face="5" X="113.25" Y="37" Depth="5" Diameter="0" ToolOffset="Undefined" Pocket="1" Closed="1">
 						<MillPreDefinedRectangle Length="0" Width="0" X="0" Y="0" Z="0" Radius="0" CornerBotLeft="0" CornerBotRight="0" CornerTopLeft="0" CornerTopRight="0" />
 						<Lines>
