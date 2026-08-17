@@ -1,34 +1,20 @@
 ```
-# Python
+# Compiled Python files
+*.pyc
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
-# IDE
+# Editor/IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Environment
+# Logs and temporary files
+*.log
+*.tmp
+
+# Environment files
 .env
 .env.local
-.env.*
-.venv/
-venv/
+*.env.*
 ```
