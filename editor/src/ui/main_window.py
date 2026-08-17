@@ -201,7 +201,7 @@ class MainWindow(QMainWindow):
     def _on_load_tools(self):
         """Обработчик кнопки загрузки базы инструментов."""
         # Проверяем есть ли сохраненный путь
-        saved_path = self.processor.settings.get_tool_db_path()
+        saved_path = self.settings.get_tool_db_path()
         
         if saved_path and os.path.exists(saved_path):
             self._log(f"\n✅ Найден сохраненный путь к базе инструментов: {saved_path}")
