@@ -10,9 +10,9 @@
 					<Point X="954" Y="0" />
 				</Outline>
 				<Machines>
-					<Machining Type="2" IsGenCode="2" Face="5" X="78" Y="50" Diameter="2.5" Depth="5.0" />
-					<Machining Type="2" IsGenCode="2" Face="5" X="477" Y="50" Diameter="2.5" Depth="5.0" />
-					<Machining Type="2" IsGenCode="2" Face="5" X="876" Y="50" Diameter="2.5" Depth="5.0" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="78" Y="50" Diameter="2.5" Depth="8" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="477" Y="50" Diameter="2.5" Depth="8" />
+					<Machining Type="2" IsGenCode="2" Face="5" X="876" Y="50" Diameter="2.5" Depth="8" />
 					<Machining Type="3" IsGenCode="2" Face="5" X="86.25" Y="50" Depth="5" Diameter="0" ToolOffset="Undefined" Pocket="1" Closed="1">
 						<MillPreDefinedRectangle Length="0" Width="0" X="0" Y="0" Z="0" Radius="0" CornerBotLeft="0" CornerBotRight="0" CornerTopLeft="0" CornerTopRight="0" />
 						<Lines>
