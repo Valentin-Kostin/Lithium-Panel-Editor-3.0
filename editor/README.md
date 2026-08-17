@@ -64,7 +64,7 @@ pip install -r requirements.txt
 ### 4. Запуск приложения
 
 ```bash
-python main.py
+python editor/main.py
 ```
 
 Или используйте `run.bat` на Windows.
