@@ -31,7 +31,6 @@ class BatchProcessor:
         self.pgmx_files: List[Path] = []
         self.csv_files: List[Path] = []
         self.log_messages: List[str] = []
-        self.backup_folder: Optional[Path] = None
         
     def log(self, message: str):
         """Добавляет сообщение в лог."""
@@ -137,17 +136,6 @@ class BatchProcessor:
             'missing_pgmx': missing_pgmx,
             'oborot_issues': oborot_issues
         }
-
-    def _create_backup(self, file_path: Path) -> Path:
-        """Создает резервную копию файла."""
-        if not self.backup_folder:
-            self.backup_folder = self.folder_path / f"backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            self.backup_folder.mkdir(exist_ok=True)
-            self.log(f"Создана папка резервных копий: {self.backup_folder.name}")
-            
-        backup_path = self.backup_folder / file_path.name
-        shutil.copy2(file_path, backup_path)
-        return backup_path
 
     def fix_scx_batch(self) -> Dict:
         """

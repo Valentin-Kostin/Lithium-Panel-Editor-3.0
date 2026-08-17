@@ -63,7 +63,6 @@ class DocumentModel:
     namespaces: Dict[str, str] = field(default_factory=dict)
     original_xml_bytes: Optional[bytes] = None
     is_modified: bool = False
-    changes_history: List[Dict[str, Any]] = field(default_factory=list)  # Для undo/redo
 
 
 class BaseFormatHandler(ABC):
