@@ -10654,3 +10654,44 @@
 2026-08-17 14:15:10 - src.core.batch_processor - INFO -    - Изменений не требуется
 2026-08-17 14:15:10 - src.core.batch_processor - INFO - === Завершено. Обработано файлов: 19 ===
 2026-08-17 14:15:33 - __main__ - INFO - Приложение завершено с кодом: 0
+2026-08-17 14:23:53 - root - INFO - ============================================================
+2026-08-17 14:23:53 - root - INFO - Запуск приложения: 2026-08-17T14:23:53.993859
+2026-08-17 14:23:53 - root - INFO - Лог файл: C:\Базис\Lithium Panel Editor_3.0\logs\cnc_editor.log
+2026-08-17 14:23:53 - root - INFO - Уровень логирования: INFO
+2026-08-17 14:23:53 - root - INFO - ============================================================
+2026-08-17 14:23:53 - __main__ - INFO - Запуск Editor
+2026-08-17 14:23:54 - __main__ - INFO - Окно приложения показано
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - Начало сканирования папки: C:/Базис/Lithium Panel Editor_3.0/1971
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - Найдено файлов: SCX=800, PGMX=1212, CSV=28
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_DSP_10_U963-ST9(DSP_10_U963-ST9).csv: 0 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_DSP_16_U963-ST9(DSP_16_U963-ST9).csv: 12 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_DSP_18_U963-ST9(DSP_18_U963-ST9).csv: 142 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_DSP_25_U963-ST9(DSP_25_U963-ST9).csv: 54 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MDF_19_L2(W)(MDF_19_L2(W))_with_Painting.csv: 11 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MDF_22_L2(W)(MDF_22_L2(W))_with_Painting.csv: 27 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MDF_25_L2(W)(MDF_25_L2(W)).csv: 3 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MDF_25_L2(W)(MDF_25_L2(W))_with_Painting.csv: 13 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_13.2_DE.T(MSP2_13.2_DE.T)_with_Painting.csv: 3 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_19.2_DE.T(MSP2_19.2_DE.T)_with_Painting.csv: 81 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_23.2_DE.T(MSP2_23.2_DE.T)_with_Painting.csv: 24 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_26.2_DE.T(MSP2_26.2_DE.T)_with_Painting.csv: 1 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_30_DE.T(MSP2_30_DE.T)_with_Painting.csv: 1 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_35.2_DE.T(MSP2_35.2_DE.T)_with_Painting.csv: 5 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_DSP_10_U963-ST9(DSP_10_U963-ST9).csv: 0 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_DSP_16_U963-ST9(DSP_16_U963-ST9).csv: 12 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_DSP_18_U963-ST9(DSP_18_U963-ST9).csv: 142 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_DSP_25_U963-ST9(DSP_25_U963-ST9).csv: 54 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MDF_19_L2(W)(MDF_19_L2(W))_with_Painting.csv: 11 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MDF_22_L2(W)(MDF_22_L2(W))_with_Painting.csv: 27 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MDF_25_L2(W)(MDF_25_L2(W)).csv: 3 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MDF_25_L2(W)(MDF_25_L2(W))_with_Painting.csv: 13 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_13.2_DE.T(MSP2_13.2_DE.T)_with_Painting.csv: 3 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_19.2_DE.T(MSP2_19.2_DE.T)_with_Painting.csv: 81 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_23.2_DE.T(MSP2_23.2_DE.T)_with_Painting.csv: 24 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_26.2_DE.T(MSP2_26.2_DE.T)_with_Painting.csv: 1 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_30_DE.T(MSP2_30_DE.T)_with_Painting.csv: 1 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - CSV 1971G1_MSP2_35.2_DE.T(MSP2_35.2_DE.T)_with_Painting.csv: 5 записей
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - Всего деталей в CSV: 754
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - Уникальных имен в CSV: 0
+2026-08-17 14:24:08 - src.core.batch_processor - INFO - Файлов PGMX найдено: 606
+2026-08-17 14:25:25 - __main__ - INFO - Приложение завершено с кодом: 0
