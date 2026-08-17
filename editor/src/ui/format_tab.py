@@ -1,20 +1,22 @@
 """
 Виджет вкладки формата (SCM или NANXING).
-Содержит левую панель со списком файлов и правую с таблицей операций.
+Содержит левую панель с логами изменений и правую с таблицей операций.
 """
 
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 import logging
+from datetime import datetime
 
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QSplitter, QListView,
-    QPushButton, QLabel, QToolBar, QFileDialog, QMessageBox
+    QWidget, QVBoxLayout, QHBoxLayout, QSplitter, QTextEdit,
+    QPushButton, QLabel, QToolBar, QFileDialog, QMessageBox, QGroupBox,
+    QFormLayout, QLineEdit, QDoubleSpinBox, QComboBox
 )
 from PySide6.QtCore import Qt, Signal, Slot
+from PySide6.QtGui import QFont
 
 from ..core.base_handler import BaseFormatHandler, FileInfo, DocumentModel
-from ..models.file_list_model import FileListModel
 from ..models.operations_model import OperationsTableModel
 from .operations_table import OperationsTableView
 from .diff_dialog import DiffDialog
@@ -50,22 +52,61 @@ class FormatTab(QWidget):
         # Сплиттер для разделения левой и правой панели
         splitter = QSplitter(Qt.Horizontal)
 
-        # Левая панель - список файлов
+        # Левая панель - логи изменений и поиск
         left_widget = QWidget()
         left_layout = QVBoxLayout(left_widget)
         left_layout.setContentsMargins(5, 5, 5, 5)
 
-        # Заголовок
-        header_label = QLabel(f"Файлы {self.format_handler.format_name}")
-        header_label.setStyleSheet("font-weight: bold; font-size: 12px;")
-        left_layout.addWidget(header_label)
+        # Группа поиска и фильтрации
+        search_group = QGroupBox("🔍 Поиск и фильтрация")
+        search_layout = QFormLayout(search_group)
+        
+        # Поиск по диаметру
+        self.diameter_input = QDoubleSpinBox()
+        self.diameter_input.setDecimals(3)
+        self.diameter_input.setRange(0.0, 100.0)
+        self.diameter_input.setValue(2.5)
+        self.diameter_input.setSingleStep(0.1)
+        search_layout.addRow("Диаметр (мм):", self.diameter_input)
+        
+        # Ограничение глубины
+        self.max_depth_input = QDoubleSpinBox()
+        self.max_depth_input.setDecimals(3)
+        self.max_depth_input.setRange(0.0, 1000.0)
+        self.max_depth_input.setValue(5.0)
+        self.max_depth_input.setSingleStep(0.5)
+        search_layout.addRow("Макс. глубина (мм):", self.max_depth_input)
+        
+        # Тип операции
+        self.operation_type_combo = QComboBox()
+        self.operation_type_combo.addItems(["Все", "Сверление", "Фрезерование", "Пиление"])
+        search_layout.addRow("Тип операции:", self.operation_type_combo)
+        
+        # Кнопки поиска
+        btn_search_layout = QHBoxLayout()
+        self.find_btn = QPushButton("🔍 Найти")
+        self.find_btn.setToolTip("Найти все операции по критериям")
+        btn_search_layout.addWidget(self.find_btn)
+        
+        self.apply_all_btn = QPushButton("✅ Применить ко всем файлам")
+        self.apply_all_btn.setToolTip("Применить изменения ко всем найденным операциям во всех файлах")
+        self.apply_all_btn.setEnabled(False)
+        btn_search_layout.addWidget(self.apply_all_btn)
+        
+        search_layout.addRow(btn_search_layout)
+        left_layout.addWidget(search_group)
 
-        # Список файлов
-        self.file_list_view = QListView()
-        self.file_list_model = FileListModel(self)
-        self.file_list_view.setModel(self.file_list_model)
-        self.file_list_view.setContextMenuPolicy(Qt.CustomContextMenu)
-        left_layout.addWidget(self.file_list_view)
+        # Заголовок логов
+        log_header = QLabel("📋 Журнал изменений")
+        log_header.setStyleSheet("font-weight: bold; font-size: 12px;")
+        left_layout.addWidget(log_header)
+
+        # Текстовое окно для логов
+        self.log_text = QTextEdit()
+        self.log_text.setReadOnly(True)
+        self.log_text.setFont(QFont("Consolas", 9))
+        self.log_text.setStyleSheet("background-color: #f5f5f5; border: 1px solid #ccc;")
+        left_layout.addWidget(self.log_text)
 
         # Кнопки управления
         btn_layout = QHBoxLayout()
@@ -74,10 +115,9 @@ class FormatTab(QWidget):
         self.open_folder_btn.setToolTip("Выбрать папку для сканирования файлов")
         btn_layout.addWidget(self.open_folder_btn)
 
-        self.save_btn = QPushButton("💾 Сохранить")
-        self.save_btn.setToolTip("Сохранить изменения в выбранный файл")
-        self.save_btn.setEnabled(False)
-        btn_layout.addWidget(self.save_btn)
+        self.clear_log_btn = QPushButton("🗑 Очистить лог")
+        self.clear_log_btn.setToolTip("Очистить журнал изменений")
+        btn_layout.addWidget(self.clear_log_btn)
 
         left_layout.addLayout(btn_layout)
 
@@ -89,7 +129,7 @@ class FormatTab(QWidget):
         right_layout.setContentsMargins(5, 5, 5, 5)
 
         # Заголовок таблицы
-        table_header = QLabel("Операции обработки")
+        table_header = QLabel("📊 Найденные операции")
         table_header.setStyleSheet("font-weight: bold; font-size: 12px;")
         right_layout.addWidget(table_header)
 
@@ -109,7 +149,7 @@ class FormatTab(QWidget):
         # Настройка размеров сплиттера
         splitter.setStretchFactor(0, 1)
         splitter.setStretchFactor(1, 3)
-        splitter.setSizes([200, 600])
+        splitter.setSizes([300, 700])
 
         layout.addWidget(splitter)
 

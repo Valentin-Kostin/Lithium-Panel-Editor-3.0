@@ -12,31 +12,30 @@ from ..core.base_handler import OperationRow
 class OperationsTableModel(QAbstractTableModel):
     """
     Модель таблицы операций для QTableView.
+    Отображает: Название операции, Тип, Z, Диаметр, Глубина
     """
 
     # Сигналы
     data_changed_signal = Signal(int, str, object)  # row, field, value
     operation_selected = Signal(int)  # row
 
-    # Заголовки столбцов
-    HEADERS = ['#', 'Файл', 'Имя операции', 'Тип', 'X', 'Y', 'Z', 'Диаметр', 'Глубина']
+    # Заголовки столбцов - только нужные колонки
+    HEADERS = ['№', 'Файл', 'Имя операции', 'Тип', 'Z', 'Диаметр', 'Глубина']
     
     # Индексы столбцов
     COL_ID = 0
     COL_FILE = 1
     COL_NAME = 2
     COL_TYPE = 3
-    COL_X = 4
-    COL_Y = 5
-    COL_Z = 6
-    COL_DIAMETER = 7
-    COL_DEPTH = 8
+    COL_Z = 4
+    COL_DIAMETER = 5
+    COL_DEPTH = 6
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self._operations: List[OperationRow] = []
         self._editable_columns = {
-            self.COL_X, self.COL_Y, self.COL_Z,
+            self.COL_Z,
             self.COL_DIAMETER, self.COL_DEPTH
         }
 
@@ -71,10 +70,6 @@ class OperationsTableModel(QAbstractTableModel):
                 return operation.operation_name
             elif column == self.COL_TYPE:
                 return operation.operation_type
-            elif column == self.COL_X:
-                return f"{operation.x:.3f}" if operation.x is not None else ""
-            elif column == self.COL_Y:
-                return f"{operation.y:.3f}" if operation.y is not None else ""
             elif column == self.COL_Z:
                 return f"{operation.z:.3f}" if operation.z is not None else ""
             elif column == self.COL_DIAMETER:
@@ -83,7 +78,7 @@ class OperationsTableModel(QAbstractTableModel):
                 return f"{operation.depth:.3f}" if operation.depth is not None else ""
 
         elif role == Qt.TextAlignmentRole:
-            if column in {self.COL_X, self.COL_Y, self.COL_Z, self.COL_DIAMETER, self.COL_DEPTH}:
+            if column in {self.COL_Z, self.COL_DIAMETER, self.COL_DEPTH}:
                 return Qt.AlignRight | Qt.AlignVCenter
             return Qt.AlignLeft | Qt.AlignVCenter
 
@@ -96,10 +91,6 @@ class OperationsTableModel(QAbstractTableModel):
             tooltip = f"Операция #{operation.id}\n"
             tooltip += f"Имя: {operation.operation_name}\n"
             tooltip += f"Тип: {operation.operation_type}\n"
-            if operation.x is not None:
-                tooltip += f"X: {operation.x:.3f}\n"
-            if operation.y is not None:
-                tooltip += f"Y: {operation.y:.3f}\n"
             if operation.z is not None:
                 tooltip += f"Z: {operation.z:.3f}\n"
             if operation.diameter is not None:
@@ -135,13 +126,7 @@ class OperationsTableModel(QAbstractTableModel):
 
         # Обновление значения
         old_value = None
-        if column == self.COL_X:
-            old_value = operation.x
-            operation.x = new_value
-        elif column == self.COL_Y:
-            old_value = operation.y
-            operation.y = new_value
-        elif column == self.COL_Z:
+        if column == self.COL_Z:
             old_value = operation.z
             operation.z = new_value
         elif column == self.COL_DIAMETER:

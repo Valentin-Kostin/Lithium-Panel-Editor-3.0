@@ -66,13 +66,11 @@ class OperationsTableView(QTableView):
         self.setSortingEnabled(True)
         self.setEditTriggers(QTableView.DoubleClicked | QTableView.SelectedClicked)
         
-        # Установка делегата для числовых ячеек
+        # Установка делегата для числовых ячеек (колонки 4, 5, 6 - Z, Диаметр, Глубина)
         numeric_delegate = NumericDelegate(self)
-        self.setItemDelegateForColumn(4, numeric_delegate)  # X
-        self.setItemDelegateForColumn(5, numeric_delegate)  # Y
-        self.setItemDelegateForColumn(6, numeric_delegate)  # Z
-        self.setItemDelegateForColumn(7, numeric_delegate)  # Диаметр
-        self.setItemDelegateForColumn(8, numeric_delegate)  # Глубина
+        self.setItemDelegateForColumn(4, numeric_delegate)  # Z
+        self.setItemDelegateForColumn(5, numeric_delegate)  # Диаметр
+        self.setItemDelegateForColumn(6, numeric_delegate)  # Глубина
 
         # Настройка заголовков
         header = self.horizontalHeader()
@@ -81,11 +79,9 @@ class OperationsTableView(QTableView):
         header.setSectionResizeMode(1, QHeaderView.Stretch)  # Файл
         header.setSectionResizeMode(2, QHeaderView.Stretch)  # Имя
         header.setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Тип
-        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)  # X
-        header.setSectionResizeMode(5, QHeaderView.ResizeToContents)  # Y
-        header.setSectionResizeMode(6, QHeaderView.ResizeToContents)  # Z
-        header.setSectionResizeMode(7, QHeaderView.ResizeToContents)  # Диаметр
-        header.setSectionResizeMode(8, QHeaderView.ResizeToContents)  # Глубина
+        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)  # Z
+        header.setSectionResizeMode(5, QHeaderView.ResizeToContents)  # Диаметр
+        header.setSectionResizeMode(6, QHeaderView.ResizeToContents)  # Глубина
 
         vertical_header = self.verticalHeader()
         vertical_header.setVisible(True)
