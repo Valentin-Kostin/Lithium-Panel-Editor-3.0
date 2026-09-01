@@ -214,21 +214,21 @@ class BatchProcessor:
                 content = re.sub(hole_pattern, replace_hole_depth, content)
                 stats['holes_fixed'] += file_stats['holes_fixed']
                 
-                # 3. Type="4" с десятичными дробями -> замена точек на запятые
-                # Ищем элементы Type="4" и меняем точки в числовых атрибутах на запятые
+                # 3. Type="4" с десятичными дробями -> замена точек на запятые ТОЛЬКО в атрибуте Width
+                # Ищем элементы Type="4" и меняем точки на запятые только в атрибуте Width
                 type4_pattern = r'(<[^>]*Type=["\']?4["\']?[^>]*>)'
                 
-                def fix_type4_numbers(match):
+                def fix_type4_width(match):
                     tag_content = match.group(1)
-                    # Меняем точки на запятые только в числовых значениях внутри этого тега
-                    # Pattern: Attr="123.45" -> Attr="123,45"
-                    fixed_tag = re.sub(r'(["\'])([\d]+)\.([\d]+)(["\'])', r'\1\2,\3\4', tag_content)
+                    # Меняем точки на запятые только в атрибуте Width
+                    # Pattern: Width="123.45" -> Width="123,45"
+                    fixed_tag = re.sub(r'(Width=["\'])([\d]+)\.([\d]+)(["\'])', r'\1\2,\3\4', tag_content)
                     if fixed_tag != tag_content:
                         file_stats['dots_replaced'] += 1
-                        self.log(f"   🔢 Type=4: заменены точки на запятые")
+                        self.log(f"   🔢 Type=4: заменены точки на запятые в атрибуте Width")
                     return fixed_tag
                     
-                content = re.sub(type4_pattern, fix_type4_numbers, content)
+                content = re.sub(type4_pattern, fix_type4_width, content)
                 stats['dots_replaced'] += file_stats['dots_replaced']
                 
                 # 4. Type="4" Face="0" -> попытка взять Face из метки отверстия 12.222
