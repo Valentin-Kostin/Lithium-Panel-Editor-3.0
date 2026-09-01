@@ -151,7 +151,7 @@ class BatchProcessor:
             return {'processed': 0, 'errors': 0}
             
         self.log("=== Начало исправления файлов .SCX (NANXING) ===")
-        stats = {'processed': 0, 'holes_fixed': 0, 'panels_found': 0, 'dots_replaced': 0, 'face_fixed': 0, 'errors': 0}
+        stats = {'processed': 0, 'holes_fixed': 0, 'panels_found': 0, 'dots_replaced': 0, 'face_fixed': 0, 'z_recalculated': 0, 'errors': 0}
         
         for file_path in self.scx_files:
             try:
@@ -166,7 +166,8 @@ class BatchProcessor:
                     'holes_fixed': 0,
                     'panels_found': 0,
                     'dots_replaced': 0,
-                    'face_fixed': 0
+                    'face_fixed': 0,
+                    'z_recalculated': 0
                 }
                 
                 # Парсим XML
@@ -230,6 +231,59 @@ class BatchProcessor:
                     
                 content = re.sub(type4_pattern, fix_type4_width, content)
                 stats['dots_replaced'] += file_stats['dots_replaced']
+                
+                # 3b. Type="4" -> пересчёт Z = Thickness - Z, EndZ = Thickness - EndZ
+                # Извлекаем Thickness из корня документа
+                thickness_match = re.search(r'Thickness=["\']?([\d.,]+)["\']?', content)
+                thickness = 0.0
+                if thickness_match:
+                    try:
+                        thickness = float(thickness_match.group(1).replace(',', '.'))
+                    except: pass
+                
+                if thickness > 0:
+                    def recalc_type4_z(match):
+                        tag_content = match.group(1)
+                        modified = False
+                        
+                        # Извлекаем текущие Z и EndZ
+                        z_match = re.search(r'Z=["\']?([\d.,]+)["\']?', tag_content)
+                        endz_match = re.search(r'EndZ=["\']?([\d.,]+)["\']?', tag_content)
+                        
+                        if z_match:
+                            try:
+                                z_old = float(z_match.group(1).replace(',', '.'))
+                                z_new = thickness - z_old
+                                # Заменяем Z="..." на Z="новый"
+                                tag_content = re.sub(
+                                    r'Z=["\'][\d.,]+["\']',
+                                    f'Z="{round(z_new, 3)}"',
+                                    tag_content
+                                )
+                                modified = True
+                            except: pass
+                        
+                        if endz_match:
+                            try:
+                                endz_old = float(endz_match.group(1).replace(',', '.'))
+                                endz_new = thickness - endz_old
+                                # Заменяем EndZ="..." на EndZ="новый"
+                                tag_content = re.sub(
+                                    r'EndZ=["\'][\d.,]+["\']',
+                                    f'EndZ="{round(endz_new, 3)}"',
+                                    tag_content
+                                )
+                                modified = True
+                            except: pass
+                        
+                        if modified:
+                            file_stats['z_recalculated'] += 1
+                            self.log(f"   🔄 Type=4: пересчитан Z и EndZ (Thickness={thickness})")
+                        
+                        return tag_content
+                    
+                    content = re.sub(type4_pattern, recalc_type4_z, content)
+                    stats['z_recalculated'] += file_stats['z_recalculated']
                 
                 # 4. Type="4" Face="0" -> попытка взять Face из метки отверстия 12.222
                 # Сначала найдем все метки с Diameter="12.222" и их Face
