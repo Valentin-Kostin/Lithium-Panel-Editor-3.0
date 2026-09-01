@@ -1,1 +1,37 @@
-Nothing should be ignored since the changes only include source code files (.py) without any build artifacts, dependencies, or temporary files.
+```
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Logs
+*.log
+editor/logs/
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Dependencies
+.venv/
+venv/
+node_modules/
+
+# Editors
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage
+.coverage
+coverage/
+htmlcov/
+
+# Build artifacts
+dist/
+build/
+target/
+```

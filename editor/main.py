@@ -12,13 +12,12 @@ from PySide6.QtCore import Qt
 from src.utils.logger import setup_logging
 from src.ui.main_window import MainWindow
 
-logger = logging.getLogger(__name__)
+# Настройка логирования и получение логгера
+logger = setup_logging()
 
 
 def main():
     """Точка входа приложения."""
-    setup_logging()
-    
     logger.info("Запуск Editor")
     
     app = QApplication(sys.argv)
