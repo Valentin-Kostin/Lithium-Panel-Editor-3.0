@@ -233,13 +233,21 @@ class BatchProcessor:
                 stats['dots_replaced'] += file_stats['dots_replaced']
                 
                 # 3b. Type="4" -> пересчёт Z = Thickness - Z, EndZ = Thickness - EndZ
-                # Извлекаем Thickness из корня документа
+                # Извлекаем Thickness из корня документа или Panel элемента
                 thickness_match = re.search(r'Thickness=["\']?([\d.,]+)["\']?', content)
                 thickness = 0.0
                 if thickness_match:
                     try:
                         thickness = float(thickness_match.group(1).replace(',', '.'))
                     except: pass
+                
+                # Если не нашли в корне, ищем в элементе Panel
+                if thickness == 0.0:
+                    panel_thickness_match = re.search(r'<Panel[^>]*Thickness=["\']?([\d.,]+)["\']?', content)
+                    if panel_thickness_match:
+                        try:
+                            thickness = float(panel_thickness_match.group(1).replace(',', '.'))
+                        except: pass
                 
                 if thickness > 0:
                     def recalc_type4_z(match):
