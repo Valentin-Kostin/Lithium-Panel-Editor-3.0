@@ -2,7 +2,7 @@
 Утилиты для исправления ошибок в SCX файлах (NANXING).
 
 Реализует полную логику проверки и исправления:
-- Замена точек на запятые в Type="4" (десятичные дроби)
+- Замена точек на запятые в Type="4" только в атрибуте Width
 - Исправление Face="0" (заглушка для будущей логики)
 - Пересчёт Z = Thickness - Z для Type="4"
 - Поиск панелей где Length > 1200 И Width > 1200
@@ -66,7 +66,7 @@ class ScxFixer:
     def fix_type4_decimals_and_z(self) -> Tuple[int, List[str]]:
         """
         Исправляет Type="4" (фрезеровка в торце):
-        1. Ищет десятичные дроби с точкой → меняет на запятую
+        1. Ищет десятичные дроби с точкой в атрибуте Width → меняет на запятую
         2. Face="0" → добавляет в список замечаний (исправление позже)
         3. Пересчитывает Z = Thickness - Z, EndZ = Thickness - EndZ
         
@@ -114,14 +114,14 @@ class ScxFixer:
                         if mach_type == '4':
                             type4_modified = False
                             
-                            # Проверка и исправление десятичных дробей с точкой на запятую
-                            for attr_name in ['X', 'Y', 'Z', 'EndX', 'EndY', 'EndZ', 'Depth', 'Width']:
-                                attr_value = machining.attrib.get(attr_name, '')
-                                if self._has_decimal_point(attr_value):
-                                    new_value = attr_value.replace('.', ',')
-                                    machining.set(attr_name, new_value)
-                                    type4_modified = True
-                                    modified = True
+                            # Проверка и исправление десятичных дробей с точкой на запятую ТОЛЬКО в атрибуте Width
+                            attr_name = 'Width'
+                            attr_value = machining.attrib.get(attr_name, '')
+                            if self._has_decimal_point(attr_value):
+                                new_value = attr_value.replace('.', ',')
+                                machining.set(attr_name, new_value)
+                                type4_modified = True
+                                modified = True
                             
                             # Проверка Face="0"
                             face_value = machining.attrib.get('Face', '')
