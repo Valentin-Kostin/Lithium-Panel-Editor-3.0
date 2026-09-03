@@ -259,7 +259,10 @@ class MainWindow(QMainWindow):
         if not folder:
             self._log("\n⚠️ Нет выбранной папки! Сначала выберите папку.")
             return
-            
+        
+        # Очищаем лог процессора перед новым запуском
+        self.processor.log_messages.clear()
+        
         self._log(f"\n{'='*60}")
         self._log(f"✏️ ЗАПУСК ИСПРАВЛЕНИЯ .SCX")
         self._log(f"{'='*60}")

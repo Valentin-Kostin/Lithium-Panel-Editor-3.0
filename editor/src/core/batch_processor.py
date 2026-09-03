@@ -149,7 +149,10 @@ class BatchProcessor:
         if not self.scx_files:
             self.log("Нет файлов .SCX для обработки")
             return {'processed': 0, 'errors': 0}
-            
+        
+        # Очищаем логи перед новым запуском
+        self.log_messages.clear()
+        
         self.log("=== Начало исправления файлов .SCX (NANXING) ===")
         stats = {'processed': 0, 'holes_fixed': 0, 'panels_found': 0, 'dots_replaced': 0, 'face_fixed': 0, 'errors': 0}
         
