@@ -216,26 +216,12 @@ class BatchProcessor:
                 stats['holes_fixed'] += file_stats['holes_fixed']
                 
                 # 3. Type="4" с десятичными дробями -> замена точек на запятые ТОЛЬКО в атрибуте Width
-                # Ищем элементы Type="4" и меняем точки на запятые только в атрибуте Width
+                # И пересчёт Z = Thickness - Z, EndZ = Thickness - EndZ ТОЛЬКО для тех элементов, где была замена
                 type4_pattern = r'(<[^>]*Type=["\']?4["\']?[^>]*>)'
                 
-                def fix_type4_width(match):
-                    tag_content = match.group(1)
-                    # Меняем точки на запятые только в атрибуте Width
-                    # Pattern: Width="123.45" -> Width="123,45"
-                    fixed_tag = re.sub(r'(Width=["\'])([\d]+)\.([\d]+)(["\'])', r'\1\2,\3\4', tag_content)
-                    if fixed_tag != tag_content:
-                        file_stats['dots_replaced'] += 1
-                        self.log(f"   🔢 Type=4: заменены точки на запятые в атрибуте Width")
-                    return fixed_tag
-                    
-                content = re.sub(type4_pattern, fix_type4_width, content)
-                stats['dots_replaced'] += file_stats['dots_replaced']
-                
-                # 3b. Type="4" -> пересчёт Z = Thickness - Z, EndZ = Thickness - EndZ
-                # Извлекаем Thickness из корня документа или Panel элемента
-                thickness_match = re.search(r'Thickness=["\']?([\d.,]+)["\']?', content)
+                # Извлекаем Thickness из корня документа или Panel элемента (один раз для файла)
                 thickness = 0.0
+                thickness_match = re.search(r'Thickness=["\']?([\d.,]+)["\']?', content)
                 if thickness_match:
                     try:
                         thickness = float(thickness_match.group(1).replace(',', '.'))
@@ -249,12 +235,21 @@ class BatchProcessor:
                             thickness = float(panel_thickness_match.group(1).replace(',', '.'))
                         except: pass
                 
-                if thickness > 0:
-                    def recalc_type4_z(match):
-                        tag_content = match.group(1)
-                        modified = False
-                        
-                        # Извлекаем текущие Z и EndZ
+                def process_type4_element(match):
+                    tag_content = match.group(1)
+                    width_was_fixed = False
+                    
+                    # Проверяем, есть ли атрибут Width с точкой (для замены на запятую)
+                    width_pattern = r'(Width=["\'])([\d]+)\.([\d]+)(["\'])'
+                    if re.search(width_pattern, tag_content):
+                        # Меняем точки на запятые только в атрибуте Width
+                        tag_content = re.sub(width_pattern, r'\1\2,\3\4', tag_content)
+                        width_was_fixed = True
+                        file_stats['dots_replaced'] += 1
+                        self.log(f"   🔢 Type=4: заменены точки на запятые в атрибуте Width")
+                    
+                    # Пересчёт Z и EndZ ТОЛЬКО если была замена точки на запятую в Width
+                    if width_was_fixed and thickness > 0:
                         z_match = re.search(r'Z=["\']?([\d.,]+)["\']?', tag_content)
                         endz_match = re.search(r'EndZ=["\']?([\d.,]+)["\']?', tag_content)
                         
@@ -262,62 +257,118 @@ class BatchProcessor:
                             try:
                                 z_old = float(z_match.group(1).replace(',', '.'))
                                 z_new = thickness - z_old
-                                # Заменяем Z="..." на Z="новый"
                                 tag_content = re.sub(
                                     r'Z=["\'][\d.,]+["\']',
                                     f'Z="{round(z_new, 3)}"',
                                     tag_content
                                 )
-                                modified = True
                             except: pass
                         
                         if endz_match:
                             try:
                                 endz_old = float(endz_match.group(1).replace(',', '.'))
                                 endz_new = thickness - endz_old
-                                # Заменяем EndZ="..." на EndZ="новый"
                                 tag_content = re.sub(
                                     r'EndZ=["\'][\d.,]+["\']',
                                     f'EndZ="{round(endz_new, 3)}"',
                                     tag_content
                                 )
-                                modified = True
                             except: pass
                         
-                        if modified:
-                            file_stats['z_recalculated'] += 1
-                            self.log(f"   🔄 Type=4: пересчитан Z и EndZ (Thickness={thickness})")
-                        
-                        return tag_content
+                        file_stats['z_recalculated'] += 1
+                        self.log(f"   🔄 Type=4: заменена точка в Width и пересчитан Z/EndZ (Thickness={thickness})")
                     
-                    content = re.sub(type4_pattern, recalc_type4_z, content)
-                    stats['z_recalculated'] += file_stats['z_recalculated']
+                    return tag_content
                 
-                # 4. Type="4" Face="0" -> попытка взять Face из метки отверстия 12.222
-                # Сначала найдем все метки с Diameter="12.222" и их Face
-                marker_faces = []
-                marker_pattern = r'<[^>]*Diameter=["\']?12[,\.]222["\']?[^>]*Face=["\']([^"\']+)["\'][^>]*>'
+                content = re.sub(type4_pattern, process_type4_element, content)
+                stats['dots_replaced'] += file_stats['dots_replaced']
+                stats['z_recalculated'] += file_stats['z_recalculated']
+                
+                # 4. Type="4" Face="0" -> попытка взять Face и Z из метки отверстия 12.222
+                # Сначала найдем все метки с Diameter="12.222" и их параметры
+                markers = []
+                marker_pattern = r'<Machining[^>]*Type=["\']?1["\']?[^>]*Diameter=["\']?12[,\.]222["\']?[^>]*/>'
                 for m in re.finditer(marker_pattern, content):
-                    face_val = m.group(1)
-                    if face_val and face_val != "0":
-                        marker_faces.append(face_val)
-                
-                if marker_faces:
-                    # Берем первое найденное значение Face из меток (упрощенная логика)
-                    target_face = marker_faces[0]
-                    self.log(f"   🎯 Найдена метка Ø12.222 с Face={target_face}")
-                    
-                    # Теперь ищем Type="4" с Face="0" и меняем Face
-                    face0_pattern = r'(<[^>]*Type=["\']?4["\']?[^>]*)Face=["\']0["\']([^>]*>)'
-                    new_content = re.sub(face0_pattern, rf'\1Face="{target_face}"\2', content)
-                    
-                    if new_content != content:
-                        count = content.count('Face="0"') - new_content.count('Face="0"')
-                        file_stats['face_fixed'] += count
-                        self.log(f"   🔧 Type=4 Face=0 исправлено: {count} раз (взят Face={target_face} из метки)")
-                        content = new_content
+                    tag = m.group(0)
+                    try:
+                        face_match = re.search(r'Face=["\']([^"\']+)["\']', tag)
+                        x_match = re.search(r'X=["\']?([\d.,]+)["\']?', tag)
+                        y_match = re.search(r'Y=["\']?([\d.,]+)["\']?', tag)
+                        z_match = re.search(r'Z=["\']?([\d.,]+)["\']?', tag)
                         
-                stats['face_fixed'] += file_stats['face_fixed']
+                        if face_match and x_match and y_match:
+                            markers.append({
+                                'face': face_match.group(1),
+                                'x': float(x_match.group(1).replace(',', '.')),
+                                'y': float(y_match.group(1).replace(',', '.')),
+                                'z': float(z_match.group(1).replace(',', '.')) if z_match else None,
+                                'full_tag': tag
+                            })
+                    except: pass
+                
+                if markers:
+                    self.log(f"   🎯 Найдено меток Ø12.222: {len(markers)}")
+                    
+                    # Теперь обрабатываем Type="4" с Face="0"
+                    type4_face0_pattern = r'(<Machining[^>]*Type=["\']?4["\']?[^>]*)Face=["\']0["\']([^>]*>)'
+                    
+                    def replace_face_from_marker(match):
+                        prefix = match.group(1)
+                        suffix = match.group(2)
+                        
+                        # Извлекаем координаты паза
+                        x_match = re.search(r'X=["\']?([\d.,]+)["\']?', prefix + suffix)
+                        y_match = re.search(r'Y=["\']?([\d.,]+)["\']?', prefix + suffix)
+                        endx_match = re.search(r'EndX=["\']?([\d.,]+)["\']?', prefix + suffix)
+                        endy_match = re.search(r'EndY=["\']?([\d.,]+)["\']?', prefix + suffix)
+                        
+                        if not x_match or not y_match:
+                            return match.group(0)
+                        
+                        x = float(x_match.group(1).replace(',', '.'))
+                        y = float(y_match.group(1).replace(',', '.'))
+                        endx = float(endx_match.group(1).replace(',', '.')) if endx_match else x
+                        endy = float(endy_match.group(1).replace(',', '.')) if endy_match else y
+                        
+                        # Вычисляем центр паза
+                        center_x = (x + endx) / 2
+                        center_y = (y + endy) / 2
+                        
+                        # Ищем ближайшую метку по расстоянию до центра паза
+                        min_dist = float('inf')
+                        best_marker = None
+                        
+                        for marker in markers:
+                            dist = ((center_x - marker['x'])**2 + (center_y - marker['y'])**2)**0.5
+                            if dist < min_dist:
+                                min_dist = dist
+                                best_marker = marker
+                        
+                        # Если нашли подходящую метку (расстояние < 100мм)
+                        if best_marker and min_dist < 100:
+                            file_stats['face_fixed'] += 1
+                            self.log(f"   🔧 Type=4 Face=0 исправлен на Face={best_marker['face']} (метка на расстоянии {min_dist:.1f}мм)")
+                            
+                            # Заменяем Face
+                            result = f'{prefix}Face="{best_marker["face"]}"{suffix}'
+                            
+                            # Если у метки есть Z и у паза есть Z, копируем Z из метки в паз
+                            if best_marker['z'] is not None:
+                                z_match_paz = re.search(r'Z=[\"\']?([\d.,]+)[\"\']?', prefix + suffix)
+                                if z_match_paz:
+                                    result = re.sub(
+                                        r'Z=[\"\'][\d.,]+[\"\']',
+                                        f'Z="{best_marker["z"]}"',
+                                        result
+                                    )
+                                    self.log(f"   📏 Type=4 Z скопирован из метки: {best_marker['z']}")
+                            
+                            return result
+                        
+                        return match.group(0)
+                    
+                    content = re.sub(type4_face0_pattern, replace_face_from_marker, content)
+                    stats['face_fixed'] += file_stats['face_fixed']
                 
                 # Сохранение если были изменения
                 if content != original_content:
