@@ -43,4 +43,12 @@ Thumbs.db
 # Testing
 .pytest_cache/
 .mypy_cache/
+
+
+#Tets
+*1971/
+*.SCX
+*.CSV
+*.pgmx
+
 ```
