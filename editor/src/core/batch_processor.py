@@ -173,25 +173,33 @@ class BatchProcessor:
                 # Для SCX часто нужно вручную парсить, так как там могут быть проблемы с форматом
                 # Используем regex для надежного поиска
                 
-                # 1. Поиск панелей > 1200x1200 (ищем в свойствах панели Length/Width или X/Y размеры)
-                # Предполагаем, что размеры панели могут быть в атрибутах корня или в специфичных тегах
-                # Это упрощенная эвристика, может потребоваться уточнение структуры SCX
-                panel_pattern = r'(Length|Width|L|W)="([\d,.]+)"'
-                matches = re.findall(panel_pattern, content)
-                dims = {}
-                for attr, val in matches:
+                # 1. Поиск панелей > 1200x1200 (ищем ТОЛЬКО внутри тегов <Panel>)
+                # Проверяем: ширина > 1200 ИЛИ длина > 1200
+                panel_pattern = r'<Panel[^>]*>'
+                panel_matches = re.finditer(panel_pattern, content)
+                
+                for panel_match in panel_matches:
+                    panel_tag = panel_match.group(0)
                     try:
-                        v = float(val.replace(',', '.'))
-                        dims[attr] = v
-                    except: pass
-                
-                length = dims.get('Length', dims.get('L', 0))
-                width = dims.get('Width', dims.get('W', 0))
-                
-                if length > 1200 and width > 1200:
-                    file_stats['panels_found'] += 1
-                    self.log(f"   ⚠️ Найдена панель >1200x1200: {length}x{width}")
-                    stats['panels_found'] += 1
+                        # Извлекаем Length и Width из тега Panel
+                        length_match = re.search(r'(Length|L)=["\']?([\d,.]+)["\']?', panel_tag)
+                        width_match = re.search(r'(Width|W)=["\']?([\d,.]+)["\']?', panel_tag)
+                        
+                        length = 0
+                        width = 0
+                        
+                        if length_match:
+                            length = float(length_match.group(2).replace(',', '.'))
+                        if width_match:
+                            width = float(width_match.group(2).replace(',', '.'))
+                        
+                        # Проверяем: ширина > 1200 ИЛИ длина > 1200
+                        if length > 1200 or width > 1200:
+                            file_stats['panels_found'] += 1
+                            stats['panels_found'] += 1
+                            self.log(f"   ⚠️ Найдена панель >1200: {file_path.name} - Длина={length}мм, Ширина={width}мм")
+                    except Exception as e:
+                        self.log(f"   ⚠️ Ошибка парсинга размеров панели: {e}")
                 
                 # 2. Исправление отверстий Ø2.5мм с глубиной >5мм
                 # Ищем элементы с Diameter="2.5" или Diameter="2,5"

@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
             stats = self.processor.fix_scx_batch()
             
             self._log(f"\n✅ Исправление .SCX завершено!")
-            if stats['processed'] > 0:
+            if stats['processed'] > 0 or stats['panels_found'] > 0:
                 self._log(f"🎉 Исправлено файлов: {stats['processed']}")
                 self._log(f"   - Отверстий Ø2.5 исправлено: {stats['holes_fixed']}")
                 self._log(f"   - Панелей >1200 найдено: {stats['panels_found']}")
