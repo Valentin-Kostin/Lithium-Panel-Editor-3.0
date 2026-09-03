@@ -13,8 +13,8 @@
 					<Machining Type="2" IsGenCode="2" Face="5" X="482" Y="268" Diameter="12" Depth="23.7" />
 					<Machining Type="1" IsGenCode="2" Face="1" X="390.23" Y="229" Z="13.47" Diameter="12.222" Depth="5" />
 					<Machining Type="1" IsGenCode="2" Face="2" X="58.5" Y="45" Z="14.2" Diameter="12.222" Depth="5" />
-					<Machining Type="4" IsGenCode="2" Face="2" X="23.7" Y="0" Z="14.2" EndX="93.3" EndY="0" EndZ="14.2" Depth="45" Width="12,6" ToolOffset="中" />
-					<Machining Type="4" IsGenCode="2" Face="1" X="353.234" Y="274" Z="13.472" EndX="422.834" EndY="274" EndZ="13.472" Depth="45" Width="12,6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="0" X="23.7" Y="0" Z="9" EndX="93.3" EndY="0" EndZ="9.000" Depth="45" Width="12.6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="1" X="353.234" Y="274" Z="9.728" EndX="422.834" EndY="274" EndZ="9.728" Depth="45" Width="12.6" ToolOffset="中" />
 					<Machining Type="3" IsGenCode="2" Face="5" X="-6" Y="71.85" Depth="12" Diameter="0" ToolOffset="Undefined" Pocket="1" Closed="1">
 						<MillPreDefinedRectangle Length="0" Width="0" X="0" Y="0" Z="0" Radius="0" CornerBotLeft="0" CornerBotRight="0" CornerTopLeft="0" CornerTopRight="0" />
 						<Lines>
