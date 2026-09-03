@@ -278,6 +278,13 @@ class MainWindow(QMainWindow):
                 self._log(f"   - Панелей >1200 найдено: {stats['panels_found']}")
                 self._log(f"   - Type=4 с запятыми: {stats['dots_replaced']}")
                 self._log(f"   - Face=0 исправлено: {stats['face_fixed']}")
+                
+                # Выводим детальные логи из процессора (включая названия файлов с панелями >1200)
+                if self.processor.log_messages:
+                    self._log(f"\n📋 Детальный отчет:")
+                    for msg in self.processor.log_messages:
+                        if "⚠️ Найдена панель >1200" in msg or "🔧" in msg or "🗑️" in msg or "🎯" in msg:
+                            self._log(f"   {msg}")
             else:
                 self._log("ℹ️ Нет файлов для исправления или изменений не требуется")
                 
