@@ -197,7 +197,9 @@ class BatchProcessor:
                         if length > 1200 or width > 1200:
                             file_stats['panels_found'] += 1
                             stats['panels_found'] += 1
-                            self.log(f"   ⚠️ Найдена панель >1200: {file_path.name} - Длина={length}мм, Ширина={width}мм")
+                            # Сохраняем информацию о панели для последующего вывода в детальном отчете
+                            panel_info = f"⚠️ Найдена панель >1200: {file_path.name} - Длина={length}мм, Ширина={width}мм"
+                            self.log(panel_info)
                     except Exception as e:
                         self.log(f"   ⚠️ Ошибка парсинга размеров панели: {e}")
                 
