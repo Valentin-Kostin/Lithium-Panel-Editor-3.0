@@ -1,58 +1,8 @@
 ```
-# Python
-__pycache__/
+# Compiled Python files
 *.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-.env
-.env.local
-.env.*
+__pycache__/
 
-# Build artifacts
-build/
-dist/
-*.egg-info/
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.swp
-*~
-
-# Coverage
-.coverage
-htmlcov/
-coverage/
-
-# IDE
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Testing
-.pytest_cache/
-.mypy_cache/
-
-
-#Tets
-1971/
-*.SCX
-*.CSV
-*.pgmx
-*1971/
-*.SCX
-*.CSV
-*.pgmx
-
+# Backup files
+*.backup
 ```
