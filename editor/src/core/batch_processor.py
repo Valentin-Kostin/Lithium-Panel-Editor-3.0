@@ -324,6 +324,12 @@ class BatchProcessor:
                         return tag_content
 
                     content = re.sub(type4_pattern_all, process_type4_with_marker, content)
+                    
+                    # Удаляем все метки Type="1" с Diameter="12.222"
+                    for marker in markers:
+                        content = content.replace(marker['full_tag'], '')
+                        self.log(f"   🗑️ Метка Ø12.222 удалена")
+                    
                     stats['face_fixed'] += file_stats['face_fixed']
                 
                 # Сохранение если были изменения
