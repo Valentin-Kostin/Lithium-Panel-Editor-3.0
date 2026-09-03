@@ -1,1 +1,1 @@
-Nothing should be ignored based on the provided file changes. The modification of 'editor/src/core/batch_processor.py' is a source code file that doesn't require any special ignore rules.
+Nothing should be ignored based on the provided file changes. The only modified file is a Python source file (`editor/src/core/batch_processor.py`), which should not be added to .gitignore.
