@@ -1,8 +1,1 @@
-```
-# Compiled Python files
-*.pyc
-__pycache__/
-
-# Backup files
-*.backup
-```
+Nothing should be ignored based on the provided file changes. The modification of 'editor/src/core/batch_processor.py' is a source code file that doesn't require any special ignore rules.

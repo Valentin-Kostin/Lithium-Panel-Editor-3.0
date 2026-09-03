@@ -151,7 +151,7 @@ class BatchProcessor:
             return {'processed': 0, 'errors': 0}
             
         self.log("=== Начало исправления файлов .SCX (NANXING) ===")
-        stats = {'processed': 0, 'holes_fixed': 0, 'panels_found': 0, 'dots_replaced': 0, 'face_fixed': 0, 'z_recalculated': 0, 'errors': 0}
+        stats = {'processed': 0, 'holes_fixed': 0, 'panels_found': 0, 'dots_replaced': 0, 'face_fixed': 0, 'errors': 0}
         
         for file_path in self.scx_files:
             try:
@@ -166,8 +166,7 @@ class BatchProcessor:
                     'holes_fixed': 0,
                     'panels_found': 0,
                     'dots_replaced': 0,
-                    'face_fixed': 0,
-                    'z_recalculated': 0
+                    'face_fixed': 0
                 }
                 
                 # Парсим XML
@@ -216,73 +215,24 @@ class BatchProcessor:
                 stats['holes_fixed'] += file_stats['holes_fixed']
                 
                 # 3. Type="4" с десятичными дробями -> замена точек на запятые ТОЛЬКО в атрибуте Width
-                # И пересчёт Z = Thickness - Z, EndZ = Thickness - EndZ ТОЛЬКО для тех элементов, где была замена
                 type4_pattern = r'(<[^>]*Type=["\']?4["\']?[^>]*>)'
-                
-                # Извлекаем Thickness из корня документа или Panel элемента (один раз для файла)
-                thickness = 0.0
-                thickness_match = re.search(r'Thickness=["\']?([\d.,]+)["\']?', content)
-                if thickness_match:
-                    try:
-                        thickness = float(thickness_match.group(1).replace(',', '.'))
-                    except: pass
-                
-                # Если не нашли в корне, ищем в элементе Panel
-                if thickness == 0.0:
-                    panel_thickness_match = re.search(r'<Panel[^>]*Thickness=["\']?([\d.,]+)["\']?', content)
-                    if panel_thickness_match:
-                        try:
-                            thickness = float(panel_thickness_match.group(1).replace(',', '.'))
-                        except: pass
-                
+
                 def process_type4_element(match):
                     tag_content = match.group(1)
-                    width_was_fixed = False
-                    
+
                     # Проверяем, есть ли атрибут Width с точкой (для замены на запятую)
                     width_pattern = r'(Width=["\'])([\d]+)\.([\d]+)(["\'])'
                     if re.search(width_pattern, tag_content):
                         # Меняем точки на запятые только в атрибуте Width
                         tag_content = re.sub(width_pattern, r'\1\2,\3\4', tag_content)
-                        width_was_fixed = True
                         file_stats['dots_replaced'] += 1
                         self.log(f"   🔢 Type=4: заменены точки на запятые в атрибуте Width")
-                    
-                    # Пересчёт Z и EndZ ТОЛЬКО если была замена точки на запятую в Width
-                    if width_was_fixed and thickness > 0:
-                        z_match = re.search(r'Z=["\']?([\d.,]+)["\']?', tag_content)
-                        endz_match = re.search(r'EndZ=["\']?([\d.,]+)["\']?', tag_content)
-                        
-                        if z_match:
-                            try:
-                                z_old = float(z_match.group(1).replace(',', '.'))
-                                z_new = thickness - z_old
-                                tag_content = re.sub(
-                                    r'Z=["\'][\d.,]+["\']',
-                                    f'Z="{round(z_new, 3)}"',
-                                    tag_content
-                                )
-                            except: pass
-                        
-                        if endz_match:
-                            try:
-                                endz_old = float(endz_match.group(1).replace(',', '.'))
-                                endz_new = thickness - endz_old
-                                tag_content = re.sub(
-                                    r'EndZ=["\'][\d.,]+["\']',
-                                    f'EndZ="{round(endz_new, 3)}"',
-                                    tag_content
-                                )
-                            except: pass
-                        
-                        file_stats['z_recalculated'] += 1
-                        self.log(f"   🔄 Type=4: заменена точка в Width и пересчитан Z/EndZ (Thickness={thickness})")
-                    
+
                     return tag_content
-                
+
                 content = re.sub(type4_pattern, process_type4_element, content)
                 stats['dots_replaced'] += file_stats['dots_replaced']
-                stats['z_recalculated'] += file_stats['z_recalculated']
+
                 
                 # 4. Type="4" Face="0" -> попытка взять Face и Z из метки отверстия 12.222
                 # Сначала найдем все метки с Diameter="12.222" и их параметры
