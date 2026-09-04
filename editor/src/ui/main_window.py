@@ -162,6 +162,10 @@ class MainWindow(QMainWindow):
         )
         
         if folder:
+            # Очищаем лог процессора и интерфейс перед новым сканированием
+            self.processor.log_messages.clear()
+            self.log_text.clear()
+            
             self._current_folder = folder  # Сохраняем путь к папке
             self._log(f"\n{'='*60}")
             self._log(f"📂 Выбрана папка: {folder}")
@@ -259,7 +263,10 @@ class MainWindow(QMainWindow):
         if not folder:
             self._log("\n⚠️ Нет выбранной папки! Сначала выберите папку.")
             return
-            
+        
+        # Очищаем лог процессора перед новым запуском
+        self.processor.log_messages.clear()
+        
         self._log(f"\n{'='*60}")
         self._log(f"✏️ ЗАПУСК ИСПРАВЛЕНИЯ .SCX")
         self._log(f"{'='*60}")
@@ -272,12 +279,19 @@ class MainWindow(QMainWindow):
             stats = self.processor.fix_scx_batch()
             
             self._log(f"\n✅ Исправление .SCX завершено!")
-            if stats['processed'] > 0:
+            if stats['processed'] > 0 or stats['panels_found'] > 0:
                 self._log(f"🎉 Исправлено файлов: {stats['processed']}")
                 self._log(f"   - Отверстий Ø2.5 исправлено: {stats['holes_fixed']}")
                 self._log(f"   - Панелей >1200 найдено: {stats['panels_found']}")
                 self._log(f"   - Type=4 с запятыми: {stats['dots_replaced']}")
                 self._log(f"   - Face=0 исправлено: {stats['face_fixed']}")
+                
+                # Выводим детальные логи из процессора (включая названия файлов с панелями >1200)
+                if self.processor.log_messages:
+                    self._log(f"\n📋 Детальный отчет:")
+                    for msg in self.processor.log_messages:
+                        if "⚠️ Найдена панель >1200" in msg or "🔧" in msg or "🗑️" in msg or "🎯" in msg:
+                            self._log(f"   {msg}")
             else:
                 self._log("ℹ️ Нет файлов для исправления или изменений не требуется")
                 
