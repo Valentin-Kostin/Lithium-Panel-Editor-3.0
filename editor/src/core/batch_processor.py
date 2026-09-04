@@ -196,8 +196,8 @@ class BatchProcessor:
                         if width_match:
                             width = float(width_match.group(2).replace(',', '.'))
                         
-                        # Проверяем: ширина > 1200 ИЛИ длина > 1200
-                        if length > 1200 or width > 1200:
+                        # Проверяем: ширина > 1200 И длина > 1200
+                        if length > 1200 and width > 1200:
                             file_stats['panels_found'] += 1
                             stats['panels_found'] += 1
                             # Сохраняем информацию о панели для последующего вывода в детальном отчете
