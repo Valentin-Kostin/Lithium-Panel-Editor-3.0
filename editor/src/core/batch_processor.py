@@ -200,7 +200,6 @@ class BatchProcessor:
                         # Проверяем: ширина > 1200 И длина > 1200
                         if length > 1200 and width > 1200:
                             file_stats['panels_found'] += 1
-                            stats['panels_found'] += 1
                             # Сохраняем информацию о панели для последующего вывода в детальном отчете
                             panel_info = f"⚠️ Найдена панель >1200: {file_path.name} - Длина={length}мм, Ширина={width}мм"
                             self.log(panel_info)
@@ -226,7 +225,6 @@ class BatchProcessor:
                     return match.group(0)
                     
                 content = re.sub(hole_pattern, replace_hole_depth, content)
-                stats['holes_fixed'] += file_stats['holes_fixed']
                 
                 # 3. Type="4" с десятичными дробями -> замена точек на запятые ТОЛЬКО в атрибуте Width
                 type4_pattern = r'(<[^>]*Type=["\']?4["\']?[^>]*>)'
@@ -245,7 +243,6 @@ class BatchProcessor:
                     return tag_content
 
                 content = re.sub(type4_pattern, process_type4_element, content)
-                stats['dots_replaced'] += file_stats['dots_replaced']
 
                 
                 # 4. Копирование Face и Z из метки отверстия 12.222 во ВСЕ Type="4"
@@ -357,8 +354,6 @@ class BatchProcessor:
                     for marker in markers:
                         content = content.replace(marker['full_tag'], '')
                         self.log(f"   🗑️ Метка Ø12.222 удалена")
-                    
-                    stats['face_fixed'] += file_stats['face_fixed']
                 
                 # 5. Обработка отверстий Type="1" на гранях 1-4, расположенных близко к краю панели
                 # Извлекаем размеры панели для расчета расстояния до края
@@ -453,13 +448,15 @@ class BatchProcessor:
                         return tag_content
                     
                     content = re.sub(hole_pattern, process_edge_hole, content)
-                    stats['edge_holes_fixed'] += file_stats.get('edge_holes_fixed', 0)
                 
                 # Сохранение если были изменения
                 if content != original_content:
                     with open(file_path, 'w', encoding=encoding) as f:
                         f.write(content)
                     stats['processed'] += 1
+                    # Добавляем статистику из файла в общую
+                    for key in file_stats:
+                        stats[key] += file_stats[key]
                     self.log(f"   ✅ Файл {file_path.name} сохранен с изменениями")
                 else:
                     self.log(f"   - Изменений не требуется")
