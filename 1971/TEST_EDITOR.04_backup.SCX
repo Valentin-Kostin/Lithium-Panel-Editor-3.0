@@ -61,15 +61,15 @@
 							<Line LineID="1" EndX="1000" EndY="25.351" Angle="0" />
 						</Lines>
 					</Machining>
-					<Machining Type="1" IsGenCode="2" Face="1" X="129.521" Y="127.324" Z="8.99" Diameter="8" Depth="47.973" />
-					<Machining Type="1" IsGenCode="2" Face="1" X="971.531" Y="127.324" Z="8.84" Diameter="8" Depth="43.973" />
+					<Machining Type="1" IsGenCode="2" Face="1" X="129.521" Y="114.351" Z="8.99" Diameter="8" Depth="35" />
+					<Machining Type="1" IsGenCode="2" Face="1" X="971.531" Y="118.351" Z="8.84" Diameter="8" Depth="35" />
 					<Machining Type="1" IsGenCode="2" Face="1" X="394.011" Y="127.324" Z="8.36" Diameter="8" Depth="35.002" />
-					<Machining Type="1" IsGenCode="2" Face="4" X="0.000" Y="18.561" Z="9.07" Diameter="8" Depth="46.471" />
+					<Machining Type="1" IsGenCode="2" Face="4" X="11.471" Y="18.561" Z="9.07" Diameter="8" Depth="35" />
 					<Machining Type="1" IsGenCode="2" Face="4" X="0" Y="86.811" Z="9.1" Diameter="8" Depth="35.001" />
-					<Machining Type="1" IsGenCode="2" Face="2" X="635.961" Y="0.000" Z="9.22" Diameter="8" Depth="50.000" />
-					<Machining Type="1" IsGenCode="2" Face="2" X="322.321" Y="0.000" Z="9.13" Diameter="8" Depth="50.000" />
+					<Machining Type="1" IsGenCode="2" Face="2" X="635.961" Y="15.351" Z="9.22" Diameter="8" Depth="35" />
+					<Machining Type="1" IsGenCode="2" Face="2" X="322.321" Y="15.351" Z="9.13" Diameter="8" Depth="35" />
 					<Machining Type="1" IsGenCode="2" Face="2" X="176.411" Y="0" Z="8.61" Diameter="8" Depth="35.001" />
-					<Machining Type="1" IsGenCode="2" Face="3" X="1000.000" Y="11.351" Z="9.13" Diameter="8" Depth="43.529" />
+					<Machining Type="1" IsGenCode="2" Face="3" X="991.471" Y="11.351" Z="9.13" Diameter="8" Depth="35" />
 					<Machining Type="2" IsGenCode="2" Face="6" X="921.471" Y="11.351" Diameter="5" Depth="9.13" />
 					<Machining Type="2" IsGenCode="2" Face="6" X="129.521" Y="44.351" Diameter="5" Depth="8.99" />
 					<Machining Type="2" IsGenCode="2" Face="6" X="971.531" Y="48.351" Diameter="5" Depth="8.84" />

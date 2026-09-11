@@ -154,7 +154,7 @@ class BatchProcessor:
         self.log_messages.clear()
         
         self.log("=== Начало исправления файлов .SCX (NANXING) ===")
-        stats = {'processed': 0, 'holes_fixed': 0, 'panels_found': 0, 'dots_replaced': 0, 'face_fixed': 0, 'errors': 0}
+        stats = {'processed': 0, 'holes_fixed': 0, 'panels_found': 0, 'dots_replaced': 0, 'face_fixed': 0, 'edge_holes_fixed': 0, 'errors': 0}
         
         for file_path in self.scx_files:
             try:
@@ -169,7 +169,8 @@ class BatchProcessor:
                     'holes_fixed': 0,
                     'panels_found': 0,
                     'dots_replaced': 0,
-                    'face_fixed': 0
+                    'face_fixed': 0,
+                    'edge_holes_fixed': 0
                 }
                 
                 # Парсим XML
@@ -364,6 +365,101 @@ class BatchProcessor:
                         self.log(f"   🗑️ Метка Ø12.222 удалена")
                     
                     stats['face_fixed'] += file_stats['face_fixed']
+                
+                # 5. Обработка отверстий Type="1" на гранях 1-4, расположенных близко к краю панели
+                # Извлекаем размеры панели для расчета расстояния до края
+                panel_length = None
+                panel_width = None
+                panel_match = re.search(r'<Panel[^>]*Length=["\']?([\d.,]+)["\']?[^>]*Width=["\']?([\d.,]+)["\']?', content)
+                if panel_match:
+                    try:
+                        panel_length = float(panel_match.group(1).replace(',', '.'))
+                        panel_width = float(panel_match.group(2).replace(',', '.'))
+                    except: pass
+                
+                if panel_length and panel_width:
+                    # Ищем все отверстия Type="1" с Face 1, 2, 3, 4
+                    hole_pattern = r'(<Machining[^>]*Type=["\']?1["\']?[^>]*Face=["\']?([1-4])["\']?[^>]*>)'
+                    
+                    def process_edge_hole(match):
+                        tag_content = match.group(1)
+                        face = match.group(2)
+                        
+                        # Извлекаем координаты и глубину отверстия
+                        x_match = re.search(r'X=["\']?([\d.,]+)["\']?', tag_content)
+                        y_match = re.search(r'Y=["\']?([\d.,]+)["\']?', tag_content)
+                        z_match = re.search(r'Z=["\']?([\d.,]+)["\']?', tag_content)
+                        depth_match = re.search(r'Depth=["\']?([\d.,]+)["\']?', tag_content)
+                        
+                        if not (x_match and y_match and depth_match):
+                            return tag_content
+                        
+                        x = float(x_match.group(1).replace(',', '.'))
+                        y = float(y_match.group(1).replace(',', '.'))
+                        z = float(z_match.group(1).replace(',', '.')) if z_match else 0
+                        depth = float(depth_match.group(1).replace(',', '.'))
+                        
+                        # Определяем расстояние до ближайшего края в зависимости от грани
+                        # Face 1: грань Y=Width (верх), Face 2: грань Y=0 (низ)
+                        # Face 3: грань X=Length (право), Face 4: грань X=0 (лево)
+                        edge_distance = None
+                        new_coord_value = None
+                        coord_type = None  # 'X' или 'Y'
+                        
+                        if face == "1":  # Грань 1 - верх панели (Y=Width), проверяем расстояние до Y=Width
+                            edge_distance = abs(panel_width - y)
+                            if 0.01 <= edge_distance <= 50:
+                                new_coord_value = panel_width
+                                coord_type = 'Y'
+                        elif face == "2":  # Грань 2 - низ панели (Y=0), проверяем расстояние до Y=0
+                            edge_distance = y
+                            if 0.01 <= edge_distance <= 50:
+                                new_coord_value = 0.0
+                                coord_type = 'Y'
+                        elif face == "3":  # Грань 3 - право панели (X=Length), проверяем расстояние до X=Length
+                            edge_distance = abs(panel_length - x)
+                            if 0.01 <= edge_distance <= 50:
+                                new_coord_value = panel_length
+                                coord_type = 'X'
+                        elif face == "4":  # Грань 4 - лево панели (X=0), проверяем расстояние до X=0
+                            edge_distance = x
+                            if 0.01 <= edge_distance <= 50:
+                                new_coord_value = 0.0
+                                coord_type = 'X'
+                        
+                        # Если отверстие находится на расстоянии от 0.01 до 50 мм от края
+                        if edge_distance is not None and new_coord_value is not None and coord_type is not None:
+                            # Увеличиваем глубину на величину смещения, но не более 50мм
+                            new_depth = min(50.0, depth + edge_distance)
+                            file_stats['edge_holes_fixed'] += 1
+                            self.log(f"   🔧 Грань {face}: отверстие перенесено на край ({coord_type}={new_coord_value:.3f}), глубина {depth:.2f} -> {new_depth:.2f}мм (смещение {edge_distance:.2f}мм)")
+                            
+                            result = tag_content
+                            # Обновляем координату
+                            if coord_type == 'Y':
+                                result = re.sub(
+                                    r'Y=["\'][\d.,]+["\']',
+                                    f'Y="{new_coord_value:.3f}"',
+                                    result
+                                )
+                            else:  # coord_type == 'X'
+                                result = re.sub(
+                                    r'X=["\'][\d.,]+["\']',
+                                    f'X="{new_coord_value:.3f}"',
+                                    result
+                                )
+                            # Обновляем глубину
+                            result = re.sub(
+                                r'Depth=["\'][\d.,]+["\']',
+                                f'Depth="{new_depth:.3f}"',
+                                result
+                            )
+                            return result
+                        
+                        return tag_content
+                    
+                    content = re.sub(hole_pattern, process_edge_hole, content)
+                    stats['edge_holes_fixed'] += file_stats.get('edge_holes_fixed', 0)
                 
                 # Сохранение если были изменения
                 if content != original_content:
