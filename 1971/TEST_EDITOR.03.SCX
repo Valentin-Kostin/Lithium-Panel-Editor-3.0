@@ -10,14 +10,17 @@
 					<Point X="255" Y="0" />
 				</Outline>
 				<Machines>
-					
-					
-					
-					
-					<Machining Type="4" IsGenCode="2" Face="2" X="104" Y="0" Z="13.326" EndX="173.6" EndY="0" EndZ="13.326" Depth="45" Width="12,6" ToolOffset="中" />
-					<Machining Type="4" IsGenCode="2" Face="3" X="255" Y="14.028" Z="17.326" EndX="255" EndY="83.628" EndZ="17.326" Depth="45" Width="12,6" ToolOffset="中" />
-					<Machining Type="4" IsGenCode="2" Face="4" X="0" Y="87.028" Z="12.67" EndX="0" EndY="17.428" EndZ="12.67" Depth="45" Width="12,6" ToolOffset="中" />
-					<Machining Type="4" IsGenCode="2" Face="1" X="87" Y="305.028" Z="14.67" EndX="17.4" EndY="305.028" EndZ="14.67" Depth="45" Width="12,6" ToolOffset="中" />
+					<Machining Type="1" IsGenCode="2" Face="1" X="87" Y="305.028" Z="14.67" Diameter="12.222" Depth="50" />
+					<Machining Type="1" IsGenCode="2" Face="4" X="0" Y="87.028" Z="12.67" Diameter="12.222" Depth="50" />
+					<Machining Type="1" IsGenCode="2" Face="2" X="138.71" Y="44.998" Z="11.67" Diameter="12.222" Depth="5" />
+					<Machining Type="1" IsGenCode="2" Face="3" X="210" Y="224.728" Z="11" Diameter="12.222" Depth="5" />
+					<Machining Type="1" IsGenCode="2" Face="3" X="210" Y="83.628" Z="7.67" Diameter="12.222" Depth="5" />
+					<Machining Type="4" IsGenCode="2" Face="2" X="104" Y="0" Z="13.326" EndX="173.6" EndY="0" EndZ="13.326" Depth="45" Width="12.6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="3" X="255" Y="14.028" Z="17.326" EndX="255" EndY="83.628" EndZ="17.326" Depth="45" Width="12.6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="4" X="0" Y="87.028" Z="12.326" EndX="0" EndY="17.428" EndZ="12.326" Depth="45" Width="12.6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="1" X="87" Y="305.028" Z="10.326" EndX="17.4" EndY="305.028" EndZ="10.326" Depth="45" Width="12.6" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="3" X="255" Y="198.528" Z="14" EndX="255" EndY="175.528" EndZ="14.000" Depth="15" Width="12" ToolOffset="中" />
+					<Machining Type="4" IsGenCode="2" Face="3" X="255" Y="274.028" Z="14" EndX="255" EndY="188.528" EndZ="14.000" Depth="45" Width="12" ToolOffset="中" />
 					<Machining Type="3" IsGenCode="2" Face="5" X="135.853" Y="147.274" Depth="3" Diameter="0" ToolOffset="Undefined" Pocket="1" Closed="1">
 						<MillPreDefinedRectangle Length="0" Width="0" X="0" Y="0" Z="0" Radius="0" CornerBotLeft="0" CornerBotRight="0" CornerTopLeft="0" CornerTopRight="0" />
 						<Lines>
