@@ -652,6 +652,9 @@ class BatchProcessor:
             self.log("⚠️ Нет файлов для сравнения (нужны и .PGMX, и .CSV)")
             return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': [], 'oborot_keys': []}
         
+        # Очищаем логи перед новым запуском сравнения
+        self.log_messages.clear()
+        
         # Извлекаем ключи из CSV: первая колонка, удаляем первые 18 символов
         csv_keys = set()
         csv_key_to_files: Dict[str, List[str]] = {}  # Ключ -> список имен CSV файлов
@@ -677,6 +680,10 @@ class BatchProcessor:
                             if key.lower().endswith('.pgmx'):
                                 key = key[:-5]
                             
+                            # Пропускаем пустые ключи
+                            if not key:
+                                continue
+                                
                             csv_keys.add(key)
                             # Сохраняем имя CSV файла для этого ключа
                             if key not in csv_key_to_files:

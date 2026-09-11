@@ -185,7 +185,7 @@ class MainWindow(QMainWindow):
                 self._log(f"   Файлов .CSV найдено: {stats['csv_count']}")
                 
                 # Подсчет общего количества записей в CSV
-                total_csv_parts = sum(stats['csv_parts'].values())
+                total_csv_parts = stats['csv_parts_total']
                 self._log(f"   Всего записей в CSV: {total_csv_parts}")
                 
                 # Отсутствующие PGMX
@@ -197,12 +197,12 @@ class MainWindow(QMainWindow):
                         self._log(f"   ... и еще {len(stats['missing_pgmx']) - 10}")
                         
                 # OBOROT файлы
-                if stats['oborot_files']:
-                    self._log(f"\n⚠️ Найдено OBOROT файлов: {len(stats['oborot_files'])}:")
-                    for name in stats['oborot_files'][:10]:
+                if stats['oborot_issues']:
+                    self._log(f"\n⚠️ Несоответствие OBOROT для {len(stats['oborot_issues'])} деталей:")
+                    for name in stats['oborot_issues'][:10]:
                         self._log(f"   - {name}")
-                    if len(stats['oborot_files']) > 10:
-                        self._log(f"   ... и еще {len(stats['oborot_files']) - 10}")
+                    if len(stats['oborot_issues']) > 10:
+                        self._log(f"   ... и еще {len(stats['oborot_issues']) - 10}")
                         
                 self._log(f"\n💡 Теперь можно нажать 'Исправить .SCX' или 'Править .PGMX'")
                 
@@ -387,7 +387,7 @@ class MainWindow(QMainWindow):
             self._log("\n⚠️ Нет выбранной папки! Сначала выберите папку.")
             return
         
-        # Очищаем лог процессора перед новым запуском
+        # Очищаем лог процессора перед новым запуском сравнения
         self.processor.log_messages.clear()
         
         self._log(f"\n{'='*60}")
