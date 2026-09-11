@@ -1,1 +1,44 @@
-Nothing should be ignored since only a Python source file was modified and no build artifacts, dependencies, or temporary files were detected in the changes.
+```
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build artifacts
+dist/
+build/
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.exe
+*.out
+
+# Dependencies
+.venv/
+venv/
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
+
+# Coverage
+.coverage
+coverage/
+htmlcov/
+
+# Cache
+.mypy_cache/
+.pytest_cache/
+```

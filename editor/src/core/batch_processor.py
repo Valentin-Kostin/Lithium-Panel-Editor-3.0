@@ -292,24 +292,44 @@ class BatchProcessor:
                         endx = float(endx_match.group(1).replace(',', '.')) if endx_match else x
                         endy = float(endy_match.group(1).replace(',', '.')) if endy_match else y
 
-                        # Вычисляем центр паза
-                        center_x = (x + endx) / 2
-                        center_y = (y + endy) / 2
-
-                        # Ищем ближайшую метку по расстоянию до центра паза
-                        min_dist = float('inf')
+                        # Ищем метку, находящуюся внутри паза (между началом и концом) с допуском 10 мм за границы
                         best_marker = None
-
-                        for marker in markers:
-                            dist = ((center_x - marker['x'])**2 + (center_y - marker['y'])**2)**0.5
-                            if dist < min_dist:
-                                min_dist = dist
-                                best_marker = marker
-
-                        # Если нашли подходящую метку (расстояние < 100мм)
-                        if best_marker and min_dist < 100:
+                        
+                        # Вектор паза
+                        dx = endx - x
+                        dy = endy - y
+                        length = (dx**2 + dy**2)**0.5
+                        
+                        if length > 0:
+                            # Нормализованный вектор направления паза
+                            ux = dx / length
+                            uy = dy / length
+                            
+                            for marker in markers:
+                                # Вектор от начала паза до метки
+                                mx = marker['x'] - x
+                                my = marker['y'] - y
+                                
+                                # Проекция метки на ось паза (скалярное произведение)
+                                projection = mx * ux + my * uy
+                                
+                                # Проверяем, находится ли проекция в пределах [-10, length+10] мм
+                                # То есть метка внутри паза или не дальше 10 мм от его границ
+                                if -10 <= projection <= length + 10:
+                                    # Дополнительно проверяем перпендикулярное расстояние (должно быть близко к 0)
+                                    perp_x = mx - projection * ux
+                                    perp_y = my - projection * uy
+                                    perp_dist = (perp_x**2 + perp_y**2)**0.5
+                                    
+                                    # Если метка лежит на линии паза (допуск 1 мм по перпендикуляру)
+                                    if perp_dist <= 1:
+                                        best_marker = marker
+                                        break
+                        
+                        # Если нашли подходящую метку (внутри паза с допуском 10 мм)
+                        if best_marker:
                             file_stats['face_fixed'] += 1
-                            self.log(f"   🔧 Type=4: Face={best_marker['face']} скопирован с метки (расстояние {min_dist:.1f}мм)")
+                            self.log(f"   🔧 Type=4: Face={best_marker['face']} скопирован с метки (внутри паза)")
 
                             # Заменяем Face
                             result = re.sub(
