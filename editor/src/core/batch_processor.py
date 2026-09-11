@@ -292,22 +292,24 @@ class BatchProcessor:
                         endx = float(endx_match.group(1).replace(',', '.')) if endx_match else x
                         endy = float(endy_match.group(1).replace(',', '.')) if endy_match else y
 
-                        # Вычисляем центр паза
-                        center_x = (x + endx) / 2
-                        center_y = (y + endy) / 2
-
-                        # Ищем ближайшую метку по расстоянию до центра паза
+                        # Ищем ближайшую метку по расстоянию до ЛЮБОЙ точки паза (начало или конец)
                         min_dist = float('inf')
                         best_marker = None
 
                         for marker in markers:
-                            dist = ((center_x - marker['x'])**2 + (center_y - marker['y'])**2)**0.5
+                            # Расстояние от начала паза до метки
+                            dist_start = ((x - marker['x'])**2 + (y - marker['y'])**2)**0.5
+                            # Расстояние от конца паза до метки
+                            dist_end = ((endx - marker['x'])**2 + (endy - marker['y'])**2)**0.5
+                            # Берем минимальное расстояние (до ближайшей точки паза)
+                            dist = min(dist_start, dist_end)
+                            
                             if dist < min_dist:
                                 min_dist = dist
                                 best_marker = marker
 
-                        # Если нашли подходящую метку (расстояние < 100мм)
-                        if best_marker and min_dist < 100:
+                        # Если нашли подходящую метку (расстояние ≤ 10мм от любой точки паза)
+                        if best_marker and min_dist <= 10:
                             file_stats['face_fixed'] += 1
                             self.log(f"   🔧 Type=4: Face={best_marker['face']} скопирован с метки (расстояние {min_dist:.1f}мм)")
 
