@@ -672,6 +672,9 @@ class BatchProcessor:
                             # Удаляем первые 18 символов (как в оригинале ZPT-TCHK.py)
                             if len(key) > 18:
                                 key = key[18:]
+                            # Удаляем расширение .pgmx если есть (для сопоставления с именами PGMX файлов)
+                            if key.lower().endswith('.pgmx'):
+                                key = key[:-5]
                             csv_keys.add(key)
                             self.log(f"   CSV: {key}")
             except Exception as e:
