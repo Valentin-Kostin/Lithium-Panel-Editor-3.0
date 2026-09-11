@@ -656,6 +656,7 @@ class BatchProcessor:
         csv_keys = set()
         csv_key_to_files: Dict[str, List[str]] = {}  # Ключ -> список имен CSV файлов
         csv_key_counts: Dict[str, int] = {}  # Ключ -> количество повторений
+        csv_file_counts: Dict[str, int] = {}  # Имя CSV файла -> количество записей в нем
         
         for csv_file in self.csv_files:
             try:
@@ -666,6 +667,7 @@ class BatchProcessor:
                     if content:
                         content = content[:-1]
                     lines = content.split("\n")
+                    file_line_count = 0
                     for line in lines:
                         parts = line.split(";")
                         if len(parts) >= 1:
@@ -682,15 +684,25 @@ class BatchProcessor:
                                 continue
                                 
                             csv_keys.add(key)
-                            # Сохраняем имя CSV файла для этого ключа
+                            file_line_count += 1
+                            # Сохраняем имя CSV файла для этого ключа (без дублирования)
                             if key not in csv_key_to_files:
                                 csv_key_to_files[key] = []
                             if csv_file.name not in csv_key_to_files[key]:
                                 csv_key_to_files[key].append(csv_file.name)
                             # Считаем количество повторений
                             csv_key_counts[key] = csv_key_counts.get(key, 0) + 1
+                    
+                    # Сохраняем количество записей в каждом CSV файле
+                    csv_file_counts[csv_file.name] = file_line_count
             except Exception as e:
                 self.log(f"   ❌ Ошибка чтения CSV {csv_file.name}: {e}")
+        
+        # Выводим количество записей в каждом CSV файле
+        if csv_file_counts:
+            self.log(f"\n📊 Записей в CSV файлах:")
+            for filename, count in sorted(csv_file_counts.items()):
+                self.log(f"   {filename} = {count}шт.")
         
         # Извлекаем ключи из PGMX: полное имя файла без расширения
         pgmx_keys = set()
@@ -727,21 +739,23 @@ class BatchProcessor:
         # Вывод результатов - только OBOROT и отсутствующие файлы с количеством
         if oborot_keys:
             self.log(f"\n🔴 OBOROT файлы:")
+            printed_files = set()  # Для предотвращения дублирования
             for key in oborot_keys:
-                # Выводим каждый PGMX файл отдельно
+                # Выводим каждый PGMX файл отдельно без дублирования
                 if key in pgmx_key_to_files:
                     for filename in pgmx_key_to_files[key]:
-                        self.log(f"   {filename} = 1шт.")
+                        if filename not in printed_files:
+                            printed_files.add(filename)
+                            self.log(f"   {filename} = 1шт.")
         
         if other_keys:
             self.log(f"\n❌ Отсутствуют файлы:")
             for key in other_keys:
-                # Ключ отсутствует в PGMX, значит он есть в CSV - выводим имя CSV файла
-                if key in csv_key_to_files:
-                    count = csv_key_counts.get(key, 0)
-                    # Берем первое имя CSV файла для этого ключа
-                    csv_filename = csv_key_to_files[key][0]
-                    self.log(f"   {csv_filename} = {count}шт.")
+                # Ключ отсутствует в PGMX, значит он есть в CSV - выводим ожидаемое имя PGMX файла
+                # Формат: MDF_19_L0_TEST_EDITOR.01.pgmx -- файла НЕТ!
+                expected_pgmx_name = f"{key}.pgmx"
+                count = csv_key_counts.get(key, 0)
+                self.log(f"   {expected_pgmx_name} -- файла НЕТ!")
         
         return {
             'matches': 0,
