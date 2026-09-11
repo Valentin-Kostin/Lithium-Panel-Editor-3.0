@@ -398,8 +398,11 @@ class MainWindow(QMainWindow):
         try:
             stats = self.processor.compare_pgmx_csv()
             
+            # Выводим все накопленные логи из процессора
+            for msg in self.processor.log_messages:
+                self._log(msg)
+            
             self._log(f"\n✅ Сравнение завершено!")
-            # Результаты уже выведены в логе из compare_pgmx_csv()
                 
         except Exception as e:
             self._log(f"❌ Ошибка при сравнении: {e}")
