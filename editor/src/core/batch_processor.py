@@ -741,12 +741,12 @@ class BatchProcessor:
             self.log(f"\n🔴 OBOROT файлы:")
             printed_files = set()  # Для предотвращения дублирования
             for key in oborot_keys:
-                # Выводим каждый PGMX файл отдельно без дублирования
+                # Выводим каждый PGMX файл отдельно без дублирования и без "= 1шт."
                 if key in pgmx_key_to_files:
                     for filename in pgmx_key_to_files[key]:
                         if filename not in printed_files:
                             printed_files.add(filename)
-                            self.log(f"   {filename} = 1шт.")
+                            self.log(f"   {filename}")
         
         if other_keys:
             self.log(f"\n❌ Отсутствуют файлы:")
