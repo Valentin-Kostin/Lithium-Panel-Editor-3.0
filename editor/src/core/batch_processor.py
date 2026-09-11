@@ -639,7 +639,7 @@ class BatchProcessor:
         - CSV: ключ = первая колонка (имя детали) с удалением первых 18 символов
         - PGMX: ключ = полное имя файла без расширения
         - Использует симметричную разность для сравнения
-        - Сначала выводит OBOROT, затем !ФАЙЛА НЕТ
+        - Выводит только OBOROT файлы и отсутствующие файлы с количеством
         
         Returns:
             Dict со статистикой сравнения.
@@ -652,10 +652,9 @@ class BatchProcessor:
             self.log("⚠️ Нет файлов для сравнения (нужны и .PGMX, и .CSV)")
             return {'matches': 0, 'missing_in_csv': [], 'missing_in_pgmx': [], 'oborot_keys': []}
         
-        self.log("=== Сравнение PGMX с CSV (логика ZPT-TCHK.py) ===")
-        
         # Извлекаем ключи из CSV: первая колонка, удаляем первые 18 символов
         csv_keys = set()
+        csv_key_counts = {}  # Подсчет количества повторений каждого ключа в CSV
         for csv_file in self.csv_files:
             try:
                 encoding = detect_encoding(csv_file)
@@ -676,7 +675,8 @@ class BatchProcessor:
                             if key.lower().endswith('.pgmx'):
                                 key = key[:-5]
                             csv_keys.add(key)
-                            self.log(f"   CSV: {key}")
+                            # Считаем количество повторений
+                            csv_key_counts[key] = csv_key_counts.get(key, 0) + 1
             except Exception as e:
                 self.log(f"   ❌ Ошибка чтения CSV {csv_file.name}: {e}")
         
@@ -685,10 +685,6 @@ class BatchProcessor:
         for pgmx_file in self.pgmx_files:
             key = pgmx_file.stem  # Полное имя без расширения, например DSP_25_U963-ST9_1971G1.01.07
             pgmx_keys.add(key)
-            self.log(f"   PGMX: {key}")
-        
-        self.log(f"\n   Найдено CSV ключей: {len(csv_keys)}")
-        self.log(f"   Найдено PGMX ключей: {len(pgmx_keys)}")
         
         # Сравниваем списки ключей
         if csv_keys == pgmx_keys:
@@ -711,16 +707,18 @@ class BatchProcessor:
         oborot_keys = sorted(oborot_keys)
         other_keys = sorted(other_keys)
         
-        # Вывод результатов (сначала OBOROT, затем !ФАЙЛА НЕТ)
+        # Вывод результатов - только OBOROT и отсутствующие файлы с количеством
         if oborot_keys:
-            self.log(f"\n⚠️ OBOROT файлы ({len(oborot_keys)}):")
+            self.log(f"\n⚠️ OBOROT файлы:")
             for key in oborot_keys:
-                self.log(f"   {key}")
+                count = csv_key_counts.get(key, 0)
+                self.log(f"   {key} = {count}шт")
         
         if other_keys:
-            self.log(f"\n⚠️ Отсутствующие файлы ({len(other_keys)}):")
+            self.log(f"\n⚠️ Отсутствующие файлы:")
             for key in other_keys:
-                self.log(f"   !ФАЙЛА НЕТ -- {key}")
+                count = csv_key_counts.get(key, 0)
+                self.log(f"   !ФАЙЛА НЕТ -- {key} = {count}шт")
         
         return {
             'matches': 0,
