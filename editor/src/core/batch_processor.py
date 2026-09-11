@@ -654,7 +654,9 @@ class BatchProcessor:
         
         # Извлекаем ключи из CSV: первая колонка, удаляем первые 18 символов
         csv_keys = set()
-        csv_key_counts = {}  # Подсчет количества повторений каждого ключа в CSV
+        csv_key_to_files: Dict[str, List[str]] = {}  # Ключ -> список имен CSV файлов
+        csv_key_counts: Dict[str, int] = {}  # Ключ -> количество повторений
+        
         for csv_file in self.csv_files:
             try:
                 encoding = detect_encoding(csv_file)
@@ -674,7 +676,13 @@ class BatchProcessor:
                             # Удаляем расширение .pgmx если есть (для сопоставления с именами PGMX файлов)
                             if key.lower().endswith('.pgmx'):
                                 key = key[:-5]
+                            
                             csv_keys.add(key)
+                            # Сохраняем имя CSV файла для этого ключа
+                            if key not in csv_key_to_files:
+                                csv_key_to_files[key] = []
+                            if csv_file.name not in csv_key_to_files[key]:
+                                csv_key_to_files[key].append(csv_file.name)
                             # Считаем количество повторений
                             csv_key_counts[key] = csv_key_counts.get(key, 0) + 1
             except Exception as e:
@@ -682,9 +690,14 @@ class BatchProcessor:
         
         # Извлекаем ключи из PGMX: полное имя файла без расширения
         pgmx_keys = set()
+        pgmx_key_to_files: Dict[str, List[str]] = {}  # Ключ -> список имен PGMX файлов
         for pgmx_file in self.pgmx_files:
             key = pgmx_file.stem  # Полное имя без расширения, например DSP_25_U963-ST9_1971G1.01.07
             pgmx_keys.add(key)
+            # Сохраняем имя PGMX файла
+            if key not in pgmx_key_to_files:
+                pgmx_key_to_files[key] = []
+            pgmx_key_to_files[key].append(pgmx_file.name)
         
         # Сравниваем списки ключей
         if csv_keys == pgmx_keys:
@@ -709,16 +722,22 @@ class BatchProcessor:
         
         # Вывод результатов - только OBOROT и отсутствующие файлы с количеством
         if oborot_keys:
-            self.log(f"\n⚠️ OBOROT файлы:")
+            self.log(f"\n🔴 OBOROT файлы:")
             for key in oborot_keys:
-                count = csv_key_counts.get(key, 0)
-                self.log(f"   {key} = {count}шт")
+                # Выводим каждый PGMX файл отдельно
+                if key in pgmx_key_to_files:
+                    for filename in pgmx_key_to_files[key]:
+                        self.log(f"   {filename} = 1шт.")
         
         if other_keys:
-            self.log(f"\n⚠️ Отсутствующие файлы:")
+            self.log(f"\n❌ Отсутствуют файлы:")
             for key in other_keys:
-                count = csv_key_counts.get(key, 0)
-                self.log(f"   !ФАЙЛА НЕТ -- {key} = {count}шт")
+                # Ключ отсутствует в PGMX, значит он есть в CSV - выводим имя CSV файла
+                if key in csv_key_to_files:
+                    count = csv_key_counts.get(key, 0)
+                    # Берем первое имя CSV файла для этого ключа
+                    csv_filename = csv_key_to_files[key][0]
+                    self.log(f"   {csv_filename} = {count}шт.")
         
         return {
             'matches': 0,
