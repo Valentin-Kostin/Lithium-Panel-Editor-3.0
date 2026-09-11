@@ -249,6 +249,10 @@ class BatchProcessor:
 
                 
                 # 4. Копирование Face и Z из метки отверстия 12.222 во ВСЕ Type="4"
+                # Логика поиска пары метка-паз:
+                # - Вариант 1 (горизонтальный паз): X метки в диапазоне [X, EndX] паза, |Y метки - Y паза| <= 50
+                # - Вариант 2 (вертикальный паз): Y метки в диапазоне [Y, EndY] паза, |X метки - X паза| <= 50
+                
                 # Сначала найдем все метки с Diameter="12.222" и их параметры
                 markers = []
                 marker_pattern = r'<Machining[^>]*Type=["\']?1["\']?[^>]*Diameter=["\']?12[,\.]222["\']?[^>]*/>'
@@ -288,49 +292,39 @@ class BatchProcessor:
                         if not x_match or not y_match:
                             return tag_content
 
-                        x = float(x_match.group(1).replace(',', '.'))
-                        y = float(y_match.group(1).replace(',', '.'))
-                        endx = float(endx_match.group(1).replace(',', '.')) if endx_match else x
-                        endy = float(endy_match.group(1).replace(',', '.')) if endy_match else y
+                        slot_x = float(x_match.group(1).replace(',', '.'))
+                        slot_y = float(y_match.group(1).replace(',', '.'))
+                        slot_endx = float(endx_match.group(1).replace(',', '.')) if endx_match else slot_x
+                        slot_endy = float(endy_match.group(1).replace(',', '.')) if endy_match else slot_y
 
-                        # Ищем метку, находящуюся внутри паза (между началом и концом) с допуском 10 мм за границы
+                        # Определяем диапазон X и Y для паза
+                        min_x = min(slot_x, slot_endx)
+                        max_x = max(slot_x, slot_endx)
+                        min_y = min(slot_y, slot_endy)
+                        max_y = max(slot_y, slot_endy)
+
+                        # Ищем подходящую метку
                         best_marker = None
                         
-                        # Вектор паза
-                        dx = endx - x
-                        dy = endy - y
-                        length = (dx**2 + dy**2)**0.5
-                        
-                        if length > 0:
-                            # Нормализованный вектор направления паза
-                            ux = dx / length
-                            uy = dy / length
+                        for marker in markers:
+                            # Вариант 1: горизонтальный паз (или с наклоном)
+                            # X метки в диапазоне [min_x, max_x], разница по Y <= 50
+                            if min_x <= marker['x'] <= max_x:
+                                if abs(marker['y'] - slot_y) <= 50:
+                                    best_marker = marker
+                                    break
                             
-                            for marker in markers:
-                                # Вектор от начала паза до метки
-                                mx = marker['x'] - x
-                                my = marker['y'] - y
-                                
-                                # Проекция метки на ось паза (скалярное произведение)
-                                projection = mx * ux + my * uy
-                                
-                                # Проверяем, находится ли проекция в пределах [-10, length+10] мм
-                                # То есть метка внутри паза или не дальше 10 мм от его границ
-                                if -10 <= projection <= length + 10:
-                                    # Дополнительно проверяем перпендикулярное расстояние (должно быть близко к 0)
-                                    perp_x = mx - projection * ux
-                                    perp_y = my - projection * uy
-                                    perp_dist = (perp_x**2 + perp_y**2)**0.5
-                                    
-                                    # Если метка лежит на линии паза (допуск 1 мм по перпендикуляру)
-                                    if perp_dist <= 1:
-                                        best_marker = marker
-                                        break
+                            # Вариант 2: вертикальный паз
+                            # Y метки в диапазоне [min_y, max_y], разница по X <= 50
+                            if min_y <= marker['y'] <= max_y:
+                                if abs(marker['x'] - slot_x) <= 50:
+                                    best_marker = marker
+                                    break
                         
-                        # Если нашли подходящую метку (внутри паза с допуском 10 мм)
+                        # Если нашли подходящую метку
                         if best_marker:
                             file_stats['face_fixed'] += 1
-                            self.log(f"   🔧 Type=4: Face={best_marker['face']} скопирован с метки (внутри паза)")
+                            self.log(f"   🔧 Type=4: Face={best_marker['face']} скопирован с метки (X={best_marker['x']}, Y={best_marker['y']})")
 
                             # Заменяем Face
                             result = re.sub(
