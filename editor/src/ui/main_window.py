@@ -42,6 +42,9 @@ class MainWindow(QMainWindow):
         # Загружаем базу инструментов при старте если есть сохраненный путь
         self.load_tool_db_from_settings()
         
+        # Применяем тему и шрифт при запуске
+        self._apply_startup_theme_and_font()
+        
     def _setup_ui(self):
         """Создание интерфейса."""
         central_widget = QWidget()
@@ -294,6 +297,18 @@ class MainWindow(QMainWindow):
             if self._load_tool_database(saved_path):
                 self._update_settings_tab()
                 self._log(f"💾 База инструментов загружена из сохраненного пути")
+            
+    def _apply_startup_theme_and_font(self):
+        """Применяет тему и размер шрифта при запуске приложения."""
+        # Применяем тему
+        theme_name = self.settings.get_theme()
+        self.settings_tab.combo_theme.setCurrentText(theme_name)
+        self.settings_tab._apply_theme()
+        
+        # Применяем размер шрифта
+        font_size = self.settings.get_font_size()
+        self.settings_tab.spin_font_size.setValue(font_size)
+        self.settings_tab._apply_font_size()
             
     def _on_fix_scx(self):
         """Обработчик кнопки исправления .SCX файлов."""

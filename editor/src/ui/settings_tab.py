@@ -3,14 +3,17 @@
 Содержит:
 - Кнопку загрузки базы инструментов
 - Таблицу для просмотра всех инструментов
+- Выбор темы оформления (5 вариантов)
+- Настройка размера шрифта
 """
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
     QFileDialog, QLabel, QTableWidget, QTableWidgetItem,
-    QGroupBox, QHeaderView, QMessageBox
+    QGroupBox, QHeaderView, QMessageBox, QComboBox, 
+    QSpinBox, QFormLayout
 )
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QBrush
+from PySide6.QtGui import QColor, QBrush, QFont
 from ..core.tool_db import global_tool_db
 from ..utils.settings import Settings
 
@@ -28,6 +31,43 @@ class SettingsTab(QWidget):
         main_layout = QVBoxLayout(self)
         main_layout.setSpacing(15)
         main_layout.setContentsMargins(15, 15, 15, 15)
+        
+        # === ГРУППА: Оформление ===
+        appearance_group = QGroupBox("🎨 Оформление")
+        appearance_layout = QFormLayout(appearance_group)
+        
+        # Выбор темы
+        theme_layout = QHBoxLayout()
+        self.combo_theme = QComboBox()
+        self.combo_theme.addItems(list(Settings.THEMES.keys()))
+        current_theme = self.settings.get_theme()
+        self.combo_theme.setCurrentText(current_theme)
+        self.combo_theme.setMinimumWidth(200)
+        
+        btn_apply_theme = QPushButton("Применить тему")
+        btn_apply_theme.clicked.connect(self._apply_theme)
+        
+        theme_layout.addWidget(self.combo_theme)
+        theme_layout.addWidget(btn_apply_theme)
+        theme_layout.addStretch()
+        
+        # Размер шрифта
+        font_layout = QHBoxLayout()
+        self.spin_font_size = QSpinBox()
+        self.spin_font_size.setRange(8, 24)
+        self.spin_font_size.setValue(self.settings.get_font_size())
+        self.spin_font_size.setMinimumWidth(100)
+        
+        btn_apply_font = QPushButton("Применить шрифт")
+        btn_apply_font.clicked.connect(self._apply_font_size)
+        
+        font_layout.addWidget(self.spin_font_size)
+        font_layout.addWidget(QLabel("px"))
+        font_layout.addWidget(btn_apply_font)
+        font_layout.addStretch()
+        
+        appearance_layout.addRow("Тема оформления:", theme_layout)
+        appearance_layout.addRow("Размер шрифта:", font_layout)
         
         # === ГРУППА: База инструментов ===
         tools_group = QGroupBox("🔧 База инструментов")
@@ -68,53 +108,207 @@ class SettingsTab(QWidget):
         self.table_tools.setHorizontalHeaderLabels(["ID", "Название фрезы", "Диаметр (мм)", "Обороты"])
         self.table_tools.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table_tools.setAlternatingRowColors(True)
-        self.table_tools.setStyleSheet("""
-            QTableWidget {
-                background-color: #2d2d2d;
-                color: #d4d4d4;
-                border: 1px solid #3e3e3e;
-                gridline-color: #3e3e3e;
-            }
-            QTableWidget::item {
-                padding: 5px;
-            }
-            QHeaderView::section {
-                background-color: #3e3e3e;
-                color: #ffffff;
-                padding: 5px;
-                border: none;
-                font-weight: bold;
-            }
-        """)
         
         table_layout.addWidget(self.table_tools)
         
         # Сборка интерфейса
+        main_layout.addWidget(appearance_group)
         main_layout.addWidget(tools_group)
         main_layout.addWidget(table_group, stretch=1)
+        
+        # Применяем текущую тему и шрифт при запуске
+        self._apply_theme()
+        self._apply_font_size()
         
     def connect_signals(self, main_window):
         """Подключение сигналов к методам главного окна."""
         self.btn_load_tools.clicked.connect(lambda: main_window._on_load_tools_in_settings())
         self.btn_refresh_tools.clicked.connect(self._refresh_tools_table)
         
+    def _apply_theme(self):
+        """Применение выбранной темы оформления."""
+        theme_name = self.combo_theme.currentText()
+        self.settings.set_theme(theme_name)
+        colors = self.settings.get_theme_colors()
+        
+        # Применяем стили ко всему приложению через главное окно
+        main_window = self.window()
+        if main_window:
+            style_sheet = f"""
+                QMainWindow, QWidget {{
+                    background-color: {colors['bg_primary']};
+                    color: {colors['text_primary']};
+                }}
+                QGroupBox {{
+                    font-weight: bold;
+                    border: 2px solid {colors['border']};
+                    border-radius: 5px;
+                    margin-top: 10px;
+                    padding-top: 10px;
+                }}
+                QGroupBox::title {{
+                    subcontrol-origin: margin;
+                    left: 10px;
+                    padding: 0 5px;
+                    color: {colors['accent']};
+                }}
+                QPushButton {{
+                    background-color: {colors['bg_tertiary']};
+                    color: {colors['text_secondary']};
+                    border: 1px solid {colors['border']};
+                    border-radius: 5px;
+                    padding: 8px 15px;
+                    font-weight: bold;
+                }}
+                QPushButton:hover {{
+                    background-color: {colors['border']};
+                }}
+                QPushButton:pressed {{
+                    background-color: {colors['accent']};
+                    color: {colors['bg_primary']};
+                }}
+                QLabel {{
+                    color: {colors['text_primary']};
+                }}
+                QComboBox {{
+                    background-color: {colors['bg_secondary']};
+                    color: {colors['text_primary']};
+                    border: 1px solid {colors['border']};
+                    border-radius: 5px;
+                    padding: 5px;
+                }}
+                QComboBox::drop-down {{
+                    border: none;
+                    width: 20px;
+                }}
+                QComboBox QAbstractItemView {{
+                    background-color: {colors['bg_secondary']};
+                    color: {colors['text_primary']};
+                    border: 1px solid {colors['border']};
+                }}
+                QSpinBox {{
+                    background-color: {colors['bg_secondary']};
+                    color: {colors['text_primary']};
+                    border: 1px solid {colors['border']};
+                    border-radius: 5px;
+                    padding: 5px;
+                }}
+                QTableWidget {{
+                    background-color: {colors['bg_secondary']};
+                    color: {colors['text_primary']};
+                    border: 1px solid {colors['border']};
+                    gridline-color: {colors['gridline']};
+                }}
+                QTableWidget::item {{
+                    padding: 5px;
+                }}
+                QHeaderView::section {{
+                    background-color: {colors['bg_tertiary']};
+                    color: {colors['text_secondary']};
+                    padding: 5px;
+                    border: none;
+                    font-weight: bold;
+                }}
+                QTextEdit {{
+                    background-color: {colors['bg_primary']};
+                    color: {colors['text_primary']};
+                    border: 1px solid {colors['border']};
+                    border-radius: 5px;
+                    padding: 5px;
+                }}
+                QProgressBar {{
+                    border: 1px solid {colors['border']};
+                    border-radius: 5px;
+                    text-align: center;
+                    color: {colors['text_primary']};
+                }}
+                QProgressBar::chunk {{
+                    background-color: {colors['accent']};
+                }}
+                QTabWidget::pane {{
+                    border: 1px solid {colors['border']};
+                    background-color: {colors['bg_primary']};
+                }}
+                QTabBar::tab {{
+                    background-color: {colors['bg_secondary']};
+                    color: {colors['text_primary']};
+                    border: 1px solid {colors['border']};
+                    border-bottom: none;
+                    border-top-left-radius: 5px;
+                    border-top-right-radius: 5px;
+                    padding: 8px 15px;
+                    margin-right: 2px;
+                }}
+                QTabBar::tab:selected {{
+                    background-color: {colors['bg_tertiary']};
+                    color: {colors['accent']};
+                }}
+                QTabBar::tab:hover {{
+                    background-color: {colors['border']};
+                }}
+            """
+            main_window.setStyleSheet(style_sheet)
+            
+        # Обновляем цвета статусных меток
+        self._update_status_colors(colors)
+        
+    def _update_status_colors(self, colors):
+        """Обновление цветов статусных меток в соответствии с темой."""
+        # Обновляем текущий статус
+        current_text = self.lbl_tool_status.text()
+        if "✅" in current_text:
+            self.lbl_tool_status.setStyleSheet(f"color: {colors['accent']}; font-weight: bold;")
+        elif "❌" in current_text or "Ошибка" in current_text:
+            self.lbl_tool_status.setStyleSheet("color: #ff6b6b; font-weight: bold;")
+        else:
+            self.lbl_tool_status.setStyleSheet(f"color: {colors['text_primary']}; font-weight: bold;")
+            
+    def _apply_font_size(self):
+        """Применение выбранного размера шрифта."""
+        font_size = self.spin_font_size.value()
+        self.settings.set_font_size(font_size)
+        
+        # Создаем новый шрифт с выбранным размером
+        font = QFont("Segoe UI", font_size)
+        
+        # Применяем шрифт ко всем виджетам на вкладке
+        self.setFont(font)
+        
+        # Применяем шрифт к таблице
+        self.table_tools.setFont(font)
+        header_font = self.table_tools.horizontalHeader().font()
+        header_font.setPointSize(font_size)
+        header_font.setBold(True)
+        self.table_tools.horizontalHeader().setFont(header_font)
+        
+        # Применяем шрифт ко всему главному окну
+        main_window = self.window()
+        if main_window:
+            main_window.setFont(font)
+            # Также обновляем шрифт лога
+            if hasattr(main_window, 'log_text'):
+                log_font = QFont("Consolas", font_size)
+                main_window.log_text.setFont(log_font)
+                
     def update_tool_info(self, file_path: str, is_loaded: bool):
         """Обновление информации о базе инструментов."""
+        colors = self.settings.get_theme_colors()
+        
         if file_path:
             self.lbl_tool_path.setText(f"Путь к базе инструментов: {file_path}")
-            self.lbl_tool_path.setStyleSheet("color: #4ecdc4;")
+            self.lbl_tool_path.setStyleSheet(f"color: {colors['accent']};")
             
             if is_loaded:
                 self.lbl_tool_status.setText("Статус: ✅ База загружена")
-                self.lbl_tool_status.setStyleSheet("color: #51cf66; font-weight: bold;")
+                self.lbl_tool_status.setStyleSheet(f"color: {colors['accent']}; font-weight: bold;")
             else:
                 self.lbl_tool_status.setText("Статус: ❌ Ошибка загрузки базы")
                 self.lbl_tool_status.setStyleSheet("color: #ff6b6b; font-weight: bold;")
         else:
             self.lbl_tool_path.setText("Путь к базе инструментов: не указан")
-            self.lbl_tool_path.setStyleSheet("color: #888;")
+            self.lbl_tool_path.setStyleSheet(f"color: {colors['text_primary']}; opacity: 0.6;")
             self.lbl_tool_status.setText("Статус: база не загружена")
-            self.lbl_tool_status.setStyleSheet("color: #ff6b6b; font-weight: bold;")
+            self.lbl_tool_status.setStyleSheet(f"color: {colors['text_primary']}; font-weight: bold;")
             
     def _refresh_tools_table(self):
         """Обновление таблицы инструментов."""
@@ -171,8 +365,9 @@ class SettingsTab(QWidget):
             separator_item = QTableWidgetItem("═══ СВЁРЛА ═══")
             separator_item.setFlags(separator_item.flags() & ~Qt.ItemIsEditable)
             separator_item.setTextAlignment(Qt.AlignCenter)
-            separator_item.setBackground(QColor("#3e3e3e"))
-            separator_item.setForeground(QColor("#ffd700"))
+            colors = self.settings.get_theme_colors()
+            separator_item.setBackground(QColor(colors['bg_tertiary']))
+            separator_item.setForeground(QColor(colors['accent']))
             font = separator_item.font()
             font.setBold(True)
             separator_item.setFont(font)
