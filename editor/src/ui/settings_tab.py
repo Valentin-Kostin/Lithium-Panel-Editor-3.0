@@ -107,7 +107,7 @@ class SettingsTab(QWidget):
         self.table_tools.setColumnCount(4)
         self.table_tools.setHorizontalHeaderLabels(["ID", "Название фрезы", "Диаметр (мм)", "Обороты"])
         self.table_tools.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.table_tools.setAlternatingRowColors(True)
+        self.table_tools.setAlternatingRowColors(False)  # Отключаем стандартное чередование, будем управлять через стили
         
         table_layout.addWidget(self.table_tools)
         
@@ -133,9 +133,10 @@ class SettingsTab(QWidget):
         
         # Получаем текущий размер шрифта для расчёта размеров кнопок
         font_size = self.spin_font_size.value()
-        padding = int(font_size * 0.6)
-        hpadding = int(font_size * 1.2)
-        btn_min_height = int(font_size * 2.2)
+        # Уменьшаем коэффициенты масштабирования, чтобы кнопки не были слишком большими
+        padding = int(font_size * 0.4)  # вертикальный отступ
+        hpadding = int(font_size * 0.8)  # горизонтальный отступ
+        btn_min_height = int(font_size * 1.8)  # минимальная высота кнопки
         
         # Применяем стили ко всему приложению через главное окно
         main_window = self.window()
@@ -144,6 +145,7 @@ class SettingsTab(QWidget):
                 QMainWindow, QWidget {{
                     background-color: {colors['bg_primary']};
                     color: {colors['text_primary']};
+                    font-size: {font_size}px;
                 }}
                 QGroupBox {{
                     font-weight: bold;
@@ -151,12 +153,14 @@ class SettingsTab(QWidget):
                     border-radius: 5px;
                     margin-top: 10px;
                     padding-top: 10px;
+                    font-size: {font_size}px;
                 }}
                 QGroupBox::title {{
                     subcontrol-origin: margin;
                     left: 10px;
                     padding: 0 5px;
                     color: {colors['accent']};
+                    font-size: {font_size}px;
                 }}
                 QPushButton {{
                     background-color: {colors['bg_tertiary']};
@@ -166,6 +170,7 @@ class SettingsTab(QWidget):
                     padding: {padding}px {hpadding}px;
                     font-weight: bold;
                     min-height: {btn_min_height}px;
+                    font-size: {font_size}px;
                 }}
                 QPushButton:hover {{
                     background-color: {colors['border']};
@@ -176,6 +181,7 @@ class SettingsTab(QWidget):
                 }}
                 QLabel {{
                     color: {colors['text_primary']};
+                    font-size: {font_size}px;
                 }}
                 QComboBox {{
                     background-color: {colors['bg_secondary']};
@@ -183,6 +189,7 @@ class SettingsTab(QWidget):
                     border: 1px solid {colors['border']};
                     border-radius: 5px;
                     padding: 5px;
+                    font-size: {font_size}px;
                 }}
                 QComboBox::drop-down {{
                     border: none;
@@ -192,6 +199,7 @@ class SettingsTab(QWidget):
                     background-color: {colors['bg_secondary']};
                     color: {colors['text_primary']};
                     border: 1px solid {colors['border']};
+                    font-size: {font_size}px;
                 }}
                 QSpinBox {{
                     background-color: {colors['bg_secondary']};
@@ -199,16 +207,23 @@ class SettingsTab(QWidget):
                     border: 1px solid {colors['border']};
                     border-radius: 5px;
                     padding: 5px;
+                    font-size: {font_size}px;
                 }}
                 QTableWidget {{
                     background-color: {colors['bg_secondary']};
                     color: {colors['text_primary']};
                     border: 1px solid {colors['border']};
                     gridline-color: {colors['gridline']};
+                    alternate-background-color: {colors['bg_primary']};
+                    font-size: {font_size}px;
                 }}
                 QTableWidget::item {{
                     padding: 5px;
                     border: none;
+                    background-color: transparent;
+                }}
+                QTableWidget::item:alternate {{
+                    background-color: {colors['bg_primary']};
                 }}
                 QTableWidget::item:selected {{
                     background-color: {colors['bg_tertiary']};
@@ -220,6 +235,7 @@ class SettingsTab(QWidget):
                     padding: 5px;
                     border: none;
                     font-weight: bold;
+                    font-size: {font_size}px;
                 }}
                 QTextEdit {{
                     background-color: {colors['bg_primary']};
@@ -227,12 +243,14 @@ class SettingsTab(QWidget):
                     border: 1px solid {colors['border']};
                     border-radius: 5px;
                     padding: 5px;
+                    font-size: {font_size}px;
                 }}
                 QProgressBar {{
                     border: 1px solid {colors['border']};
                     border-radius: 5px;
                     text-align: center;
                     color: {colors['text_primary']};
+                    font-size: {font_size}px;
                 }}
                 QProgressBar::chunk {{
                     background-color: {colors['accent']};
@@ -248,8 +266,9 @@ class SettingsTab(QWidget):
                     border-bottom: none;
                     border-top-left-radius: 5px;
                     border-top-right-radius: 5px;
-                    padding: 8px 15px;
+                    padding: {int(font_size * 0.6)}px {int(font_size * 1.2)}px;
                     margin-right: 2px;
+                    font-size: {font_size}px;
                 }}
                 QTabBar::tab:selected {{
                     background-color: {colors['bg_tertiary']};
@@ -385,8 +404,7 @@ class SettingsTab(QWidget):
             separator_item.setFlags(separator_item.flags() & ~Qt.ItemIsEditable)
             separator_item.setTextAlignment(Qt.AlignCenter)
             colors = self.settings.get_theme_colors()
-            separator_item.setBackground(QColor(colors['bg_tertiary']))
-            separator_item.setForeground(QColor(colors['accent']))
+            # Убираем явную установку фона и текста, пусть работает через стили темы
             font = separator_item.font()
             font.setBold(True)
             separator_item.setFont(font)
