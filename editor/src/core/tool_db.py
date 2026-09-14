@@ -16,6 +16,12 @@ class ToolDB:
         self.tools: Dict[str, dict] = {}  # Key: ToolID (e.g., "E007"), Value: tool data
         self.file_path: Optional[Path] = None
         self.is_loaded = False
+        # Порядок отображения инструментов
+        self.tool_order = [
+            "E001", "E003", "E004", "E005", "E006", "E007", "E008",
+            "E012", "E013", "E015", "E020", "E035", "E038", "E044",
+            "E054", "E060", "E100"
+        ]
 
     def load(self, file_path: str) -> bool:
         """
@@ -57,6 +63,10 @@ class ToolDB:
                 if not tool_name:
                     continue
                 
+                # Пропускаем инструменты, которых нет в списке порядка
+                if tool_name not in self.tool_order:
+                    continue
+                
                 # Получаем диаметр из ToolDimension
                 dim_elem = core_tool.find('.//tool:ToolDimension/tool:Diameter', ns)
                 diameter = float(dim_elem.text) if dim_elem is not None and dim_elem.text else 0.0
@@ -65,12 +75,25 @@ class ToolDB:
                 desc_elem = core_tool.find('main:Description', ns)
                 description = desc_elem.text if desc_elem is not None and desc_elem.text else ""
                 
+                # Получаем обороты (SpindleSpeed Standard) из ToolTechnology
+                spindle_speed = 0.0
+                tech_elem = core_tool.find('.//tool:ToolTechnology', ns)
+                if tech_elem is not None:
+                    # SpindleSpeed находится в main namespace
+                    speed_elem = tech_elem.find('main:SpindleSpeed/main:Standard', ns)
+                    if speed_elem is not None and speed_elem.text:
+                        try:
+                            spindle_speed = float(speed_elem.text)
+                        except ValueError:
+                            spindle_speed = 0.0
+                
                 # Сохраняем инструмент
                 self.tools[str(tool_name)] = {
                     'id': str(tool_name),
                     'name': str(tool_name),
                     'diameter': diameter,
                     'description': description,
+                    'rpm': spindle_speed,
                     'xml_element': core_tool
                 }
                 count += 1

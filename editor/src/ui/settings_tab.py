@@ -65,7 +65,7 @@ class SettingsTab(QWidget):
         
         self.table_tools = QTableWidget()
         self.table_tools.setColumnCount(4)
-        self.table_tools.setHorizontalHeaderLabels(["ID", "Название", "Диаметр (мм)", "Описание"])
+        self.table_tools.setHorizontalHeaderLabels(["ID", "Название фрезы", "Диаметр (мм)", "Обороты"])
         self.table_tools.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table_tools.setAlternatingRowColors(True)
         self.table_tools.setStyleSheet("""
@@ -128,29 +128,35 @@ class SettingsTab(QWidget):
             self.table_tools.setSpan(0, 0, 1, 4)
             return
         
-        # Заполняем таблицу инструментами
-        for tool_id, tool_data in sorted(global_tool_db.tools.items()):
+        # Заполняем таблицу инструментами в заданном порядке
+        for tool_id in global_tool_db.tool_order:
+            if tool_id not in global_tool_db.tools:
+                continue
+                
+            tool_data = global_tool_db.tools[tool_id]
             row = self.table_tools.rowCount()
             self.table_tools.insertRow(row)
             
-            # ID
+            # ID (например, "E001")
             item_id = QTableWidgetItem(tool_data.get('id', ''))
             item_id.setFlags(item_id.flags() & ~Qt.ItemIsEditable)
             self.table_tools.setItem(row, 0, item_id)
             
-            # Название
-            item_name = QTableWidgetItem(tool_data.get('name', ''))
+            # Название фрезы (описание из файла - например "V90 зенковка")
+            item_name = QTableWidgetItem(tool_data.get('description', ''))
             item_name.setFlags(item_name.flags() & ~Qt.ItemIsEditable)
             self.table_tools.setItem(row, 1, item_name)
             
             # Диаметр
             diameter = tool_data.get('diameter', 0.0)
-            item_diameter = QTableWidgetItem(f"{diameter:.3f}" if diameter > 0 else "N/A")
+            item_diameter = QTableWidgetItem(f"{diameter:.1f}" if diameter > 0 else "N/A")
             item_diameter.setFlags(item_diameter.flags() & ~Qt.ItemIsEditable)
             item_diameter.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
             self.table_tools.setItem(row, 2, item_diameter)
             
-            # Описание
-            item_desc = QTableWidgetItem(tool_data.get('description', ''))
-            item_desc.setFlags(item_desc.flags() & ~Qt.ItemIsEditable)
-            self.table_tools.setItem(row, 3, item_desc)
+            # Обороты
+            rpm = tool_data.get('rpm', 0.0)
+            item_rpm = QTableWidgetItem(f"{int(rpm)}" if rpm > 0 else "N/A")
+            item_rpm.setFlags(item_rpm.flags() & ~Qt.ItemIsEditable)
+            item_rpm.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            self.table_tools.setItem(row, 3, item_rpm)
