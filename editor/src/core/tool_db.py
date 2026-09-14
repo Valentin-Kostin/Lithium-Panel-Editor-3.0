@@ -61,9 +61,9 @@ class ToolDB:
                 dim_elem = core_tool.find('.//tool:ToolDimension/tool:Diameter', ns)
                 diameter = float(dim_elem.text) if dim_elem is not None and dim_elem.text else 0.0
                 
-                # Получаем описание
-                desc_elem = core_tool.find('util:Description', ns)
-                description = desc_elem.text if desc_elem is not None else ""
+                # Получаем описание (в основном namespace)
+                desc_elem = core_tool.find('main:Description', ns)
+                description = desc_elem.text if desc_elem is not None and desc_elem.text else ""
                 
                 # Сохраняем инструмент
                 self.tools[str(tool_name)] = {

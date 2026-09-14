@@ -98,19 +98,15 @@ class SettingsTab(QWidget):
         self.btn_load_tools.clicked.connect(lambda: main_window._on_load_tools_in_settings())
         self.btn_refresh_tools.clicked.connect(self._refresh_tools_table)
         
-    def update_tool_info(self, file_path: str, is_loaded: bool, has_e007: bool):
+    def update_tool_info(self, file_path: str, is_loaded: bool):
         """Обновление информации о базе инструментов."""
         if file_path:
             self.lbl_tool_path.setText(f"Путь к базе инструментов: {file_path}")
             self.lbl_tool_path.setStyleSheet("color: #4ecdc4;")
             
             if is_loaded:
-                if has_e007:
-                    self.lbl_tool_status.setText("Статус: ✅ База загружена, инструмент E007 найден")
-                    self.lbl_tool_status.setStyleSheet("color: #51cf66; font-weight: bold;")
-                else:
-                    self.lbl_tool_status.setText("Статус: ⚠️ База загружена, но инструмент E007 НЕ найден")
-                    self.lbl_tool_status.setStyleSheet("color: #ffd43b; font-weight: bold;")
+                self.lbl_tool_status.setText("Статус: ✅ База загружена")
+                self.lbl_tool_status.setStyleSheet("color: #51cf66; font-weight: bold;")
             else:
                 self.lbl_tool_status.setText("Статус: ❌ Ошибка загрузки базы")
                 self.lbl_tool_status.setStyleSheet("color: #ff6b6b; font-weight: bold;")
@@ -158,17 +154,3 @@ class SettingsTab(QWidget):
             item_desc = QTableWidgetItem(tool_data.get('description', ''))
             item_desc.setFlags(item_desc.flags() & ~Qt.ItemIsEditable)
             self.table_tools.setItem(row, 3, item_desc)
-        
-        # Подсветка инструмента E007
-        e007_row = None
-        for row in range(self.table_tools.rowCount()):
-            if self.table_tools.item(row, 0).text() == "E007":
-                e007_row = row
-                break
-        
-        if e007_row is not None:
-            for col in range(4):
-                item = self.table_tools.item(e007_row, col)
-                if item:
-                    item.setBackground(QBrush(QColor("#51cf66")))
-                    item.setForeground(QBrush(QColor("#000000")))

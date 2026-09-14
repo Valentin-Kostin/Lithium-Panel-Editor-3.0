@@ -260,8 +260,7 @@ class MainWindow(QMainWindow):
         """Обновляет информацию во вкладке настроек после загрузки базы."""
         saved_path = self.settings.get_tool_db_path()
         is_loaded = global_tool_db.is_loaded
-        has_e007 = global_tool_db.get_replacement_tool("E007") is not None
-        self.settings_tab.update_tool_info(saved_path, is_loaded, has_e007)
+        self.settings_tab.update_tool_info(saved_path, is_loaded)
         self.settings_tab._refresh_tools_table()
     
     def _load_tool_database(self, file_path: str) -> bool:

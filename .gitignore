@@ -1,1 +1,35 @@
-Nothing should be ignored in this case, as the only modified file is a Python source file (`editor/src/ui/settings_tab.py`) which is part of the actual codebase and not a build artifact, dependency, or temporary file.
+```
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local
+.env.*
+.venv/
+venv/
+ENV/
+```
