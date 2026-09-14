@@ -133,10 +133,11 @@ class SettingsTab(QWidget):
         
         # Получаем текущий размер шрифта для расчёта размеров кнопок
         font_size = self.spin_font_size.value()
-        padding = int(font_size * 0.8)
-        hpadding = int(font_size * 1.5)
-        min_height = int(font_size * 2.5)
-                # Применяем стили ко всему приложению через главное окно
+        padding = int(font_size * 0.6)
+        hpadding = int(font_size * 1.2)
+        btn_min_height = int(font_size * 2.2)
+        
+        # Применяем стили ко всему приложению через главное окно
         main_window = self.window()
         if main_window:
             style_sheet = f"""
@@ -164,7 +165,7 @@ class SettingsTab(QWidget):
                     border-radius: 5px;
                     padding: {padding}px {hpadding}px;
                     font-weight: bold;
-                    min-height: {min_height}em;
+                    min-height: {btn_min_height}px;
                 }}
                 QPushButton:hover {{
                     background-color: {colors['border']};
@@ -207,6 +208,11 @@ class SettingsTab(QWidget):
                 }}
                 QTableWidget::item {{
                     padding: 5px;
+                    border: none;
+                }}
+                QTableWidget::item:selected {{
+                    background-color: {colors['bg_tertiary']};
+                    color: {colors['text_primary']};
                 }}
                 QHeaderView::section {{
                     background-color: {colors['bg_tertiary']};
