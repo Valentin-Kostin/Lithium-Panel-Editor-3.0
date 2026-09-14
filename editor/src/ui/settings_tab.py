@@ -131,7 +131,12 @@ class SettingsTab(QWidget):
         self.settings.set_theme(theme_name)
         colors = self.settings.get_theme_colors()
         
-        # Применяем стили ко всему приложению через главное окно
+        # Получаем текущий размер шрифта для расчёта размеров кнопок
+        font_size = self.spin_font_size.value()
+        padding = int(font_size * 0.8)
+        hpadding = int(font_size * 1.5)
+        min_height = int(font_size * 2.5)
+                # Применяем стили ко всему приложению через главное окно
         main_window = self.window()
         if main_window:
             style_sheet = f"""
@@ -157,8 +162,9 @@ class SettingsTab(QWidget):
                     color: {colors['text_secondary']};
                     border: 1px solid {colors['border']};
                     border-radius: 5px;
-                    padding: 8px 15px;
+                    padding: {padding}px {hpadding}px;
                     font-weight: bold;
+                    min-height: {min_height}em;
                 }}
                 QPushButton:hover {{
                     background-color: {colors['border']};
@@ -281,6 +287,10 @@ class SettingsTab(QWidget):
         header_font.setBold(True)
         self.table_tools.horizontalHeader().setFont(header_font)
         
+        # Увеличиваем высоту строк таблицы пропорционально шрифту
+        row_height = int(font_size * 2.2)
+        self.table_tools.verticalHeader().setDefaultSectionSize(row_height)
+        
         # Применяем шрифт ко всему главному окну
         main_window = self.window()
         if main_window:
@@ -289,6 +299,9 @@ class SettingsTab(QWidget):
             if hasattr(main_window, 'log_text'):
                 log_font = QFont("Consolas", font_size)
                 main_window.log_text.setFont(log_font)
+                
+        # Обновляем тему для применения новых размеров кнопок
+        self._apply_theme()
                 
     def update_tool_info(self, file_path: str, is_loaded: bool):
         """Обновление информации о базе инструментов."""
