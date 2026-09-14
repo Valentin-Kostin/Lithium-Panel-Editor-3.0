@@ -128,32 +128,10 @@ class SettingsTab(QWidget):
             self.table_tools.setSpan(0, 0, 1, 4)
             return
         
-        # Разделитель между фрезами и сверлами
-        drills_start_ids = {"E001", "E002", "E003", "E004", "E005", "E006", "E007"}
-        has_drills = any(tool_id in global_tool_db.tools for tool_id in drills_start_ids)
-        has_mills = any(tool_id in global_tool_db.tools and tool_id not in drills_start_ids 
-                        for tool_id in global_tool_db.tool_order)
-        
-        # Заполняем таблицу инструментами в заданном порядке
-        for tool_id in global_tool_db.tool_order:
+        # Сначала отображаем фрезы (Exxx)
+        for tool_id in global_tool_db.mill_order:
             if tool_id not in global_tool_db.tools:
                 continue
-            
-            # Добавляем разделитель перед сверлами
-            if tool_id in drills_start_ids and has_mills:
-                row = self.table_tools.rowCount()
-                self.table_tools.insertRow(row)
-                separator_item = QTableWidgetItem("═══ СВЁРЛА ═══")
-                separator_item.setFlags(separator_item.flags() & ~Qt.ItemIsEditable)
-                separator_item.setTextAlignment(Qt.AlignCenter)
-                separator_item.setBackground(QColor("#3e3e3e"))
-                separator_item.setForeground(QColor("#ffd700"))
-                font = separator_item.font()
-                font.setBold(True)
-                separator_item.setFont(font)
-                self.table_tools.setItem(row, 0, separator_item)
-                self.table_tools.setSpan(row, 0, 1, 4)
-                has_mills = False  # Чтобы разделитель был только один раз
             
             tool_data = global_tool_db.tools[tool_id]
             row = self.table_tools.rowCount()
@@ -165,6 +143,57 @@ class SettingsTab(QWidget):
             self.table_tools.setItem(row, 0, item_id)
             
             # Название фрезы (описание из файла - например "V90 зенковка")
+            item_name = QTableWidgetItem(tool_data.get('description', ''))
+            item_name.setFlags(item_name.flags() & ~Qt.ItemIsEditable)
+            self.table_tools.setItem(row, 1, item_name)
+            
+            # Диаметр
+            diameter = tool_data.get('diameter', 0.0)
+            item_diameter = QTableWidgetItem(f"{diameter:.1f}" if diameter > 0 else "N/A")
+            item_diameter.setFlags(item_diameter.flags() & ~Qt.ItemIsEditable)
+            item_diameter.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            self.table_tools.setItem(row, 2, item_diameter)
+            
+            # Обороты
+            rpm = tool_data.get('rpm', 0.0)
+            item_rpm = QTableWidgetItem(f"{int(rpm)}" if rpm > 0 else "N/A")
+            item_rpm.setFlags(item_rpm.flags() & ~Qt.ItemIsEditable)
+            item_rpm.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            self.table_tools.setItem(row, 3, item_rpm)
+        
+        # Добавляем разделитель перед сверлами, если есть и фрезы и сверла
+        has_mills = any(tool_id in global_tool_db.tools for tool_id in global_tool_db.mill_order)
+        has_drills = any(tool_id in global_tool_db.tools for tool_id in global_tool_db.drill_order)
+        
+        if has_mills and has_drills:
+            row = self.table_tools.rowCount()
+            self.table_tools.insertRow(row)
+            separator_item = QTableWidgetItem("═══ СВЁРЛА ═══")
+            separator_item.setFlags(separator_item.flags() & ~Qt.ItemIsEditable)
+            separator_item.setTextAlignment(Qt.AlignCenter)
+            separator_item.setBackground(QColor("#3e3e3e"))
+            separator_item.setForeground(QColor("#ffd700"))
+            font = separator_item.font()
+            font.setBold(True)
+            separator_item.setFont(font)
+            self.table_tools.setItem(row, 0, separator_item)
+            self.table_tools.setSpan(row, 0, 1, 4)
+        
+        # Затем отображаем сверла (0xx)
+        for tool_id in global_tool_db.drill_order:
+            if tool_id not in global_tool_db.tools:
+                continue
+            
+            tool_data = global_tool_db.tools[tool_id]
+            row = self.table_tools.rowCount()
+            self.table_tools.insertRow(row)
+            
+            # ID (например, "001")
+            item_id = QTableWidgetItem(tool_data.get('id', ''))
+            item_id.setFlags(item_id.flags() & ~Qt.ItemIsEditable)
+            self.table_tools.setItem(row, 0, item_id)
+            
+            # Описание (для сверел обычно пустое, но оставляем поле)
             item_name = QTableWidgetItem(tool_data.get('description', ''))
             item_name.setFlags(item_name.flags() & ~Qt.ItemIsEditable)
             self.table_tools.setItem(row, 1, item_name)

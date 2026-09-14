@@ -13,14 +13,15 @@ class ToolDB:
     """Класс для управления базой инструментов."""
     
     def __init__(self):
-        self.tools: Dict[str, dict] = {}  # Key: ToolID (e.g., "E007"), Value: tool data
+        self.tools: Dict[str, dict] = {}  # Key: ToolID (e.g., "E007", "001"), Value: tool data
         self.file_path: Optional[Path] = None
         self.is_loaded = False
-        # Порядок отображения инструментов: сначала фрезы, потом сверла (E001-E007 внизу)
-        self.tool_order = [
-            "E008", "E012", "E013", "E015", "E020", "E035", "E038", "E044",
-            "E054", "E060", "E100",
-            "E001", "E002", "E003", "E004", "E005", "E006", "E007"
+        # Порядок отображения инструментов: сначала фрезы (Exxx), потом сверла (0xx)
+        self.drill_order = ["001", "002", "003", "004", "005", "006", "007"]
+        self.mill_order = [
+            "E001", "E003", "E004", "E005", "E006", "E007", "E008",
+            "E012", "E013", "E015", "E020", "E035", "E038", "E044",
+            "E054", "E060", "E100"
         ]
 
     def load(self, file_path: str) -> bool:
@@ -55,6 +56,8 @@ class ToolDB:
             
             # Ищем все CoreTool элементы
             count = 0
+            all_tool_ids = self.mill_order + self.drill_order
+            
             for core_tool in root.findall('.//main:Tools/main:CoreTool', ns):
                 # Получаем Name инструмента
                 name_elem = core_tool.find('util:Name', ns)
@@ -64,7 +67,7 @@ class ToolDB:
                     continue
                 
                 # Пропускаем инструменты, которых нет в списке порядка
-                if tool_name not in self.tool_order:
+                if tool_name not in all_tool_ids:
                     continue
                 
                 # Получаем диаметр из ToolDimension
