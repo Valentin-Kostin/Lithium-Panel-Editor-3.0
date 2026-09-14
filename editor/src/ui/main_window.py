@@ -188,21 +188,14 @@ class MainWindow(QMainWindow):
                 total_csv_parts = stats['csv_parts_total']
                 self._log(f"   Всего записей в CSV: {total_csv_parts}")
                 
-                # Отсутствующие PGMX
-                if stats['missing_pgmx']:
-                    self._log(f"\n⚠️ Отсутствуют PGMX файлы для {len(stats['missing_pgmx'])} деталей:")
-                    for name in stats['missing_pgmx'][:10]:
-                        self._log(f"   - {name}")
-                    if len(stats['missing_pgmx']) > 10:
-                        self._log(f"   ... и еще {len(stats['missing_pgmx']) - 10}")
+                # Вывод количества записей в каждом CSV файле
+                if 'csv_file_counts' in stats and stats['csv_file_counts']:
+                    for csv_name, count in stats['csv_file_counts'].items():
+                        self._log(f"   {csv_name} = {count}шт.")
                         
-                # OBOROT файлы
-                if stats['oborot_issues']:
-                    self._log(f"\n⚠️ Несоответствие OBOROT для {len(stats['oborot_issues'])} деталей:")
-                    for name in stats['oborot_issues'][:10]:
-                        self._log(f"   - {name}")
-                    if len(stats['oborot_issues']) > 10:
-                        self._log(f"   ... и еще {len(stats['oborot_issues']) - 10}")
+                # Отсутствующие PGMX файлы уже выведены в логе batch_processor.py
+                
+                # OBOROT файлы уже выведены в логе batch_processor.py
                         
                 self._log(f"\n💡 Теперь можно нажать 'Исправить .SCX' или 'Править .PGMX'")
                 

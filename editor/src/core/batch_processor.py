@@ -56,37 +56,61 @@ class BatchProcessor:
         
         self.log(f"Начало сканирования папки: {folder_path}")
         
-        # Рекурсивный поиск файлов
+        # Рекурсивный поиск файлов (используем set для исключения дубликатов)
+        scx_set = set()
         for ext in ['*.scx', '*.SCX']:
-            self.scx_files.extend(self.folder_path.rglob(ext))
+            scx_set.update(self.folder_path.rglob(ext))
+        self.scx_files = list(scx_set)
             
+        pgmx_set = set()
         for ext in ['*.pgmx', '*.PGMX']:
-            self.pgmx_files.extend(self.folder_path.rglob(ext))
+            pgmx_set.update(self.folder_path.rglob(ext))
+        self.pgmx_files = list(pgmx_set)
             
+        csv_set = set()
         for ext in ['*.csv', '*.CSV']:
-            self.csv_files.extend(self.folder_path.rglob(ext))
+            csv_set.update(self.folder_path.rglob(ext))
+        self.csv_files = list(csv_set)
             
         self.log(f"Найдено файлов: SCX={len(self.scx_files)}, PGMX={len(self.pgmx_files)}, CSV={len(self.csv_files)}")
         
-        # Анализ CSV файлов
+        # Анализ CSV файлов (формат: [PARTPROGRAMNAME]=...;[QUANTITY]=... без заголовков)
         csv_total_parts = 0
         csv_part_names = set()
+        csv_file_counts = {}  # Для хранения количества записей в каждом CSV файле
         
         for csv_file in self.csv_files:
             try:
                 # Пытаемся определить кодировку
                 encoding = detect_encoding(csv_file)
                 with open(csv_file, 'r', encoding=encoding) as f:
-                    reader = csv.DictReader(f, delimiter=';') # Обычно разделитель ;
-                    count = 0
-                    for row in reader:
-                        count += 1
-                        # Ищем имя детали (обычно в колонке Name или PartName)
-                        name = row.get('Name') or row.get('PartName') or row.get('Имя')
-                        if name:
-                            csv_part_names.add(name)
-                    csv_total_parts += count
-                    self.log(f"CSV {csv_file.name}: {count} записей")
+                    content = f.read()
+                    
+                # Разделяем по переводу строки и затем по ';'
+                lines = content.replace('\r\n', '\n').replace('\r', '\n').split('\n')
+                count = 0
+                
+                for line in lines:
+                    if not line.strip():
+                        continue
+                    # Разбиваем строку на записи по ';'
+                    records = line.split(';')
+                    # Ищем в каждой записи [PARTPROGRAMNAME]
+                    for record in records:
+                        if '[PARTPROGRAMNAME]' in record:
+                            count += 1
+                            # Извлекаем имя файла после '='
+                            match = re.search(r'\[PARTPROGRAMNAME\]=([^;]+)', record)
+                            if match:
+                                pgmx_name = match.group(1).strip()
+                                # Убираем расширение .pgmx если есть
+                                if pgmx_name.endswith('.pgmx'):
+                                    pgmx_name = pgmx_name[:-5]
+                                csv_part_names.add(pgmx_name)
+                    
+                csv_total_parts += count
+                csv_file_counts[csv_file.name] = count
+                self.log(f"CSV {csv_file.name}: {count} записей")
             except Exception as e:
                 self.log(f"Ошибка чтения CSV {csv_file.name}: {e}")
                 
@@ -118,22 +142,28 @@ class BatchProcessor:
         self.log(f"Файлов PGMX найдено: {len(pgmx_names)}")
         
         if missing_pgmx:
-            self.log(f"⚠️ Отсутствуют PGMX файлы для {len(missing_pgmx)} деталей из CSV")
-            for name in missing_pgmx[:10]: # Показываем первые 10
-                self.log(f"   - {name}")
-            if len(missing_pgmx) > 10:
-                self.log(f"   ... и еще {len(missing_pgmx) - 10}")
+            self.log(f"❌ Отсутствуют файлы:")
+            for name in missing_pgmx:
+                # Формируем ожидаемое имя PGMX файла
+                expected_pgmx = f"{name}.pgmx"
+                self.log(f"   {expected_pgmx} -- файла НЕТ!")
                 
         if oborot_issues:
-            self.log(f"⚠️ Несоответствие OBOROT для {len(oborot_issues)} деталей")
-            for name in oborot_issues[:10]:
-                self.log(f"   - {name}")
-                
+            self.log(f"🔴 OBOROT файлы:")
+            seen_oborot = set()
+            for name in oborot_issues:
+                if name not in seen_oborot:
+                    seen_oborot.add(name)
+                    # Формируем имя OBOROT файла
+                    oborot_filename = f"{name}.pgmx"
+                    self.log(f"   {oborot_filename}")
+                    
         return {
             'scx_count': len(self.scx_files),
             'pgmx_count': len(self.pgmx_files),
             'csv_count': len(self.csv_files),
             'csv_parts_total': csv_total_parts,
+            'csv_file_counts': csv_file_counts,
             'missing_pgmx': missing_pgmx,
             'oborot_issues': oborot_issues
         }
