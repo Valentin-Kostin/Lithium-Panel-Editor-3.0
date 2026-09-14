@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QGroupBox, QHeaderView, QMessageBox
 )
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor, QBrush
 from ..core.tool_db import global_tool_db
 from ..utils.settings import Settings
 
@@ -169,5 +170,5 @@ class SettingsTab(QWidget):
             for col in range(4):
                 item = self.table_tools.item(e007_row, col)
                 if item:
-                    item.setBackground("#51cf66")
-                    item.setForeground("#000000")
+                    item.setBackground(QBrush(QColor("#51cf66")))
+                    item.setForeground(QBrush(QColor("#000000")))
