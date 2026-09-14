@@ -303,12 +303,161 @@ class MainWindow(QMainWindow):
         # Применяем тему
         theme_name = self.settings.get_theme()
         self.settings_tab.combo_theme.setCurrentText(theme_name)
-        self.settings_tab._apply_theme()
         
-        # Применяем размер шрифта
         font_size = self.settings.get_font_size()
         self.settings_tab.spin_font_size.setValue(font_size)
-        self.settings_tab._apply_font_size()
+        
+        colors = self.settings.get_theme_colors()
+        padding = int(font_size * 0.4)
+        hpadding = int(font_size * 0.8)
+        btn_min_height = int(font_size * 1.8)
+        
+        self.apply_theme_and_font(colors, font_size, padding, hpadding, btn_min_height)
+    
+    def apply_theme_and_font(self, colors, font_size, padding, hpadding, btn_min_height):
+        """Применяет тему и шрифт ко всем элементам интерфейса."""
+        style_sheet = f"""
+            QMainWindow, QWidget {{
+                background-color: {colors['bg_primary']};
+                color: {colors['text_primary']};
+                font-size: {font_size}px;
+            }}
+            QGroupBox {{
+                font-weight: bold;
+                border: 2px solid {colors['border']};
+                border-radius: 5px;
+                margin-top: 10px;
+                padding-top: 10px;
+                font-size: {font_size}px;
+            }}
+            QGroupBox::title {{
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px;
+                color: {colors['accent']};
+                font-size: {font_size}px;
+            }}
+            QPushButton {{
+                background-color: {colors['bg_tertiary']};
+                color: {colors['text_secondary']};
+                border: 1px solid {colors['border']};
+                border-radius: 5px;
+                padding: {padding}px {hpadding}px;
+                font-weight: bold;
+                min-height: {btn_min_height}px;
+                font-size: {font_size}px;
+            }}
+            QPushButton:hover {{
+                background-color: {colors['border']};
+            }}
+            QPushButton:pressed {{
+                background-color: {colors['accent']};
+                color: {colors['bg_primary']};
+            }}
+            QLabel {{
+                color: {colors['text_primary']};
+                font-size: {font_size}px;
+            }}
+            QComboBox {{
+                background-color: {colors['bg_secondary']};
+                color: {colors['text_primary']};
+                border: 1px solid {colors['border']};
+                border-radius: 5px;
+                padding: 5px;
+                font-size: {font_size}px;
+            }}
+            QComboBox::drop-down {{
+                border: none;
+                width: 20px;
+            }}
+            QComboBox QAbstractItemView {{
+                background-color: {colors['bg_secondary']};
+                color: {colors['text_primary']};
+                border: 1px solid {colors['border']};
+                font-size: {font_size}px;
+            }}
+            QSpinBox {{
+                background-color: {colors['bg_secondary']};
+                color: {colors['text_primary']};
+                border: 1px solid {colors['border']};
+                border-radius: 5px;
+                padding: 5px;
+                font-size: {font_size}px;
+            }}
+            QTableWidget {{
+                background-color: {colors['bg_secondary']};
+                color: {colors['text_primary']};
+                border: 1px solid {colors['border']};
+                gridline-color: {colors['gridline']};
+                alternate-background-color: {colors['bg_primary']};
+                font-size: {font_size}px;
+            }}
+            QTableWidget::item {{
+                padding: 5px;
+                border: none;
+                background-color: transparent;
+            }}
+            QTableWidget::item:alternate {{
+                background-color: {colors['bg_primary']};
+            }}
+            QTableWidget::item:selected {{
+                background-color: {colors['bg_tertiary']};
+                color: {colors['text_primary']};
+            }}
+            QHeaderView::section {{
+                background-color: {colors['bg_tertiary']};
+                color: {colors['text_secondary']};
+                padding: 5px;
+                border: none;
+                font-weight: bold;
+                font-size: {font_size}px;
+            }}
+            QTextEdit {{
+                background-color: {colors['bg_primary']};
+                color: {colors['text_primary']};
+                border: 1px solid {colors['border']};
+                border-radius: 5px;
+                padding: 5px;
+                font-size: {font_size}px;
+            }}
+            QProgressBar {{
+                border: 1px solid {colors['border']};
+                border-radius: 5px;
+                text-align: center;
+                color: {colors['text_primary']};
+                font-size: {font_size}px;
+            }}
+            QProgressBar::chunk {{
+                background-color: {colors['accent']};
+            }}
+            QTabWidget::pane {{
+                border: 1px solid {colors['border']};
+                background-color: {colors['bg_primary']};
+            }}
+            QTabBar::tab {{
+                background-color: {colors['bg_secondary']};
+                color: {colors['text_primary']};
+                border: 1px solid {colors['border']};
+                border-bottom: none;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                padding: {int(font_size * 0.6)}px {int(font_size * 1.2)}px;
+                margin-right: 2px;
+                font-size: {font_size}px;
+            }}
+            QTabBar::tab:selected {{
+                background-color: {colors['bg_tertiary']};
+                color: {colors['accent']};
+            }}
+            QTabBar::tab:hover {{
+                background-color: {colors['border']};
+            }}
+        """
+        self.setStyleSheet(style_sheet)
+        
+        # Обновляем шрифт лога
+        log_font = QFont("Consolas", font_size)
+        self.log_text.setFont(log_font)
             
     def _on_fix_scx(self):
         """Обработчик кнопки исправления .SCX файлов."""
