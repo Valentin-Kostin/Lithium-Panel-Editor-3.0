@@ -128,11 +128,33 @@ class SettingsTab(QWidget):
             self.table_tools.setSpan(0, 0, 1, 4)
             return
         
+        # Разделитель между фрезами и сверлами
+        drills_start_ids = {"E001", "E002", "E003", "E004", "E005", "E006", "E007"}
+        has_drills = any(tool_id in global_tool_db.tools for tool_id in drills_start_ids)
+        has_mills = any(tool_id in global_tool_db.tools and tool_id not in drills_start_ids 
+                        for tool_id in global_tool_db.tool_order)
+        
         # Заполняем таблицу инструментами в заданном порядке
         for tool_id in global_tool_db.tool_order:
             if tool_id not in global_tool_db.tools:
                 continue
-                
+            
+            # Добавляем разделитель перед сверлами
+            if tool_id in drills_start_ids and has_mills:
+                row = self.table_tools.rowCount()
+                self.table_tools.insertRow(row)
+                separator_item = QTableWidgetItem("═══ СВЁРЛА ═══")
+                separator_item.setFlags(separator_item.flags() & ~Qt.ItemIsEditable)
+                separator_item.setTextAlignment(Qt.AlignCenter)
+                separator_item.setBackground(QColor("#3e3e3e"))
+                separator_item.setForeground(QColor("#ffd700"))
+                font = separator_item.font()
+                font.setBold(True)
+                separator_item.setFont(font)
+                self.table_tools.setItem(row, 0, separator_item)
+                self.table_tools.setSpan(row, 0, 1, 4)
+                has_mills = False  # Чтобы разделитель был только один раз
+            
             tool_data = global_tool_db.tools[tool_id]
             row = self.table_tools.rowCount()
             self.table_tools.insertRow(row)

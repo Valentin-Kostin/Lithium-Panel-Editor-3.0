@@ -16,11 +16,11 @@ class ToolDB:
         self.tools: Dict[str, dict] = {}  # Key: ToolID (e.g., "E007"), Value: tool data
         self.file_path: Optional[Path] = None
         self.is_loaded = False
-        # Порядок отображения инструментов
+        # Порядок отображения инструментов: сначала фрезы, потом сверла (E001-E007 внизу)
         self.tool_order = [
-            "E001", "E003", "E004", "E005", "E006", "E007", "E008",
-            "E012", "E013", "E015", "E020", "E035", "E038", "E044",
-            "E054", "E060", "E100"
+            "E008", "E012", "E013", "E015", "E020", "E035", "E038", "E044",
+            "E054", "E060", "E100",
+            "E001", "E002", "E003", "E004", "E005", "E006", "E007"
         ]
 
     def load(self, file_path: str) -> bool:
