@@ -3,11 +3,12 @@
 Новый интерфейс:
 - Верхняя панель с кнопками управления
 - Большое текстовое окно логов внизу
+- Вкладка настроек
 """
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
     QPushButton, QTextEdit, QFileDialog, QLabel, QProgressBar,
-    QGroupBox, QApplication
+    QGroupBox, QApplication, QTabWidget
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
@@ -16,6 +17,7 @@ import os
 from ..core.batch_processor import BatchProcessor
 from ..core.tool_db import global_tool_db
 from ..utils.settings import Settings
+from .settings_tab import SettingsTab
 
 
 class MainWindow(QMainWindow):
@@ -28,8 +30,17 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Lithium Panel Editor v3.0")
         self.setMinimumSize(900, 700)
         
+        # Создаем вкладку настроек
+        self.settings_tab = SettingsTab()
+        
         self._setup_ui()
         self._connect_signals()
+        
+        # Подключаем сигналы вкладки настроек
+        self.settings_tab.connect_signals(self)
+        
+        # Загружаем базу инструментов при старте если есть сохраненный путь
+        self.load_tool_db_from_settings()
         
     def _setup_ui(self):
         """Создание интерфейса."""
@@ -39,7 +50,16 @@ class MainWindow(QMainWindow):
         main_layout.setSpacing(10)
         main_layout.setContentsMargins(15, 15, 15, 15)
         
-        # === ВЕРХНЯЯ ПАНЕЛЬ С КНОПКАМИ ===
+        # === ВКЛАДКИ ===
+        self.tabs = QTabWidget()
+        
+        # Вкладка "Основная"
+        main_tab = QWidget()
+        main_tab_layout = QVBoxLayout(main_tab)
+        main_tab_layout.setSpacing(10)
+        main_tab_layout.setContentsMargins(0, 0, 0, 0)
+        
+        # === ВЕРХНЯЯ ПАНЕЛЬ С КНОПКАМИ (на основной вкладке) ===
         control_group = QGroupBox("🛠️ Панель управления")
         control_layout = QHBoxLayout(control_group)
         control_layout.setSpacing(10)
@@ -82,17 +102,13 @@ class MainWindow(QMainWindow):
         )
         self.btn_compare_csv.setMinimumHeight(40)
         
-        self.btn_load_tools = QPushButton("🔧 База инструментов")
-        self.btn_load_tools.setToolTip("Загрузить файл def.tlgx с базой инструментов")
-        self.btn_load_tools.setMinimumHeight(40)
-        
+        # Убираем старую кнопку "База инструментов" - теперь она во вкладке Настройки
         # Добавление кнопок в layout
         control_layout.addWidget(self.btn_select_folder)
         control_layout.addWidget(self.btn_fix_scx)
         control_layout.addWidget(self.btn_fix_pgmx)
         control_layout.addWidget(self.btn_revert_dots)
         control_layout.addWidget(self.btn_compare_csv)
-        control_layout.addWidget(self.btn_load_tools)
         
         # === ПРОГРЕСС БАР И СТАТУС ===
         status_layout = QHBoxLayout()
@@ -132,15 +148,22 @@ class MainWindow(QMainWindow):
         btn_clear_log.clicked.connect(self.log_text.clear)
         log_layout.addWidget(btn_clear_log, alignment=Qt.AlignRight)
         
+        # Сборка основной вкладки
+        main_tab_layout.addWidget(control_group)
+        main_tab_layout.addLayout(status_layout)
+        main_tab_layout.addWidget(log_group, stretch=1)
+        
+        # Добавляем вкладки
+        self.tabs.addTab(main_tab, "📊 Основная")
+        self.tabs.addTab(self.settings_tab, "⚙️ Настройки")
+        
         # === СБОРКА ИНТЕРФЕЙСА ===
-        main_layout.addWidget(control_group)
-        main_layout.addLayout(status_layout)
-        main_layout.addWidget(log_group, stretch=1)  # Растягиваем лог
+        main_layout.addWidget(self.tabs)
         
     def _connect_signals(self):
         """Подключение сигналов к слотам."""
         self.btn_select_folder.clicked.connect(self._on_select_folder)
-        self.btn_load_tools.clicked.connect(self._on_load_tools)
+        # Кнопка загрузки инструментов теперь подключается через settings_tab.connect_signals()
         self.btn_fix_scx.clicked.connect(self._on_fix_scx)
         self.btn_fix_pgmx.clicked.connect(self._on_fix_pgmx)
         self.btn_revert_dots.clicked.connect(self._on_revert_dots)
@@ -206,13 +229,14 @@ class MainWindow(QMainWindow):
                 self.status_label.setText("Готов к работе")
                 
     def _on_load_tools(self):
-        """Обработчик кнопки загрузки базы инструментов."""
+        """Обработчик кнопки загрузки базы инструментов (вызывается из вкладки настроек)."""
         # Проверяем есть ли сохраненный путь
         saved_path = self.settings.get_tool_db_path()
         
         if saved_path and os.path.exists(saved_path):
             self._log(f"\n✅ Найден сохраненный путь к базе инструментов: {saved_path}")
             if self._load_tool_database(saved_path):
+                self._update_settings_tab()
                 return
                 
         # Если нет сохраненного пути или файл не найден, запрашиваем у пользователя
@@ -226,6 +250,19 @@ class MainWindow(QMainWindow):
                 # Сохраняем путь
                 self.settings.set_tool_db_path(file_path)
                 self._log(f"💾 Путь сохранен в настройках")
+                self._update_settings_tab()
+    
+    def _on_load_tools_in_settings(self):
+        """Вызывается при нажатии кнопки загрузки инструментов во вкладке настроек."""
+        self._on_load_tools()
+    
+    def _update_settings_tab(self):
+        """Обновляет информацию во вкладке настроек после загрузки базы."""
+        saved_path = self.settings.get_tool_db_path()
+        is_loaded = global_tool_db.is_loaded
+        has_e007 = global_tool_db.get_replacement_tool("E007") is not None
+        self.settings_tab.update_tool_info(saved_path, is_loaded, has_e007)
+        self.settings_tab._refresh_tools_table()
     
     def _load_tool_database(self, file_path: str) -> bool:
         """Загружает базу инструментов и обновляет UI"""
@@ -249,6 +286,15 @@ class MainWindow(QMainWindow):
             self._log(f"   Кнопка 'Править .PGMX' останется отключенной.")
             self.btn_fix_pgmx.setEnabled(False)
             return False
+    
+    def load_tool_db_from_settings(self):
+        """Загружает базу инструментов при старте приложения если есть сохраненный путь."""
+        saved_path = self.settings.get_tool_db_path()
+        if saved_path and os.path.exists(saved_path):
+            self._log(f"✅ Найден сохраненный путь к базе инструментов: {saved_path}")
+            if self._load_tool_database(saved_path):
+                self._update_settings_tab()
+                self._log(f"💾 База инструментов загружена из сохраненного пути")
             
     def _on_fix_scx(self):
         """Обработчик кнопки исправления .SCX файлов."""
