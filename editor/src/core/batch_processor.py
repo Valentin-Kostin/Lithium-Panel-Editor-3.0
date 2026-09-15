@@ -576,7 +576,7 @@ class BatchProcessor:
                                 return new_tag
                             return full_match
                         
-                        content = re.sub(tag_pattern, fix_tag, content)
+                        content = re.sub(tag_pattern, fix_tag, content)  # type: ignore[arg-type]
                         new_xml_data[name] = content.encode(encoding)
                         
                     except Exception as e:
