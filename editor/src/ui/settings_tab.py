@@ -88,12 +88,7 @@ class SettingsTab(QWidget):
         self.btn_load_tools.setToolTip("Выбрать файл def.tlgx с базой инструментов")
         self.btn_load_tools.setMinimumHeight(40)
         
-        self.btn_refresh_tools = QPushButton("🔄 Обновить таблицу")
-        self.btn_refresh_tools.setToolTip("Обновить таблицу инструментов")
-        self.btn_refresh_tools.setMinimumHeight(40)
-        
         btn_layout.addWidget(self.btn_load_tools)
-        btn_layout.addWidget(self.btn_refresh_tools)
         
         tools_layout.addWidget(self.lbl_tool_path)
         tools_layout.addWidget(self.lbl_tool_status)
@@ -119,7 +114,6 @@ class SettingsTab(QWidget):
     def connect_signals(self, main_window):
         """Подключение сигналов к методам главного окна."""
         self.btn_load_tools.clicked.connect(lambda: main_window._on_load_tools_in_settings())
-        self.btn_refresh_tools.clicked.connect(self._refresh_tools_table)
         
         # Применяем текущую тему и шрифт после подключения сигналов
         self._apply_theme()
