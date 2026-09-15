@@ -396,7 +396,7 @@ class BatchProcessor:
                         panel_width = float(panel_match.group(2).replace(',', '.'))
                     except: pass
                 
-                if panel_length and panel_width:
+                if panel_length is not None and panel_width is not None:
                     # Ищем все отверстия Type="1" с Face 1, 2, 3, 4
                     hole_pattern = r'(<Machining[^>]*Type=["\']?1["\']?[^>]*Face=["\']?([1-4])["\']?[^>]*>)'
                     

@@ -1,32 +1,65 @@
 ```
-# Compiled Python files
-*.pyc
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.ENV
+.env
+.env.*
+.venv.bak/
+.python-version
 
-# Editor/IDE files
+# Build/dist
+build/
+dist/
+*.egg-info/
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*.tmp
 
 # Logs
 *.log
 
-# Environment files
-.env
-.env.local
-*.env.*
+# Coverage
+.coverage
+coverage/
+htmlcov/
 
-# Build/dist directories
-dist/
-build/
-target/
+# Temporary files
+*.tmp
+*.temp
 
-# Dependencies
-node_modules/
-venv/
-.venv/
-.mypy_cache/
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
 .pytest_cache/
+.mypy_cache/
+.hypothesis/
+
+# Distribution / packaging
+*.tar.gz
+*.whl
+pip-log.txt
+pip-delete-this-directory.txt
+
+# PyInstaller
+*.spec
+
+# Environment variables
+.env.local
+.env.*
+
+# Batch processor specific (based on modified file)
+editor/src/core/__pycache__/
+editor/src/core/*.pyc
 ```
