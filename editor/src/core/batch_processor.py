@@ -553,7 +553,7 @@ class BatchProcessor:
                         # Pattern для поиска тега с Diameter и ToolId
                         tag_pattern = r'<[^>]*Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])["\']?[^>]*ToolId=["\'][^"\']+["\'][^>]*>'
                         
-                        def fix_tag(full_match):
+                        def fix_tag(full_match: str) -> str:
                             nonlocal tool_count, modified
                             # Извлекаем диаметр из匹配的字符串
                             dia_match = re.search(r'Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])', full_match)
