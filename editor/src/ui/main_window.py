@@ -257,7 +257,18 @@ class MainWindow(QMainWindow):
     
     def _on_load_tools_in_settings(self):
         """Вызывается при нажатии кнопки загрузки инструментов во вкладке настроек."""
-        self._on_load_tools()
+        # Всегда открываем диалог выбора файла при нажатии кнопки во вкладке настроек
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Выберите файл базы инструментов", "",
+            "Tool Library Files (*.tlgx);;All Files (*)"
+        )
+        
+        if file_path:
+            if self._load_tool_database(file_path):
+                # Сохраняем путь
+                self.settings.set_tool_db_path(file_path)
+                self._log(f"💾 Путь сохранен в настройках")
+                self._update_settings_tab()
     
     def _update_settings_tab(self):
         """Обновляет информацию во вкладке настроек после загрузки базы."""
