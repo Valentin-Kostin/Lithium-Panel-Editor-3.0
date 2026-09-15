@@ -1,1 +1,1 @@
-Nothing should be ignored since the changes only include Python source files (.py) and no build artifacts, dependencies, or temporary files.
+(editor/src/ui/main_window.py)

@@ -291,17 +291,9 @@ class MainWindow(QMainWindow):
             self.btn_fix_pgmx.setEnabled(False)
             return False
             
-        e007 = global_tool_db.get_replacement_tool("E007")
-        if e007:
-            self._log(f"✅ База инструментов успешно загружена!")
-            self._log(f"   🎯 Инструмент E007 найден (ID: {e007['id']})")
-            self.btn_fix_pgmx.setEnabled(True)
-            return True
-        else:
-            self._log(f"⚠️ Инструмент E007 НЕ найден в базе!")
-            self._log(f"   Кнопка 'Править .PGMX' останется отключенной.")
-            self.btn_fix_pgmx.setEnabled(False)
-            return False
+        self._log(f"✅ База инструментов успешно загружена!")
+        self.btn_fix_pgmx.setEnabled(True)
+        return True
     
     def load_tool_db_from_settings(self):
         """Загружает базу инструментов при старте приложения если есть сохраненный путь."""
