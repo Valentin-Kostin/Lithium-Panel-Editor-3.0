@@ -116,14 +116,14 @@ class SettingsTab(QWidget):
         main_layout.addWidget(tools_group)
         main_layout.addWidget(table_group, stretch=1)
         
-        # Применяем текущую тему и шрифт при запуске
-        self._apply_theme()
-        self._apply_font_size()
-        
     def connect_signals(self, main_window):
         """Подключение сигналов к методам главного окна."""
         self.btn_load_tools.clicked.connect(lambda: main_window._on_load_tools_in_settings())
         self.btn_refresh_tools.clicked.connect(self._refresh_tools_table)
+        
+        # Применяем текущую тему и шрифт после подключения сигналов
+        self._apply_theme()
+        self._apply_font_size()
         
     def _apply_theme(self):
         """Применение выбранной темы оформления."""
@@ -145,6 +145,25 @@ class SettingsTab(QWidget):
             
         # Обновляем цвета статусных меток
         self._update_status_colors(colors)
+    
+    def _apply_font_size(self):
+        """Применение размера шрифта."""
+        font_size = self.spin_font_size.value()
+        self.settings.set_font_size(font_size)
+        
+        # Пересчитываем размеры для кнопок
+        padding = int(font_size * 0.4)
+        hpadding = int(font_size * 0.8)
+        btn_min_height = int(font_size * 1.8)
+        
+        # Получаем цвета текущей темы
+        theme_name = self.combo_theme.currentText()
+        colors = self.settings.get_theme_colors()
+        
+        # Применяем тему и шрифт через главное окно
+        main_window = self._get_main_window()
+        if main_window:
+            main_window.apply_theme_and_font(colors, font_size, padding, hpadding, btn_min_height)
     
     def _get_main_window(self):
         """Получение ссылки на главное окно MainWindow."""
