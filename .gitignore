@@ -1,1 +1,32 @@
-(editor/src/ui/main_window.py)
+```
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Build/dist directories
+dist/
+build/
+target/
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+.mypy_cache/
+.pytest_cache/
+```
