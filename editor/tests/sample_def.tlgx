@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<main:ToolLibrary xmlns:main="http://schemas.datacontract.org/2004/07/ScmGroup.XCam.ToolDataModel.Common" xmlns:tool="http://schemas.datacontract.org/2004/07/ScmGroup.XCam.ToolDataModel.Tool" xmlns:util="http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Utility">
+  <main:Tools>
+    <main:CoreTool>
+      <util:Name>E007</util:Name>
+      <main:Description>V90 зенковка</main:Description>
+      <tool:ToolDimension>
+        <tool:Diameter>10.0</tool:Diameter>
+      </tool:ToolDimension>
+      <tool:ToolTechnology>
+        <main:SpindleSpeed>
+          <main:Standard>18000</main:Standard>
+        </main:SpindleSpeed>
+      </tool:ToolTechnology>
+    </main:CoreTool>
+    <main:CoreTool>
+      <util:Name>E001</util:Name>
+      <main:Description>Фреза основная</main:Description>
+      <tool:ToolDimension>
+        <tool:Diameter>12.0</tool:Diameter>
+      </tool:ToolDimension>
+      <tool:ToolTechnology>
+        <main:SpindleSpeed>
+          <main:Standard>24000</main:Standard>
+        </main:SpindleSpeed>
+      </tool:ToolTechnology>
+    </main:CoreTool>
+    <main:CoreTool>
+      <util:Name>001</util:Name>
+      <main:Description>Сверло 5мм</main:Description>
+      <tool:ToolDimension>
+        <tool:Diameter>5.0</tool:Diameter>
+      </tool:ToolDimension>
+      <tool:ToolTechnology>
+        <main:SpindleSpeed>
+          <main:Standard>12000</main:Standard>
+        </main:SpindleSpeed>
+      </tool:ToolTechnology>
+    </main:CoreTool>
+  </main:Tools>
+</main:ToolLibrary>
