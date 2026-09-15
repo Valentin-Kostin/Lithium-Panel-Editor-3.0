@@ -371,6 +371,10 @@ class ScxFormatHandler(BaseFormatHandler):
         target_path = output_path or doc.file_info.path
         
         logger.info(f"Сохранение SCX файла: {target_path}")
+        
+        # Проверка наличия XML дерева
+        if doc.xml_tree is None:
+            raise ValueError("XML дерево документа пусто. Невозможно сохранить файл.")
 
         # Сериализация XML
         encoding = doc.file_info.encoding or 'utf-8'

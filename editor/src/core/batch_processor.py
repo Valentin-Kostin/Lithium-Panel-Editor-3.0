@@ -396,7 +396,7 @@ class BatchProcessor:
                         panel_width = float(panel_match.group(2).replace(',', '.'))
                     except: pass
                 
-                if panel_length and panel_width:
+                if panel_length is not None and panel_width is not None:
                     # Ищем все отверстия Type="1" с Face 1, 2, 3, 4
                     hole_pattern = r'(<Machining[^>]*Type=["\']?1["\']?[^>]*Face=["\']?([1-4])["\']?[^>]*>)'
                     
@@ -553,7 +553,7 @@ class BatchProcessor:
                         # Pattern для поиска тега с Diameter и ToolId
                         tag_pattern = r'<[^>]*Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])["\']?[^>]*ToolId=["\'][^"\']+["\'][^>]*>'
                         
-                        def fix_tag(full_match):
+                        def fix_tag(full_match: str) -> str:
                             nonlocal tool_count, modified
                             # Извлекаем диаметр из匹配的字符串
                             dia_match = re.search(r'Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])', full_match)
@@ -576,7 +576,7 @@ class BatchProcessor:
                                 return new_tag
                             return full_match
                         
-                        content = re.sub(tag_pattern, fix_tag, content)
+                        content = re.sub(tag_pattern, fix_tag, content)  # type: ignore[arg-type]
                         new_xml_data[name] = content.encode(encoding)
                         
                     except Exception as e:
