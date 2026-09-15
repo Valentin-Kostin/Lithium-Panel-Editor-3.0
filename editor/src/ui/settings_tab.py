@@ -139,12 +139,22 @@ class SettingsTab(QWidget):
         btn_min_height = int(font_size * 1.8)  # минимальная высота кнопки
         
         # Применяем стили ко всему приложению через главное окно
-        main_window = self.window()
+        main_window = self._get_main_window()
         if main_window:
             main_window.apply_theme_and_font(colors, font_size, padding, hpadding, btn_min_height)
             
         # Обновляем цвета статусных меток
         self._update_status_colors(colors)
+    
+    def _get_main_window(self):
+        """Получение ссылки на главное окно MainWindow."""
+        widget = self
+        while widget:
+            from .main_window import MainWindow
+            if isinstance(widget, MainWindow):
+                return widget
+            widget = widget.parentWidget()
+        return None
         
     def _update_status_colors(self, colors):
         """Обновление цветов статусных меток в соответствии с темой."""
