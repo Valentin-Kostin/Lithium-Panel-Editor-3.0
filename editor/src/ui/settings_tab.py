@@ -147,7 +147,7 @@ class SettingsTab(QWidget):
         self._update_status_colors(colors)
     
     def _apply_font_size(self):
-        """Применение размера шрифта."""
+        """Применение выбранного размера шрифта."""
         font_size = self.spin_font_size.value()
         self.settings.set_font_size(font_size)
         
@@ -185,31 +185,6 @@ class SettingsTab(QWidget):
             self.lbl_tool_status.setStyleSheet("color: #ff6b6b; font-weight: bold;")
         else:
             self.lbl_tool_status.setStyleSheet(f"color: {colors['text_primary']}; font-weight: bold;")
-            
-    def _apply_font_size(self):
-        """Применение выбранного размера шрифта."""
-        font_size = self.spin_font_size.value()
-        self.settings.set_font_size(font_size)
-        
-        # Создаем новый шрифт с выбранным размером
-        font = QFont("Segoe UI", font_size)
-        
-        # Применяем шрифт ко всем виджетам на вкладке
-        self.setFont(font)
-        
-        # Применяем шрифт к таблице
-        self.table_tools.setFont(font)
-        header_font = self.table_tools.horizontalHeader().font()
-        header_font.setPointSize(font_size)
-        header_font.setBold(True)
-        self.table_tools.horizontalHeader().setFont(header_font)
-        
-        # Увеличиваем высоту строк таблицы пропорционально шрифту
-        row_height = int(font_size * 2.2)
-        self.table_tools.verticalHeader().setDefaultSectionSize(row_height)
-        
-        # Пересчитываем и применяем тему с новыми размерами
-        self._apply_theme()
                 
     def update_tool_info(self, file_path: str, is_loaded: bool):
         """Обновление информации о базе инструментов."""
