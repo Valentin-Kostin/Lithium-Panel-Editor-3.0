@@ -264,16 +264,19 @@ class MainWindow(QMainWindow):
         )
         
         if file_path:
+            self._log(f"\n📁 Выбран файл: {file_path}")
             if self._load_tool_database(file_path):
                 # Сохраняем путь
                 self.settings.set_tool_db_path(file_path)
-                self._log(f"💾 Путь сохранен в настройках")
+                self._log(f"💾 Путь сохранен в настройках: {file_path}")
                 self._update_settings_tab()
     
     def _update_settings_tab(self):
         """Обновляет информацию во вкладке настроек после загрузки базы."""
         saved_path = self.settings.get_tool_db_path()
         is_loaded = global_tool_db.is_loaded
+        # Принудительно обновляем текст метки, даже если путь не изменился
+        self.settings_tab.lbl_tool_path.setText(f"Путь к базе инструментов: {saved_path}")
         self.settings_tab.update_tool_info(saved_path, is_loaded)
         self.settings_tab._refresh_tools_table()
     

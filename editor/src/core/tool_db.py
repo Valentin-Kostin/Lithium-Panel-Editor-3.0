@@ -1,5 +1,5 @@
 """
-Модуль для работы с базой инструментов (def.tlgx).
+Модуль для работы с базой инструментов (*.tlgx).
 Парсит XML файл библиотеки инструментов и предоставляет доступ к данным.
 """
 import xml.etree.ElementTree as ET
@@ -29,7 +29,7 @@ class ToolDB:
         Загружает базу инструментов из файла .tlgx.
         
         Args:
-            file_path: Путь к файлу def.tlgx
+            file_path: Путь к файлу *.tlgx (имя файла может быть любым)
             
         Returns:
             True если загрузка успешна, иначе False.
@@ -40,7 +40,7 @@ class ToolDB:
             return False
 
         try:
-            # def.tlgx имеет сложные namespaces SCM Group
+            # Файл .tlgx имеет сложные namespaces SCM Group
             tree = ET.parse(path)
             root = tree.getroot()
             

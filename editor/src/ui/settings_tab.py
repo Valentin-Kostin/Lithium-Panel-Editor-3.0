@@ -85,7 +85,7 @@ class SettingsTab(QWidget):
         btn_layout = QHBoxLayout()
         
         self.btn_load_tools = QPushButton("📂 Загрузить базу инструментов")
-        self.btn_load_tools.setToolTip("Выбрать файл def.tlgx с базой инструментов")
+        self.btn_load_tools.setToolTip("Выбрать файл *.tlgx с базой инструментов (имя файла может быть любым)")
         self.btn_load_tools.setMinimumHeight(40)
         
         btn_layout.addWidget(self.btn_load_tools)
