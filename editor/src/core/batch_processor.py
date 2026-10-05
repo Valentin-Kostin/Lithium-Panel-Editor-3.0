@@ -588,18 +588,35 @@ class BatchProcessor:
                 key_m = re.search(r'<Key xmlns="[^"]*"><ID>(\d+)</ID>', op)
                 if not key_m or key_m.group(1) not in target_op_ids:
                     return op
-                tk_m = re.search(r'<ToolKey[^>]*>.*?</ToolKey>', op, re.S)
+                tk_m = re.search(r'<ToolKey\b[^>]*>.*?</ToolKey>', op, re.S)
                 if not tk_m:
                     return op
                 old_tk = tk_m.group(0)
-                ns_attr_m = re.search(r'\sxmlns:([a-zA-Z0-9]+)="([^"]*)"', old_tk)
+                # ВАЖНО: префикс пространства имён берём ТОЛЬКО из локального
+                # объявления на самом элементе <ToolKey xmlns:b="...">.
+                # Наследование префиксов от предков здесь недопустимо: в PGMX
+                # (XmlSerializer) один и тот же префикс (например "b") объявлен
+                # на разных элементах с РАЗНЫми URI. Если подставить URI Utility
+                # с префиксом, который у предка занят другим namespace, получится
+                # конфликт деклараций -> XCAM: "Префикс \"b\" не определён".
+                ns_attr_m = re.search(r'\bxmlns:([a-zA-Z0-9_]+)="([^"]*)"', old_tk)
                 if ns_attr_m:
                     prefix, uri = ns_attr_m.group(1), ns_attr_m.group(2)
                 else:
-                    prefix, uri = 'b', self._NS_UTILITY
+                    # нет локальной декларации — переиспользовать префикс/URI
+                    # из первого дочернего элемента (обычно <b:ID>)
+                    child_ns_m = re.search(
+                        r'<([a-zA-Z0-9_]+):ID>', old_tk)
+                    if child_ns_m:
+                        prefix = child_ns_m.group(1)
+                        decl_m = re.search(
+                            r'xmlns:%s="([^"]*)"' % re.escape(prefix), op)
+                        uri = decl_m.group(1) if decl_m else self._NS_UTILITY
+                    else:
+                        prefix, uri = 'b', self._NS_UTILITY
                 tid = tool_ids_by_name.get(replacement_id, '0')
                 new_tk = (
-                    f'<ToolKey {prefix}="{uri}">'
+                    f'<ToolKey xmlns:{prefix}="{uri}">'
                     f'<{prefix}:ID>{tid}</{prefix}:ID>'
                     f'<{prefix}:ObjectType>ScmGroup.XCam.ToolDataModel.Tool.CuttingTool</{prefix}:ObjectType>'
                     f'<{prefix}:Name>{replacement_id}</{prefix}:Name></ToolKey>'
