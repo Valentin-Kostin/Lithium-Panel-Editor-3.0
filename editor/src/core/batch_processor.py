@@ -508,7 +508,8 @@ class BatchProcessor:
 
         Алгоритм (реальный формат PGMX):
         1. В <Features> находятся ManufacturingFeature i:type="a:RoundHole" — отверстия
-           сверловки с диаметром <a:Diameter> и ссылкой на операцию сверления
+           сверловки с диаметром <a:Diameter>, глубиной <Depth><EndDepth>/<StartDepth>
+           и ссылкой на операцию сверления
            <OperationIDs><b:ReferenceKey><b:ID>N</b:ID>...DrillingOperation...
         2. Для каждого RoundHole с диаметром 2.15-2.30 мм находится операция
            DrillingOperation с ID==N, у которой заменяется <ToolKey> на инструмент
@@ -516,9 +517,15 @@ class BatchProcessor:
            <b:Name>E007</b:Name>
         3. Диаметр отверстия (<a:Diameter> в RoundHole) устанавливается равным
            диаметру фрезы замены (из базы инструментов, например 0.1 мм для E007)
+        4. Отверстия Ø2.5 мм: если глубина (|EndDepth - StartDepth|) больше 5 мм,
+           глубина ограничивается 5 мм (максимум для сверла Ø2.5).
+           Если глубина <= 5 мм — привязка инструмента не требуется.
+        5. Отверстия точного диаметра 3 мм и/или 2 мм: диаметр меняется на 2.5 мм,
+           глубина устанавливается 3 мм.
 
         Returns:
-            (количество замененных инструментов, был ли изменён файл)
+            (заменено инструментов, файл изменён,
+             ограничено глубин Ø2.5, исправлено отверстий Ø3/Ø2)
         """
         tool_ids_by_name: Dict[str, str] = {}
         tool_diameters_by_name: Dict[str, float] = {}
@@ -564,6 +571,8 @@ class BatchProcessor:
 
         # 2) Обрабатываем XML проекта
         replacements = 0
+        depth_fixes = 0       # ограничены глубины у отверстий Ø2.5 (>5 мм → 5 мм)
+        dia32_fixes = 0       # отверстия Ø3/Ø2 → Ø2.5, глубина 3 мм
         new_raw = dict(raw_files)
         for name, data in raw_files.items():
             if not name.lower().endswith('.xml'):
@@ -575,12 +584,16 @@ class BatchProcessor:
 
             # a) Собираем ID операций сверления для целевых отверстий (Ø 2.15-2.30)
             target_op_ids = set()
-            hole_spans = []  # (start, end, new_dia_text) — правки диаметров отверстий
+            hole_spans = []  # (start, end, new_text) — правки диаметров/глубин отверстий
+            # ВАЖНО: .*? с re.S не должен перескакивать закрывающий тег иначе
+            # матч может «склеить» несколько элементов и позиции правок сместятся
             for feat_m in re.finditer(
-                r'<ManufacturingFeature i:type="a:RoundHole".*?</ManufacturingFeature>',
+                r'<ManufacturingFeature i:type="a:RoundHole"'
+                r'(?:(?!</ManufacturingFeature>).)*?</ManufacturingFeature>',
                 content, re.S
             ):
                 feat = feat_m.group(0)
+                base = feat_m.start()
                 dia_m = re.search(r'<a:Diameter>([\d.,]+)</a:Diameter>', feat)
                 op_m = re.search(
                     r'<b:ReferenceKey><b:ID>(\d+)</b:ID>'
@@ -598,21 +611,68 @@ class BatchProcessor:
                     # Диаметр holes должен соответствовать диаметру фрезы замены
                     if eff_tool_dia > 0 and abs(dia - eff_tool_dia) > 1e-9:
                         new_dia = f"{eff_tool_dia:g}"
-                        span_start = feat_m.start() + dia_m.start(1)
-                        span_end = feat_m.start() + dia_m.end(1)
+                        span_start = base + dia_m.start(1)
+                        span_end = base + dia_m.end(1)
                         hole_spans.append((span_start, span_end, new_dia))
                         self.log(f"   📏 Диаметр отверстия: {dia_m.group(1)} → {new_dia} мм "
                                  f"(диаметр фрезы {replacement_id})")
 
-            if not target_op_ids:
+                elif abs(dia - 2.5) < 1e-9:
+                    # Правило Ø2.5: максимальная глубина сверления 5 мм
+                    dep_m = re.search(
+                        r'<Depth>\s*<EndDepth>([\d.,\-]+)</EndDepth>\s*'
+                        r'<StartDepth>([\d.,\-]+)</StartDepth>\s*</Depth>', feat)
+                    if dep_m:
+                        try:
+                            end_d = float(dep_m.group(1).replace(',', '.'))
+                            start_d = float(dep_m.group(2).replace(',', '.'))
+                        except ValueError:
+                            end_d = start_d = 0.0
+                        hole_depth = abs(end_d - start_d)
+                        if hole_depth > 5.0 + 1e-9:
+                            span_start = base + dep_m.start(1)
+                            span_end = base + dep_m.end(1)
+                            hole_spans.append(
+                                (span_start, span_end, f"{start_d + 5.0:g}"))
+                            depth_fixes += 1
+                            self.log(f"   ⛔ Отверстие Ø2.5: глубина {hole_depth:g} мм > 5 мм "
+                                     f"→ ограничена 5 мм (максимум для сверла Ø2.5)")
+
+                elif abs(dia - 3.0) < 1e-9 or abs(dia - 2.0) < 1e-9:
+                    # Правило Ø3/Ø2: диаметр → 2.5 мм, глубина → 3 мм
+                    span_start = base + dia_m.start(1)
+                    span_end = base + dia_m.end(1)
+                    hole_spans.append((span_start, span_end, '2.5'))
+                    dep_m = re.search(
+                        r'<Depth>\s*<EndDepth>([\d.,\-]+)</EndDepth>\s*'
+                        r'<StartDepth>([\d.,\-]+)</StartDepth>\s*</Depth>', feat)
+                    if dep_m:
+                        try:
+                            start_d = float(dep_m.group(2).replace(',', '.'))
+                        except ValueError:
+                            start_d = 0.0
+                        hole_spans.append(
+                            (base + dep_m.start(1), base + dep_m.end(1),
+                             f"{start_d + 3.0:g}"))
+                    dia32_fixes += 1
+                    self.log(f"   🔄 Отверстие Ø{dia:g} мм → Ø2.5 мм, глубина 3 мм")
+
+            if not (target_op_ids or hole_spans):
                 continue
 
-            # a2) Применяем правки диаметров отверстий (по позициям, справа налево)
-            if hole_spans:
-                content_chars = list(content)
-                for s, e, val in sorted(hole_spans, reverse=True):
-                    content_chars[s:e] = list(val)
-                content = ''.join(content_chars)
+            # a2) Применяем правки диаметров/глубин отверстий.
+            #     Каждую правку ищем как точное вхождение текущего текста span
+            #     и заменяем на новое значение — так позиции не зависят от
+            #     предыдущих замен и не «съезжают» при разной длине чисел.
+            for s, e, val in sorted(hole_spans, reverse=True):
+                old_text = content[s:e]
+                if old_text == val:
+                    continue  # уже исправлено — идемпотентность
+                idx = content.find(old_text, max(0, s - 500))
+                if idx == -1:
+                    self.log(f"   ⚠️ Не удалось применить правку '{old_text}' → '{val}'")
+                    continue
+                content = content[:idx] + val + content[idx + len(old_text):]
 
             # b) В этих операциях заменяем ToolKey на инструмент замены
             def fix_operation(op_m: re.Match) -> str:
@@ -664,18 +724,21 @@ class BatchProcessor:
                 r'<Operation i:type="a:DrillingOperation".*?</Operation>',
                 fix_operation, content, flags=re.S)
 
-            if new_content != content:
+            # Сохраняем файл при ЛЮБЫХ изменениях XML (правки отверстий и/или
+            # замена инструмента), а не только при замене инструмента
+            if new_content != data.decode('utf-8', errors='replace'):
                 new_raw[name] = new_content.encode('utf-8')
 
-        # 3) Пересобираем архив (полностью, все файлы), только если были замены
-        if replacements > 0:
+        # 3) Пересобираем архив (полностью, все файлы), только если были изменения
+        if any(new_raw[k] != raw_files[k] for k in raw_files):
             tmp_path = file_path.with_name(file_path.name + '.tmp')
             with zipfile.ZipFile(tmp_path, 'w', zipfile.ZIP_DEFLATED) as zout:
                 for item in entries:
                     zout.writestr(item, new_raw[item.filename])
             os.replace(tmp_path, file_path)
 
-        return replacements, replacements > 0
+        changed = any(new_raw[k] != raw_files[k] for k in raw_files)
+        return replacements, changed, depth_fixes, dia32_fixes
 
     def fix_pgmx_batch(self) -> Dict:
         """
@@ -685,14 +748,17 @@ class BatchProcessor:
         """
         if not global_tool_db.is_loaded:
             self.log("❌ База инструментов не загружена! Нажмите 'База инструментов' сначала.")
-            return {'processed': 0, 'tools_replaced': 0, 'errors': 0}
+            return {'processed': 0, 'tools_replaced': 0, 'errors': 0,
+                   'depth_limited': 0, 'holes_3_2_fixed': 0}
 
         if not self.pgmx_files:
             self.log("Нет файлов .PGMX для обработки")
-            return {'processed': 0, 'tools_replaced': 0, 'errors': 0}
+            return {'processed': 0, 'tools_replaced': 0, 'errors': 0,
+                   'depth_limited': 0, 'holes_3_2_fixed': 0}
 
         self.log("=== Начало исправления файлов .PGMX (SCM) ===")
-        stats = {'processed': 0, 'tools_replaced': 0, 'errors': 0}
+        stats = {'processed': 0, 'tools_replaced': 0, 'errors': 0,
+               'depth_limited': 0, 'holes_3_2_fixed': 0}
 
         # Получаем данные о фрезе E007
         replacement_tool = global_tool_db.get_replacement_tool("E007")
@@ -708,12 +774,21 @@ class BatchProcessor:
         for file_path in self.pgmx_files:
             try:
                 self.log(f"Обработка файла: {file_path.name}")
-                count, changed = self._fix_single_pgmx(
+                count, changed, dfix, diafix = self._fix_single_pgmx(
                     file_path, replacement_id, replacement_dia)
+                stats['depth_limited'] += dfix
+                stats['holes_3_2_fixed'] += diafix
                 if changed:
                     stats['processed'] += 1
                     stats['tools_replaced'] += count
-                    self.log(f"   ✅ Файл сохранен. Заменено инструментов: {count}")
+                    extra = []
+                    if count:
+                        extra.append(f"заменено инструментов: {count}")
+                    if dfix:
+                        extra.append(f"ограничено глубин (Ø2.5): {dfix}")
+                    if diafix:
+                        extra.append(f"исправлено отверстий (Ø3/Ø2 → Ø2.5): {diafix}")
+                    self.log("   ✅ Файл сохранен. " + "; ".join(extra))
                 else:
                     self.log(f"   - Изменений не требуется")
             except zipfile.BadZipFile:
@@ -723,7 +798,10 @@ class BatchProcessor:
                 logger.exception(e)
                 stats['errors'] += 1
 
-        self.log(f"=== Завершено. Обработано файлов: {stats['processed']}, заменено инструментов: {stats['tools_replaced']} ===")
+        self.log(f"=== Завершено. Обработано файлов: {stats['processed']}, "
+                 f"заменено инструментов: {stats['tools_replaced']}, "
+                 f"ограничено глубин Ø2.5: {stats['depth_limited']}, "
+                 f"исправлено отверстий Ø3/Ø2: {stats['holes_3_2_fixed']} ===")
         return stats
 
 
