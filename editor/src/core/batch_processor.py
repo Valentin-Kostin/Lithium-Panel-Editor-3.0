@@ -524,6 +524,7 @@ class BatchProcessor:
         self.log(f"Инструмент замены: ID={replacement_tool['id']}, Name={replacement_tool['name']}")
         
         for file_path in self.pgmx_files:
+            temp_zip = None
             try:
                 self.log(f"Обработка файла: {file_path.name}")
                 
@@ -594,13 +595,13 @@ class BatchProcessor:
                     self.log(f"   - Изменений не требуется")
                     
                 # Удаляем временный файл если остался
-                if temp_zip.exists():
+                if temp_zip and temp_zip.exists():
                     temp_zip.unlink()
                     
             except Exception as e:
                 self.log(f"   ❌ Ошибка обработки {file_path.name}: {e}")
                 stats['errors'] += 1
-                if temp_zip.exists():
+                if temp_zip and temp_zip.exists():
                     temp_zip.unlink()
                     
         self.log(f"=== Завершено. Обработано файлов: {stats['processed']}, заменено инструментов: {stats['tools_replaced']} ===")
