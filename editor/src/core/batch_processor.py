@@ -501,7 +501,8 @@ class BatchProcessor:
     # Namespace Utility SCM XCam (используется в <Name>, <Key>, <ToolKey>)
     _NS_UTILITY = "http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Utility"
 
-    def _fix_single_pgmx(self, file_path: Path, replacement_id: str) -> Tuple[int, bool]:
+    def _fix_single_pgmx(self, file_path: Path, replacement_id: str,
+                        replacement_diameter: float = 0.0) -> Tuple[int, bool]:
         """
         Исправляет один .PGMX файл (ZIP-архив проекта SCM XCAM).
 
@@ -513,18 +514,22 @@ class BatchProcessor:
            DrillingOperation с ID==N, у которой заменяется <ToolKey> на инструмент
            замены: <b:ID>id из def.tlgx</b:ID><b:ObjectType>...CuttingTool</b:ObjectType>
            <b:Name>E007</b:Name>
+        3. Диаметр отверстия (<a:Diameter> в RoundHole) устанавливается равным
+           диаметру фрезы замены (из базы инструментов, например 0.1 мм для E007)
 
         Returns:
             (количество замененных инструментов, был ли изменён файл)
         """
         tool_ids_by_name: Dict[str, str] = {}
+        tool_diameters_by_name: Dict[str, float] = {}
 
         with zipfile.ZipFile(file_path, 'r') as zin:
             entries = zin.infolist()
             raw_files = {item.filename: zin.read(item.filename) for item in entries}
 
         # 1) Читаем библиотеку инструментов def.tlgx (если есть в архиве),
-        #    чтобы получить числовой ID инструмента E007 для корректной привязки в XCAM
+        #    чтобы получить числовой ID и диаметр инструмента E007 для
+        #    корректной привязки в XCAM
         for name, data in raw_files.items():
             if name.lower().endswith('.tlgx'):
                 try:
@@ -537,6 +542,14 @@ class BatchProcessor:
                         idm = re.search(r'<Key xmlns="[^"]*"><ID>(\d+)</ID>', block)
                         if nm and idm:
                             tool_ids_by_name[nm.group(1)] = idm.group(1)
+                            dim_m = re.search(
+                                r'<(?:[A-Za-z0-9_]+:)?Diameter>\s*([\d.,]+)\s*</', block)
+                            if dim_m:
+                                try:
+                                    tool_diameters_by_name[nm.group(1)] = \
+                                        float(dim_m.group(1).replace(',', '.'))
+                                except ValueError:
+                                    pass
                 except Exception as e:
                     self.log(f"   ⚠️ Не удалось прочитать библиотеку инструментов {name}: {e}")
                 break
@@ -544,6 +557,10 @@ class BatchProcessor:
         if replacement_id not in tool_ids_by_name:
             self.log(f"   ⚠️ Инструмент {replacement_id} не найден в библиотеке архива "
                      f"({file_path.name}), ID будет установлен как 0 (привязка только по имени)")
+
+        # Диаметр фрезы замены: сначала из библиотеки архива (def.tlgx),
+        # при отсутствии — из загруженной базы инструментов
+        eff_tool_dia = tool_diameters_by_name.get(replacement_id) or replacement_diameter
 
         # 2) Обрабатываем XML проекта
         replacements = 0
@@ -558,6 +575,7 @@ class BatchProcessor:
 
             # a) Собираем ID операций сверления для целевых отверстий (Ø 2.15-2.30)
             target_op_ids = set()
+            hole_spans = []  # (start, end, new_dia_text) — правки диаметров отверстий
             for feat_m in re.finditer(
                 r'<ManufacturingFeature i:type="a:RoundHole".*?</ManufacturingFeature>',
                 content, re.S
@@ -577,9 +595,24 @@ class BatchProcessor:
                 if 2.15 <= dia <= 2.30:
                     target_op_ids.add(op_m.group(1))
                     self.log(f"   🔩 Отверстие Ø{dia:g} мм → операция {op_m.group(1)}")
+                    # Диаметр holes должен соответствовать диаметру фрезы замены
+                    if eff_tool_dia > 0 and abs(dia - eff_tool_dia) > 1e-9:
+                        new_dia = f"{eff_tool_dia:g}"
+                        span_start = feat_m.start() + dia_m.start(1)
+                        span_end = feat_m.start() + dia_m.end(1)
+                        hole_spans.append((span_start, span_end, new_dia))
+                        self.log(f"   📏 Диаметр отверстия: {dia_m.group(1)} → {new_dia} мм "
+                                 f"(диаметр фрезы {replacement_id})")
 
             if not target_op_ids:
                 continue
+
+            # a2) Применяем правки диаметров отверстий (по позициям, справа налево)
+            if hole_spans:
+                content_chars = list(content)
+                for s, e, val in sorted(hole_spans, reverse=True):
+                    content_chars[s:e] = list(val)
+                content = ''.join(content_chars)
 
             # b) В этих операциях заменяем ToolKey на инструмент замены
             def fix_operation(op_m: re.Match) -> str:
@@ -668,12 +701,15 @@ class BatchProcessor:
             return stats
 
         replacement_id = str(replacement_tool['id'])
-        self.log(f"Инструмент замены: ID={replacement_id}, Name={replacement_tool['name']}")
+        replacement_dia = float(replacement_tool.get('diameter', 0) or 0.0)
+        self.log(f"Инструмент замены: ID={replacement_id}, Name={replacement_tool['name']}, "
+                 f"Ø={replacement_dia:g} мм")
 
         for file_path in self.pgmx_files:
             try:
                 self.log(f"Обработка файла: {file_path.name}")
-                count, changed = self._fix_single_pgmx(file_path, replacement_id)
+                count, changed = self._fix_single_pgmx(
+                    file_path, replacement_id, replacement_dia)
                 if changed:
                     stats['processed'] += 1
                     stats['tools_replaced'] += count
