@@ -545,59 +545,68 @@ class BatchProcessor:
                             
                 # Обрабатываем каждый XML внутри архива
                 new_xml_data = {}
+
+                def fix_tag(match: re.Match) -> str:
+                    """Заменяет ToolId в теге, если диаметр сверления 2.15-2.30 мм."""
+                    nonlocal tool_count, modified
+                    full_tag = match.group(0)
+                    # Извлекаем диаметр из найденного тега
+                    dia_match = re.search(r'Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])', full_tag)
+                    if not dia_match:
+                        return full_tag
+
+                    dia_str = dia_match.group(1)
+                    try:
+                        dia = float(dia_str.replace(',', '.'))
+                    except ValueError:
+                        return full_tag
+
+                    if 2.15 <= dia <= 2.30:
+                        # Заменяем ToolId в этом теге (если там ещё не инструмент замены)
+                        new_tag = re.sub(
+                            r'ToolId=["\'](?!' + re.escape(str(replacement_tool["id"])) + r'["\'])[^"\']+["\']',
+                            f'ToolId="{replacement_tool["id"]}"', full_tag)
+                        if new_tag != full_tag:
+                            tool_count += 1
+                            modified = True
+                            self.log(f"   🔧 Найдено сверло Ø{dia:.2f}, замена ToolId на {replacement_tool['id']}")
+                        return new_tag
+                    return full_tag
+
+                # Pattern для поиска тега с Diameter (2.15-2.30) и ToolId
+                tag_pattern = r'<[^>]*Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])["\']?[^>]*ToolId=["\'][^"\']+["\'][^>]*>'
+
                 for name, data in xml_data.items():
                     try:
                         encoding = detect_encoding(data) if isinstance(data, bytes) else 'utf-8'
                         content = data.decode(encoding) if isinstance(data, bytes) else data
-                        
+
                         # Ищем операции сверления с диаметром ~2.22 и заменяем ToolId на E007
-                        # Pattern для поиска тега с Diameter и ToolId
-                        tag_pattern = r'<[^>]*Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])["\']?[^>]*ToolId=["\'][^"\']+["\'][^>]*>'
-                        
-                        def fix_tag(full_match: str) -> str:
-                            nonlocal tool_count, modified
-                            # Извлекаем диаметр из匹配的字符串
-                            dia_match = re.search(r'Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])', full_match)
-                            if not dia_match:
-                                return full_match
-                            
-                            dia_str = dia_match.group(1)
-                            try:
-                                dia = float(dia_str.replace(',', '.'))
-                            except:
-                                return full_match
-                                
-                            if 2.15 <= dia <= 2.30:
-                                # Заменяем ToolId в этом теге
-                                new_tag = re.sub(r'ToolId=["\'][^"\']+["\']', f'ToolId="{replacement_tool["id"]}"', full_match)
-                                if new_tag != full_match:
-                                    tool_count += 1
-                                    modified = True
-                                    self.log(f"   🔧 Найдено сверло Ø{dia:.2f}, замена ToolId на {replacement_tool['id']}")
-                                return new_tag
-                            return full_match
-                        
-                        content = re.sub(tag_pattern, fix_tag, content)  # type: ignore[arg-type]
+                        content = re.sub(tag_pattern, fix_tag, content)
                         new_xml_data[name] = content.encode(encoding)
-                        
+
                     except Exception as e:
                         self.log(f"   Ошибка парсинга XML {name}: {e}")
-                        
-                # Если были изменения, сохраняем новый ZIP
+
+                # Если были изменения, сохраняем новый ZIP (полностью, со всеми файлами архива)
                 if modified:
-                    with zipfile.ZipFile(file_path, 'w') as zout:
-                        for name, data in new_xml_data.items():
-                            zout.writestr(name, data)
+                    with zipfile.ZipFile(temp_zip, 'r') as zin_src, \
+                         zipfile.ZipFile(file_path, 'w', zipfile.ZIP_DEFLATED) as zout:
+                        for item in zin_src.infolist():
+                            if item.filename in new_xml_data:
+                                zout.writestr(item, new_xml_data[item.filename])
+                            else:
+                                zout.writestr(item, zin_src.read(item.filename))
                     stats['processed'] += 1
                     stats['tools_replaced'] += tool_count
                     self.log(f"   ✅ Файл сохранен. Заменено инструментов: {tool_count}")
                 else:
                     self.log(f"   - Изменений не требуется")
-                    
+
                 # Удаляем временный файл если остался
                 if temp_zip and temp_zip.exists():
                     temp_zip.unlink()
-                    
+
             except Exception as e:
                 self.log(f"   ❌ Ошибка обработки {file_path.name}: {e}")
                 stats['errors'] += 1
