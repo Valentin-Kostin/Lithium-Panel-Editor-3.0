@@ -4,7 +4,7 @@
 """
 
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 import logging
 
 try:
@@ -20,14 +20,14 @@ PRIORITY_ENCODINGS = ['utf-8', 'utf-8-sig', 'gb18030', 'gbk', 'windows-1251', 'c
 
 
 def detect_encoding(
-    file_path: Path,
+    file_path: Union[Path, bytes],
     priority_encodings: Optional[list] = None
 ) -> str:
     """
     Определение кодировки файла.
 
     Args:
-        file_path: Путь к файлу.
+        file_path: Путь к файлу или байтовые данные.
         priority_encodings: Список кодировок для приоритетной проверки.
 
     Returns:
@@ -35,17 +35,21 @@ def detect_encoding(
     """
     encodings_to_try = priority_encodings or PRIORITY_ENCODINGS
 
-    if not file_path.exists():
-        logger.warning(f"Файл не найден: {file_path}")
-        return 'utf-8'
+    # Если переданы байтовые данные, определяем кодировку по ним
+    if isinstance(file_path, bytes):
+        raw_data = file_path
+    else:
+        if not file_path.exists():
+            logger.warning(f"Файл не найден: {file_path}")
+            return 'utf-8'
 
-    # Чтение первых байтов файла
-    try:
-        with open(file_path, 'rb') as f:
-            raw_data = f.read(4096)  # Первые 4KB
-    except IOError as e:
-        logger.error(f"Ошибка чтения файла {file_path}: {e}")
-        return 'utf-8'
+        # Чтение первых байтов файла
+        try:
+            with open(file_path, 'rb') as f:
+                raw_data = f.read(4096)  # Первые 4KB
+        except IOError as e:
+            logger.error(f"Ошибка чтения файла {file_path}: {e}")
+            return 'utf-8'
 
     # Проверка XML declaration
     xml_decl = raw_data[:200].decode('ascii', errors='ignore')

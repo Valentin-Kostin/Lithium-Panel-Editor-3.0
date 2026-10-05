@@ -521,13 +521,14 @@ class MainWindow(QMainWindow):
             
         # Проверяем загружена ли база инструментов
         tool_db = global_tool_db
-        if tool_db is None or not tool_db.tools:
+        if tool_db is None or not tool_db.is_loaded:
             self._log("\n⚠️ База инструментов не загружена! Укажите путь к файлу базы (*.tlgx) в настройках.")
             return
             
         e007_id = global_tool_db.get_replacement_tool("E007")
         if not e007_id:
-            self._log("\n⚠️ Инструмент E007 не найден в базе!")
+            self._log("\n❌ Инструмент E007 не найден в базе!")
+            self._log("💡 Загрузите базу инструментов, содержащую фрезу E007, через вкладку 'Настройки'")
             return
             
         self._log(f"\n{'='*60}")
