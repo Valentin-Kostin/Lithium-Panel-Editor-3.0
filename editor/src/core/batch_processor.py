@@ -498,123 +498,181 @@ class BatchProcessor:
         self.log(f"=== Завершено. Обработано файлов: {stats['processed']} ===")
         return stats
 
+    # Namespace Utility SCM XCam (используется в <Name>, <Key>, <ToolKey>)
+    _NS_UTILITY = "http://schemas.datacontract.org/2004/07/ScmGroup.XCam.MachiningDataModel.Utility"
+
+    def _fix_single_pgmx(self, file_path: Path, replacement_id: str) -> Tuple[int, bool]:
+        """
+        Исправляет один .PGMX файл (ZIP-архив проекта SCM XCAM).
+
+        Алгоритм (реальный формат PGMX):
+        1. В <Features> находятся ManufacturingFeature i:type="a:RoundHole" — отверстия
+           сверловки с диаметром <a:Diameter> и ссылкой на операцию сверления
+           <OperationIDs><b:ReferenceKey><b:ID>N</b:ID>...DrillingOperation...
+        2. Для каждого RoundHole с диаметром 2.15-2.30 мм находится операция
+           DrillingOperation с ID==N, у которой заменяется <ToolKey> на инструмент
+           замены: <b:ID>id из def.tlgx</b:ID><b:ObjectType>...CuttingTool</b:ObjectType>
+           <b:Name>E007</b:Name>
+
+        Returns:
+            (количество замененных инструментов, был ли изменён файл)
+        """
+        tool_ids_by_name: Dict[str, str] = {}
+
+        with zipfile.ZipFile(file_path, 'r') as zin:
+            entries = zin.infolist()
+            raw_files = {item.filename: zin.read(item.filename) for item in entries}
+
+        # 1) Читаем библиотеку инструментов def.tlgx (если есть в архиве),
+        #    чтобы получить числовой ID инструмента E007 для корректной привязки в XCAM
+        for name, data in raw_files.items():
+            if name.lower().endswith('.tlgx'):
+                try:
+                    tlg = data.decode('utf-8', errors='replace')
+                    for m in re.finditer(r'<CoreTool\b.*?</CoreTool>', tlg, re.S):
+                        block = m.group(0)
+                        nm = re.search(
+                            r'<Name xmlns="%s">([^<]+)</Name>' % re.escape(self._NS_UTILITY),
+                            block)
+                        idm = re.search(r'<Key xmlns="[^"]*"><ID>(\d+)</ID>', block)
+                        if nm and idm:
+                            tool_ids_by_name[nm.group(1)] = idm.group(1)
+                except Exception as e:
+                    self.log(f"   ⚠️ Не удалось прочитать библиотеку инструментов {name}: {e}")
+                break
+
+        if replacement_id not in tool_ids_by_name:
+            self.log(f"   ⚠️ Инструмент {replacement_id} не найден в библиотеке архива "
+                     f"({file_path.name}), ID будет установлен как 0 (привязка только по имени)")
+
+        # 2) Обрабатываем XML проекта
+        replacements = 0
+        new_raw = dict(raw_files)
+        for name, data in raw_files.items():
+            if not name.lower().endswith('.xml'):
+                continue
+            try:
+                content = data.decode('utf-8')
+            except UnicodeDecodeError:
+                content = data.decode('utf-8', errors='replace')
+
+            # a) Собираем ID операций сверления для целевых отверстий (Ø 2.15-2.30)
+            target_op_ids = set()
+            for feat_m in re.finditer(
+                r'<ManufacturingFeature i:type="a:RoundHole".*?</ManufacturingFeature>',
+                content, re.S
+            ):
+                feat = feat_m.group(0)
+                dia_m = re.search(r'<a:Diameter>([\d.,]+)</a:Diameter>', feat)
+                op_m = re.search(
+                    r'<b:ReferenceKey><b:ID>(\d+)</b:ID>'
+                    r'<b:ObjectType>ScmGroup\.XCam\.MachiningDataModel\.Drilling\.DrillingOperation',
+                    feat)
+                if not (dia_m and op_m):
+                    continue
+                try:
+                    dia = float(dia_m.group(1).replace(',', '.'))
+                except ValueError:
+                    continue
+                if 2.15 <= dia <= 2.30:
+                    target_op_ids.add(op_m.group(1))
+                    self.log(f"   🔩 Отверстие Ø{dia:g} мм → операция {op_m.group(1)}")
+
+            if not target_op_ids:
+                continue
+
+            # b) В этих операциях заменяем ToolKey на инструмент замены
+            def fix_operation(op_m: re.Match) -> str:
+                nonlocal replacements
+                op = op_m.group(0)
+                key_m = re.search(r'<Key xmlns="[^"]*"><ID>(\d+)</ID>', op)
+                if not key_m or key_m.group(1) not in target_op_ids:
+                    return op
+                tk_m = re.search(r'<ToolKey[^>]*>.*?</ToolKey>', op, re.S)
+                if not tk_m:
+                    return op
+                old_tk = tk_m.group(0)
+                ns_attr_m = re.search(r'\sxmlns:([a-zA-Z0-9]+)="([^"]*)"', old_tk)
+                if ns_attr_m:
+                    prefix, uri = ns_attr_m.group(1), ns_attr_m.group(2)
+                else:
+                    prefix, uri = 'b', self._NS_UTILITY
+                tid = tool_ids_by_name.get(replacement_id, '0')
+                new_tk = (
+                    f'<ToolKey {prefix}="{uri}">'
+                    f'<{prefix}:ID>{tid}</{prefix}:ID>'
+                    f'<{prefix}:ObjectType>ScmGroup.XCam.ToolDataModel.Tool.CuttingTool</{prefix}:ObjectType>'
+                    f'<{prefix}:Name>{replacement_id}</{prefix}:Name></ToolKey>'
+                )
+                if new_tk == old_tk:
+                    return op  # уже привязан инструмент замены — идемпотентность
+                replacements += 1
+                self.log(f"   🔧 Замена инструмента на {replacement_id} в операции {key_m.group(1)}")
+                return op[:tk_m.start()] + new_tk + op[tk_m.end():]
+
+            new_content = re.sub(
+                r'<Operation i:type="a:DrillingOperation".*?</Operation>',
+                fix_operation, content, flags=re.S)
+
+            if new_content != content:
+                new_raw[name] = new_content.encode('utf-8')
+
+        # 3) Пересобираем архив (полностью, все файлы), только если были замены
+        if replacements > 0:
+            tmp_path = file_path.with_name(file_path.name + '.tmp')
+            with zipfile.ZipFile(tmp_path, 'w', zipfile.ZIP_DEFLATED) as zout:
+                for item in entries:
+                    zout.writestr(item, new_raw[item.filename])
+            os.replace(tmp_path, file_path)
+
+        return replacements, replacements > 0
+
     def fix_pgmx_batch(self) -> Dict:
         """
         Исправляет все .PGMX файлы:
-        - Ищет сверления с диаметром ~2.22мм
-        - Заменяет инструмент на E007 (из базы инструментов)
+        - Ищет отверстия сверловки (RoundHole) с диаметром 2.15-2.30 мм
+        - Привязывает к их операциям инструмент E007 (из базы инструментов)
         """
         if not global_tool_db.is_loaded:
             self.log("❌ База инструментов не загружена! Нажмите 'База инструментов' сначала.")
-            return {'processed': 0, 'errors': 0}
-            
+            return {'processed': 0, 'tools_replaced': 0, 'errors': 0}
+
         if not self.pgmx_files:
             self.log("Нет файлов .PGMX для обработки")
-            return {'processed': 0, 'errors': 0}
-            
+            return {'processed': 0, 'tools_replaced': 0, 'errors': 0}
+
         self.log("=== Начало исправления файлов .PGMX (SCM) ===")
         stats = {'processed': 0, 'tools_replaced': 0, 'errors': 0}
-        
+
         # Получаем данные о фрезе E007
         replacement_tool = global_tool_db.get_replacement_tool("E007")
         if not replacement_tool:
             self.log("❌ Инструмент E007 не найден в базе!")
             return stats
-            
-        self.log(f"Инструмент замены: ID={replacement_tool['id']}, Name={replacement_tool['name']}")
-        
+
+        replacement_id = str(replacement_tool['id'])
+        self.log(f"Инструмент замены: ID={replacement_id}, Name={replacement_tool['name']}")
+
         for file_path in self.pgmx_files:
-            temp_zip = None
             try:
                 self.log(f"Обработка файла: {file_path.name}")
-                
-                # PGMX это ZIP архив
-                # Создаем временную копию для работы
-                temp_zip = file_path.with_suffix('.tmp.zip')
-                shutil.copy2(file_path, temp_zip)
-                
-                modified = False
-                tool_count = 0
-                
-                with zipfile.ZipFile(temp_zip, 'r') as zin:
-                    # Читаем содержимое
-                    xml_data = {}
-                    for name in zin.namelist():
-                        if name.endswith('.xml'):
-                            xml_data[name] = zin.read(name)
-                            
-                # Обрабатываем каждый XML внутри архива
-                new_xml_data = {}
-
-                def fix_tag(match: re.Match) -> str:
-                    """Заменяет ToolId в теге, если диаметр сверления 2.15-2.30 мм."""
-                    nonlocal tool_count, modified
-                    full_tag = match.group(0)
-                    # Извлекаем диаметр из найденного тега
-                    dia_match = re.search(r'Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])', full_tag)
-                    if not dia_match:
-                        return full_tag
-
-                    dia_str = dia_match.group(1)
-                    try:
-                        dia = float(dia_str.replace(',', '.'))
-                    except ValueError:
-                        return full_tag
-
-                    if 2.15 <= dia <= 2.30:
-                        # Заменяем ToolId в этом теге (если там ещё не инструмент замены)
-                        new_tag = re.sub(
-                            r'ToolId=["\'](?!' + re.escape(str(replacement_tool["id"])) + r'["\'])[^"\']+["\']',
-                            f'ToolId="{replacement_tool["id"]}"', full_tag)
-                        if new_tag != full_tag:
-                            tool_count += 1
-                            modified = True
-                            self.log(f"   🔧 Найдено сверло Ø{dia:.2f}, замена ToolId на {replacement_tool['id']}")
-                        return new_tag
-                    return full_tag
-
-                # Pattern для поиска тега с Diameter (2.15-2.30) и ToolId
-                tag_pattern = r'<[^>]*Diameter=["\']?([2][.,]1[5-9]|[2][.,]2[0-9]|[2][.,]3[0-9])["\']?[^>]*ToolId=["\'][^"\']+["\'][^>]*>'
-
-                for name, data in xml_data.items():
-                    try:
-                        encoding = detect_encoding(data) if isinstance(data, bytes) else 'utf-8'
-                        content = data.decode(encoding) if isinstance(data, bytes) else data
-
-                        # Ищем операции сверления с диаметром ~2.22 и заменяем ToolId на E007
-                        content = re.sub(tag_pattern, fix_tag, content)
-                        new_xml_data[name] = content.encode(encoding)
-
-                    except Exception as e:
-                        self.log(f"   Ошибка парсинга XML {name}: {e}")
-
-                # Если были изменения, сохраняем новый ZIP (полностью, со всеми файлами архива)
-                if modified:
-                    with zipfile.ZipFile(temp_zip, 'r') as zin_src, \
-                         zipfile.ZipFile(file_path, 'w', zipfile.ZIP_DEFLATED) as zout:
-                        for item in zin_src.infolist():
-                            if item.filename in new_xml_data:
-                                zout.writestr(item, new_xml_data[item.filename])
-                            else:
-                                zout.writestr(item, zin_src.read(item.filename))
+                count, changed = self._fix_single_pgmx(file_path, replacement_id)
+                if changed:
                     stats['processed'] += 1
-                    stats['tools_replaced'] += tool_count
-                    self.log(f"   ✅ Файл сохранен. Заменено инструментов: {tool_count}")
+                    stats['tools_replaced'] += count
+                    self.log(f"   ✅ Файл сохранен. Заменено инструментов: {count}")
                 else:
                     self.log(f"   - Изменений не требуется")
-
-                # Удаляем временный файл если остался
-                if temp_zip and temp_zip.exists():
-                    temp_zip.unlink()
-
+            except zipfile.BadZipFile:
+                self.log(f"   ⏭️ Пропущен (не является ZIP/PGMX): {file_path.name}")
             except Exception as e:
                 self.log(f"   ❌ Ошибка обработки {file_path.name}: {e}")
+                logger.exception(e)
                 stats['errors'] += 1
-                if temp_zip and temp_zip.exists():
-                    temp_zip.unlink()
-                    
+
         self.log(f"=== Завершено. Обработано файлов: {stats['processed']}, заменено инструментов: {stats['tools_replaced']} ===")
         return stats
+
 
     def revert_dots(self) -> Dict:
         """
